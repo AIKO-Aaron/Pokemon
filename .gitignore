@@ -1,2 +1,6 @@
 bin/
 *.zip
+*.log
+push.sh
+.*
+!/.gitignore
