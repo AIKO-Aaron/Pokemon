@@ -35,7 +35,7 @@ public class MainMenu extends Menu {
 	public void paint(Drawer d) {
 		d.fillRect(0, 0, d.getFrame().getWidth(), d.getFrame().getHeight(), 0xFF000000);
 		for(int i = 0; i < fields.length; i++) {
-			d.drawText(labels[i] + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF);
+			d.drawText(labels[i] + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF, "fonts/Sans.ttf");
 		}
 	}
 	

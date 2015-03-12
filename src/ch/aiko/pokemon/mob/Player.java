@@ -19,6 +19,9 @@ public class Player extends Mob {
 	private boolean isPaused;
 	private boolean walking = false;
 	private boolean opened = false;
+	
+	//Auto-path finding creates error if false
+	private static final boolean collide = true;
 
 	public Player(Sprite s, int x, int y) {
 		super(s, x, y);
@@ -28,6 +31,7 @@ public class Player extends Mob {
 		super(s, x, y, w, h);
 	}
 
+	//@SuppressWarnings("unused")
 	public void update(Frame f) {
 		if (isPaused) return;
 		if (isOnTile(f)) ;
@@ -53,8 +57,8 @@ public class Player extends Mob {
 		int xs = speed;
 		int ys = speed;
 
-		if (checkCollisionX(f, xmovement, xs)) xs = getMaxSpeedX(f, xmovement, speed);
-		if (checkCollisionY(f, ymovement, ys)) ys = getMaxSpeedY(f, ymovement, speed);
+		if (checkCollisionX(f, xmovement, xs) && collide) xs = getMaxSpeedX(f, xmovement, speed);
+		if (checkCollisionY(f, ymovement, ys) && collide) ys = getMaxSpeedY(f, ymovement, speed);
 
 		x += xmovement * xs;
 		y += ymovement * ys;
@@ -68,7 +72,7 @@ public class Player extends Mob {
 		if (!opened && Settings.isFirstLaunch) {
 			f.openMenu(new Menu() {
 				public void paint(Drawer d) {
-					d.drawText("Press X to open Menu", getXOnScreen(d) - 100, getYOnScreen(d) - 50, 25, 0xFFFF00FF);
+					d.drawText("Press X to open Menu", getXOnScreen(d) - 100, getYOnScreen(d) - 50, 25, 0xFFFF00FF, "/fonts/Sans.tff");
 				}
 
 				public void update(Drawer d) {

@@ -37,7 +37,7 @@ public class LanguageMenu extends Menu {
 		ArrayList<Language> langs = Language.getLanguages();
 		
 		for(int i = starting_point; i < langs.size(); i++) {			
-			d.drawText(langs.get(i).getValue(langs.get(i).getName()) + " " + (langs.get(i) == Language.current ? Language.translate("selected") : "") + " " + (i == index ? "  <---" : ""), 0, Text_size * (i-starting_point), Text_size, 0xFF000000 |  ~Background_Color);
+			d.drawText(langs.get(i).getValue(langs.get(i).getName()) + " " + (langs.get(i) == Language.current ? Language.translate("selected") : "") + " " + (i == index ? "  <---" : ""), 0, Text_size * (i-starting_point), Text_size, 0xFF000000 |  ~Background_Color, "fonts/Sans.ttf");
 		}
 	}
 	

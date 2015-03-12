@@ -22,7 +22,6 @@ public abstract class Mob extends Entity {
 		this.w = w;
 		this.h = h;
 		sprite.setImage(ImageUtil.resize2(s.getImage(), (float) w / (float) sprite.getWidth(), (float) h / (float) sprite.getHeight()));
-		// sprite.setImage(ImageUtil.resize(s.getImage(), w, h));
 	}
 
 	public int getWidth() {
@@ -91,28 +90,113 @@ public abstract class Mob extends Entity {
 		return path;
 	}
 
-	
 	/**
-	 * Tries to find a path through the Level.
-	 * Return empty List if no path coulll be found
+	 * Tries to find a path through the Level. Return empty List if no path coulll be found
 	 * 
-	 * @param f The mainFrame. Used to get the Level with its collision-detection
-	 * @param posx1 The x position of the source
-	 * @param posy1 The y position of the source
-	 * @param w The width of the source
-	 * @param h The height of the source
-	 * @param x The desired new location x coordinate
-	 * @param y The desired new location y coordinate
-	 * @param speed The speed with which your source walks/flies
-	 * @return A List with all steps the source has to tak to get to the location.
+	 * @param f
+	 *            The mainFrame. Used to get the Level with its collision-detection
+	 * @param posx1
+	 *            The x position of the source
+	 * @param posy1
+	 *            The y position of the source
+	 * @param w
+	 *            The width of the source
+	 * @param h
+	 *            The height of the source
+	 * @param x
+	 *            The desired new location x coordinate
+	 * @param y
+	 *            The desired new location y coordinate
+	 * @param speed
+	 *            The speed with which your source walks/flies
+	 * @return A List with all steps the source has to take to get to the location. Ideally for moving objects with collision detection
 	 */
-	public static ArrayList<Point> getPathTo(Frame f, int posx1, int posy1, int w, int h, int x, int y, float speed) {
+	public static ArrayList<Point> getPathTo(Frame f, Entity e, int destx, int desty, float speed0) {
+		int speed = (int) speed0;
 		ArrayList<Point> path = new ArrayList<Point>();
+
+		int xd = 0, yd = 0, x = e.x, y = e.y;
+
+		if (e.x < x) xd = 1;
+		if (e.x > x) xd = -1;
+		if (e.y < y) yd = 1;
+		if (e.y > y) yd = -1;
+
+		while (x != destx || y != desty) {
+			int xm = x != destx ? getMaxSpeedX(f, x, y, e.w, e.h, xd, speed) : 0;
+			int ym = y != desty ? getMaxSpeedY(f, x, y, e.w, e.h, yd, speed) : 0;
+
+			if ((xm == 0 && x != destx) || (ym == 0 && y != desty)) {
+				if (xm == 0 && x != destx) {
+					int yp, dis1 = 0, dis2 = 0;
+
+					for (int yy = y; yy > 0; yy--) {
+						// Frame f, int xmov, float speed, int w, int h, int y
+						if (!e.checkCollisionX(f, xd, speed, e.w, e.h, yy)) break;
+						dis1++;
+					}
+
+					for (int yy = y; yy < f.getLevel().getHeight(); yy++) {
+						if (!e.checkCollisionX(f, xd, speed, e.w, e.h, yy)) break;
+						dis2++;
+					}
+					
+					yp = dis1 < dis2 ? -1 : 1;
+					ym = yp;
+				}
+
+				if (ym == 0 && y != desty) {
+
+				}
+
+				// break;
+			} else {
+				x += xm;
+				y += ym;
+
+				path.add(new Point(destx - x, desty - y));
+			}
+		}
 
 		return path;
 	}
 
+	public static void printPoint(Point p, String s) {
+		System.out.println(s + ": (" + p.x + "|" + p.y + ")");
+	}
+
+	public static ArrayList<Point> join(ArrayList<Point> a1, ArrayList<Point> a2) {
+		ArrayList<Point> a3 = new ArrayList<Point>();
+		for (Point p : a1)
+			a3.add(p);
+		for (Point p : a2)
+			a3.add(p);
+		return a1;
+	}
+
+	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
+		while (f.getLevel().checkCollisionX(x + speed * xmov, y, w, h) && speed > 0) {
+			speed--;
+		}
+		return speed;
+	}
+
+	public static int getMaxSpeedY(Frame f, int x, int y, int w, int h, int ymov, int maxSpeed) {
+		while (f.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
+			maxSpeed--;
+		}
+		return maxSpeed;
+	}
+
 	public Point pathFind(Frame f, int x, int y, float speed) {
+		System.out.println(x + "," + y);
+		for (Point p : getPathTo(f, this, x, y, speed)) {
+			System.out.println(p.x + ":" + p.y);
+			return p;
+		}
+
+		// if(getPathTo(f, this.x, this.y, w, h, x, y, speed) != null) return getPathTo(f, this.x, this.y, w, h, x, y, speed).get(0);
+		if (f != null) return new Point(0, 0);
 		int xmov = 0, ymov = 0;
 		if (this.x < x) xmov++;
 		if (this.x > x) xmov--;
@@ -151,7 +235,6 @@ public abstract class Mob extends Entity {
 			}
 
 			int max = Math.max(Math.abs(dis1), dis2);
-			System.out.println(max + "x");
 
 			dir = dis1 < dis2 ? -1 : 1;
 

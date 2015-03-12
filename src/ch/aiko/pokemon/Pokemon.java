@@ -21,7 +21,7 @@ import ch.aiko.pokemon.sprite.Tile;
 
 public class Pokemon {
 
-	public static Frame w;
+	public static Frame frame;
 	public static Tile tile;
 	public static Player player;
 	public static Level level1, level2;
@@ -34,6 +34,7 @@ public class Pokemon {
 	public static Moves moves;
 	
 	public static boolean debug = false;
+	
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
@@ -69,8 +70,10 @@ public class Pokemon {
 		Trainer profOak = new Trainer(320, 320, 0);
 		level2.addMob(profOak);
 		
-		w = new Frame(level1);
-		w.loopStart();
+		level1.addTile(new Tile(sheet1.getSprite(0), 434, 434, false));
+		
+		frame = new Frame(level1);
+		frame.loopStart();
 	}
 
 	private static HashMap<Integer, Tile> generateCoding(boolean b) {
@@ -96,5 +99,9 @@ public class Pokemon {
 		sheet = new SpriteSheet("/textures/img.jpg", 100, 100);
 		sheet1 = new SpriteSheet("/textures/Sprites.png", 16, 16);
 		pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", 80, 80);
+	}
+	
+	public static Frame getMainFrame() {
+		return frame;
 	}
 }

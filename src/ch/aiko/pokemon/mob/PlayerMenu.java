@@ -103,7 +103,7 @@ public class PlayerMenu extends Menu {
 		//Menu Fields (look above)
 		for (int i = 0; i < length; i++) {
 			d.drawRect(x, (height / length) * i + y, width, 1, 0xFF000000);
-			d.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF);
+			d.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF, "fonts/Sans.ttf");
 		}
 
 		//Rectangle around selected Menu Field
