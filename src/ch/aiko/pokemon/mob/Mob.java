@@ -112,66 +112,7 @@ public abstract class Mob extends Entity {
 	 * @return A List with all steps the source has to take to get to the location. Ideally for moving objects with collision detection
 	 */
 	public static ArrayList<Point> getPathTo(Frame f, Entity e, int destx, int desty, float speed0) {
-		int speed = (int) speed0;
-		ArrayList<Point> path = new ArrayList<Point>();
-
-		int xd = 0, yd = 0, x = e.x, y = e.y;
-
-		if (e.x < x) xd = 1;
-		if (e.x > x) xd = -1;
-		if (e.y < y) yd = 1;
-		if (e.y > y) yd = -1;
-
-		while (x != destx || y != desty) {
-			int xm = x != destx ? getMaxSpeedX(f, x, y, e.w, e.h, xd, speed) : 0;
-			int ym = y != desty ? getMaxSpeedY(f, x, y, e.w, e.h, yd, speed) : 0;
-
-			if ((xm == 0 && x != destx) || (ym == 0 && y != desty)) {
-				if (xm == 0 && x != destx) {
-					int yp, dis1 = 0, dis2 = 0;
-
-					for (int yy = y; yy > 0; yy--) {
-						// Frame f, int xmov, float speed, int w, int h, int y
-						if (!e.checkCollisionX(f, xd, speed, e.w, e.h, yy)) break;
-						dis1++;
-					}
-
-					for (int yy = y; yy < f.getLevel().getHeight(); yy++) {
-						if (!e.checkCollisionX(f, xd, speed, e.w, e.h, yy)) break;
-						dis2++;
-					}
-					
-					yp = dis1 < dis2 ? -1 : 1;
-					ym = yp;
-				}
-
-				if (ym == 0 && y != desty) {
-
-				}
-
-				// break;
-			} else {
-				x += xm;
-				y += ym;
-
-				path.add(new Point(destx - x, desty - y));
-			}
-		}
-
-		return path;
-	}
-
-	public static void printPoint(Point p, String s) {
-		System.out.println(s + ": (" + p.x + "|" + p.y + ")");
-	}
-
-	public static ArrayList<Point> join(ArrayList<Point> a1, ArrayList<Point> a2) {
-		ArrayList<Point> a3 = new ArrayList<Point>();
-		for (Point p : a1)
-			a3.add(p);
-		for (Point p : a2)
-			a3.add(p);
-		return a1;
+		return Path.getPath(f, e.x, e.y, destx, desty, (int) speed0, e);
 	}
 
 	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
@@ -187,15 +128,17 @@ public abstract class Mob extends Entity {
 		}
 		return maxSpeed;
 	}
+	
+	public void teleport(Point p) {
+		this.x = p.x;
+		this.y = p.y;
+	}
 
 	public Point pathFind(Frame f, int x, int y, float speed) {
-		System.out.println(x + "," + y);
-		for (Point p : getPathTo(f, this, x, y, speed)) {
-			System.out.println(p.x + ":" + p.y);
-			return p;
-		}
-
-		// if(getPathTo(f, this.x, this.y, w, h, x, y, speed) != null) return getPathTo(f, this.x, this.y, w, h, x, y, speed).get(0);
+		ArrayList<Point> path = getPathTo(f, this, x, y, speed);
+		if(path.size() > 0) teleport(path.get(0));
+		
+		//OLD
 		if (f != null) return new Point(0, 0);
 		int xmov = 0, ymov = 0;
 		if (this.x < x) xmov++;
