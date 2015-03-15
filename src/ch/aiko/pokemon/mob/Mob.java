@@ -112,7 +112,7 @@ public abstract class Mob extends Entity {
 	 * @return A List with all steps the source has to take to get to the location. Ideally for moving objects with collision detection
 	 */
 	public static ArrayList<Point> getPathTo(Frame f, Entity e, int destx, int desty, float speed0) {
-		return Path.getPath(f, e.x, e.y, destx, desty, (int) speed0, e);
+		return Path.convert(Path.getPath(f, e.x, e.y, destx, desty, (int) speed0, e, 5));
 	}
 
 	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
@@ -128,7 +128,7 @@ public abstract class Mob extends Entity {
 		}
 		return maxSpeed;
 	}
-	
+
 	public void teleport(Point p) {
 		this.x = p.x;
 		this.y = p.y;
@@ -136,57 +136,7 @@ public abstract class Mob extends Entity {
 
 	public Point pathFind(Frame f, int x, int y, float speed) {
 		ArrayList<Point> path = getPathTo(f, this, x, y, speed);
-		if(path.size() > 0) teleport(path.get(0));
-		
-		//OLD
-		if (f != null) return new Point(0, 0);
-		int xmov = 0, ymov = 0;
-		if (this.x < x) xmov++;
-		if (this.x > x) xmov--;
-
-		if (this.y < y) ymov++;
-		if (this.y > y) ymov--;
-
-		if (checkCollisionX(f, xmov, speed, w, h, y) && checkCollisionY(f, ymov, speed, w, h, xmov, 0)) {
-			int dir = 1;
-			int dis1 = 0, dis2 = 0;
-			for (int yy = y; yy > 0; yy--) {
-				dis1--;
-				if (!checkCollisionX(f, xmov, speed, w, h, yy)) break;
-			}
-			for (int yy = y; yy > f.getLevel().getHeight(); yy++) {
-				dis2++;
-				if (!checkCollisionX(f, xmov, speed, w, h, yy)) break;
-			}
-			int max = Math.max(Math.abs(dis1), dis2);
-			// System.out.println(max);
-
-			dir = dis1 < dis2 ? -1 : 1;
-			ymov = (int) (dir * speed);
-		}
-
-		if (checkCollisionY(f, ymov, speed, w, h, x) && checkCollisionX(f, xmov, speed, w, h, 0, ymov)) {
-			int dir = 0;
-			int dis1 = 0, dis2 = 0;
-			for (int xx = x; xx > 0; xx--) {
-				dis1--;
-				if (!checkCollisionY(f, ymov, speed, w, h, xx)) break;
-			}
-			for (int xx = x; xx > f.getLevel().getWidth(); xx++) {
-				dis2++;
-				if (!checkCollisionY(f, ymov, speed, w, h, xx)) break;
-			}
-
-			int max = Math.max(Math.abs(dis1), dis2);
-
-			dir = dis1 < dis2 ? -1 : 1;
-
-			// System.out.println(dis1 + "," + dis2 + ": " + dir);
-			xmov = (int) (dir * speed);
-		}
-
-		// System.out.println("XMOV: " + xmov);
-
-		return new Point(xmov, ymov);
+		if (path.size() > 1) return path.get(path.size() - 2);
+		else return new Point(0, 0);
 	}
 }

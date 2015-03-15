@@ -95,7 +95,9 @@ public class TeamPokemon {
 	}
 
 	public void levelUp() {
+		System.out.println("Level Up");
 		lvl++;
+		if(lvl >= pokemon.getLevelEvolve() && pokemon.getLevelEvolve() != -1) System.out.println("Evolve");
 		xpToLvl += lvl;
 		if (xpToLvl <= 0) levelUp();
 	}

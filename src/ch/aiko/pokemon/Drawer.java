@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.pokemon.sprite.Sprite;
 
 public class Drawer {
@@ -49,15 +50,25 @@ public class Drawer {
 		Sprite sprite = new Sprite(createText(text, size, col, font));
 		drawTile(sprite, x, y);
 	}
+	
+	public void drawText(String text, int x, int y, int size, int col) {
+		Sprite sprite = new Sprite(createText(text, size, col, Settings.font));
+		drawTile(sprite, x, y);
+	}
 
 	protected BufferedImage createText(String text, int size, int col, String font) {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		try {
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, extract(font)));
-		} catch (Exception e) {
-			e.printStackTrace();
+		String font1 = font.contains("fonts/") ? font.split("/")[font.split("/").length - 1].split("\\.")[0].replace("-", " ") : font;
+		
+		if (!exists(font1)) {
+			//System.out.println(font);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			try {
+				ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, extract(font)));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-
+		
 		Font f = new Font(font, 0, size);
 		Point p = getLength(f, text);
 		BufferedImage img = new BufferedImage(p.x + 3, p.y + size / 4, BufferedImage.TYPE_INT_ARGB);
@@ -68,6 +79,22 @@ public class Drawer {
 		g.setFont(f);
 		g.drawString(text, 0, size);
 		return img;
+	}
+
+	protected Font getDefaultFont(String font) {
+		for(Font f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) if(f.getFontName().equalsIgnoreCase(font)) return f;
+		return null;
+	}
+	
+	protected boolean exists(String font) {
+		// font = font.replace("-", " ").split("/")[font.replace("-", " ").split("/").length - 1].split("\\.")[0];
+		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		for (Font f : e.getAllFonts()) {
+			//System.out.println(f.getFontName() + ":" + font);
+			if (f.getFontName().equalsIgnoreCase(font)) return true;
+		}
+
+		return false;
 	}
 
 	protected Point getLength(Font f, String s) {
@@ -117,7 +144,7 @@ public class Drawer {
 			return f;
 		} catch (Exception e) {
 			System.out.println("An error has occurred while extracting a resource. This may mean the program is missing functionality, please contact the developer.\nError Description:\n" + e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}

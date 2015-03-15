@@ -43,7 +43,7 @@ public class Pokemon {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-				
+		
 		if(args.length >= 1 && args[0] != null && args[0].equalsIgnoreCase("--debug-mode=true")) debug = true;
 
 		Settings.load();
@@ -64,13 +64,13 @@ public class Pokemon {
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		teampokemon1.xp(1);
 
-		TestMob mob = new TestMob(sheet1.getSprite(0, 2), 320, 320);
+		TestMob mob = new TestMob(sheet1.getSprite(0, 0), 320, 320);
 		level1.addMob(mob);
 		
 		Trainer profOak = new Trainer(320, 320, 0);
 		level2.addMob(profOak);
 		
-		level1.addTile(new Tile(sheet1.getSprite(0), 434, 434, false));
+		level1.addTile(new Tile(sheet1.getSprite(0), 434, 240, false));
 		
 		frame = new Frame(level1);
 		frame.loopStart();

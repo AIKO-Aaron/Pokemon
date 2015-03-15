@@ -11,20 +11,25 @@ public class Pokemon {
 	
 	public static SpriteSheet pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", WIDTH, HEIGHT);
 
-	protected int id;
+	protected int id, l;
 	protected String name;
 	protected Type type1, type2;
 	protected Sprite sprite;
 
 	protected Pokemon evolution;
 	
-	public Pokemon(int x, int y, int id, int evolution) {
+	public Pokemon(int x, int y, int id, int evolution, int lvlToEv) {
 		sprite = pokemons.getSprite(x, y);
 		this.name = Language.current.getValue("pok" + id);
 		this.id = id;
 		this.evolution = Pokemons.get(evolution);
+		this.l = lvlToEv;
 		
 		Pokemons.pokemons.put(id, this);
+	}
+	
+	public int getLevelEvolve() {
+		return l;
 	}
 
 	public String getName() {

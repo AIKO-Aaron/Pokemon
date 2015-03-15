@@ -79,10 +79,13 @@ moves=moves
 //Menus
 
 BAG=Bag
-POKEMON=Pokémon
-POKEDEX=Pokédex
+POKEMON=Pokemon
+POKEDEX=Pokedex
 NAME=Name
 MENU=Menu
 SAVE=Save
 BACK=Back
 SELECTED=(!)
+LANGUAGE=language
+REL_TEX=Reload Textures
+FONT=Font

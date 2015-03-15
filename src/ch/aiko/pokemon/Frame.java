@@ -86,7 +86,6 @@ public class Frame extends Window {
 				}, 0, 1000 / FPS);
 			}
 		};
-		if(!Draw.isAlive()) Draw.start();
 		
 		
 		if(Update == null) Update = new Thread("Update") {
@@ -98,6 +97,9 @@ public class Frame extends Window {
 				}, 0, 1000 / FPS);
 			}
 		};
+		
+		
+		if(!Draw.isAlive()) Draw.start();
 		if(!Update.isAlive()) Update.start();
 
 	}

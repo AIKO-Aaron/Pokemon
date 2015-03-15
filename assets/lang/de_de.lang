@@ -79,12 +79,13 @@ moves=Attacken
 //Menus
 
 BAG=Beutel
-POKEMON=Pokémon
-POKEDEX=Pokédex
+POKEMON=Pokemon
+POKEDEX=Pokedex
 name=Name
 MENU=Menu
 SAVE=Sichern
 Back=Zurück
 LANGUAGE=Sprache
 SELECTED=(!)
-LANGUAGE=Language
+REL_TEX=Lade Texturen neu
+FONT=Schriftart

@@ -43,6 +43,8 @@ public class Player extends Mob {
 		if (f.isKeyPressed(Settings.getInstance().getIntegerValue("keyDown"))) ymovement++;
 		if (f.isKeyPressed(Settings.getInstance().getIntegerValue("keyLeft"))) xmovement--;
 		if (f.isKeyPressed(Settings.getInstance().getIntegerValue("keyRight"))) xmovement++;
+		
+		if(f.getTimesPressed(KeyEvent.VK_U) > 0) System.out.println(x + ":" + y);
 
 		walking = ymovement == 0 && xmovement == 0;
 
@@ -72,7 +74,7 @@ public class Player extends Mob {
 		if (!opened && Settings.isFirstLaunch) {
 			f.openMenu(new Menu() {
 				public void paint(Drawer d) {
-					d.drawText("Press X to open Menu", getXOnScreen(d) - 100, getYOnScreen(d) - 50, 25, 0xFFFF00FF, "/fonts/Sans.tff");
+					d.drawText("Press X to open Menu", getXOnScreen(d) - 100, getYOnScreen(d) - 50, 25, 0xFFFF00FF);
 				}
 
 				public void update(Drawer d) {

@@ -9,6 +9,7 @@ import ch.aiko.pokemon.Menu;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.language.LanguageMenu;
 import ch.aiko.pokemon.pokemon.PokemonMenu;
+import ch.aiko.pokemon.settings.Settings;
 
 public class PlayerMenu extends Menu {
 	private static ArrayList<PlayerMenuFields> fields = new ArrayList<PlayerMenuFields>();
@@ -79,9 +80,9 @@ public class PlayerMenu extends Menu {
 
 	public void update(Drawer d) {
 		//Key input
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_X) > 0) d.getFrame().closeMenu();
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_UP) > 0) index = index > 0 ? index - 1 : 0;
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_DOWN) > 0) index = index < fields.size() - 1 ? index + 1 : fields.size() - 1;
+		if (d.getFrame().getTimesPressed(Settings.getInteger("keyMenu")) > 0) d.getFrame().closeMenu();
+		if (d.getFrame().getTimesPressed(Settings.getInteger("keyUp")) > 0) index = index > 0 ? index - 1 : 0;
+		if (d.getFrame().getTimesPressed(Settings.getInteger("keyDown")) > 0) index = index < fields.size() - 1 ? index + 1 : fields.size() - 1;
 
 		if (d.getFrame().getTimesPressed(KeyEvent.VK_SPACE) > 0) run(index);
 	}
@@ -103,7 +104,7 @@ public class PlayerMenu extends Menu {
 		//Menu Fields (look above)
 		for (int i = 0; i < length; i++) {
 			d.drawRect(x, (height / length) * i + y, width, 1, 0xFF000000);
-			d.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF, "fonts/Sans.ttf");
+			d.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF);
 		}
 
 		//Rectangle around selected Menu Field
