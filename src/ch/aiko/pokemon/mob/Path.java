@@ -1,99 +1,129 @@
 package ch.aiko.pokemon.mob;
 
+import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.entity.Entity;
-import ch.aiko.pokemon.sprite.Sprite;
 
 public class Path {
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	public static ArrayList<Point> getPath(Frame f, int srcx, int srcy, int destx, int desty, int speed, Entity e, int depth) {
-		if (DEBUG) printlnPoint(new Point(destx, desty, null), "Finding Path to");
-		ArrayList<Point> visited = new ArrayList<Point>();
-		Stack<Point> on = new Stack<Point>();
 		ArrayList<Point> path = new ArrayList<Point>();
+		path.add(new Point(srcy, srcy));
 
-		// Tile[] tiles = f.getLevel().getTilesOn(e);
-		// for (Tile t : tiles)
-		// if (t.solid) return convert(path);
-		if (depth == 0) return path;
+		int dx = destx - srcx;
+		int dy = desty - srcy;
 
-		on.push(new Point(srcx, srcy, null));
+		int xx = srcx;
+		int yy = srcy;
 
-		while (!on.isEmpty()) {
-			Point tmp = on.pop();
+		int xMov = 0;
+		int yMov = 0;
 
-			if (DEBUG) printPoint(tmp, "	Currently on");
-			if (DEBUG) printlnPoint(new Point(destx, desty, null), "");
+		if (srcx < destx) xMov++;
+		if (srcx > destx) xMov--;
+		if (srcy < desty) yMov++;
+		if (srcy > desty) yMov--;
 
-			// f.getLevel().drawTile(new Sprite(0xFFFF00FF, e.w, e.h), tmp.x, tmp.y);
+		while (xx != destx || yy != desty) {
+			int xSpeed = getMaxSpeedX(f, xx, yy, e.w, e.h, xMov, Math.min(speed, Math.abs(xx - destx))) * xMov;
+			int ySpeed = getMaxSpeedY(f, xx, yy, e.w, e.h, yMov, Math.min(speed, Math.abs(yy - desty))) * yMov;
 
-			int dx = 0;
-			int dy = 0;
+			if (xSpeed == 0 && ySpeed == 0) {
+				if (xx != destx) {
+					int i, j;
+					for (i = yy; i >= 0; i--) {
+						if (getMaxSpeedX(f, xx, i, e.w, e.h, xMov, speed) > 0) break;
+					}
+					for (j = yy; j < f.getHeight(); j++) {
+						if (getMaxSpeedX(f, xx, j, e.w, e.h, xMov, speed) > 0) break;
+					}
 
-			if (tmp.x < destx) dx++;
-			if (tmp.x > destx) dx--;
-			if (tmp.y < desty) dy++;
-			if (tmp.y > desty) dy--;
+					double w1 = Hypothenuse(xx - srcx, Math.abs(yy) - i);
+					double w2 = Hypothenuse(xx - srcx, Math.abs(yy) + j);
 
-			if (DEBUG) printlnPoint(new Point(dx, dy, null), "		Direction");
+					// TODO Add more precise path length methods to find the nearest path
 
-			int xd = getMaxSpeedX(f, tmp.x, tmp.y, e.w, e.h, dx, speed);
-			int yd = getMaxSpeedY(f, tmp.x, tmp.y, e.w, e.h, dy, speed);
+					if (w1 < w2) yy = i;
+					else yy = j;
 
-			if (DEBUG) printlnPoint(new Point(xd, yd, null), "		Movement");
+					path.add(new Point(xx, yy));
 
-			if (xd == 0 && tmp.x != destx) {
-				if (DEBUG) System.err.println("Collision ! Trying to find another path to desired Position");
-				int i, j;
-				for (i = tmp.y; i >= 0; i -= speed) {
-					if (getMaxSpeedX(f, tmp.x, i, e.w, e.h, dx, speed) > 0) break;
+					//printPoint(new Point((int) w1, (int) w2), "Path Length1");
+					//printlnPoint(new Point(i, j), "Path Length");
+					
+					continue;
 				}
-				for (j = tmp.y; j < f.getHeight(); j += speed) {
-					if (getMaxSpeedX(f, tmp.x, j, e.w, e.h, dx, speed) > 0) break;
-				}
-				// System.out.println(i + ":" + j);
-				if (i == 0 && j == f.getHeight()) return (path);
-				ArrayList<Point> way1 = getPath(f, tmp.x, i - e.h, destx, desty, speed, e, depth - 1);
-				ArrayList<Point> way2 = getPath(f, tmp.x, j + e.h, destx, desty, speed, e, depth - 1);
-
-				if(way1.size() == 0 && way2.size() == 0) return path;
 				
-				if (way1.size() == 0) way1 = new ArrayList<Point>(way2.size() + 1);
-				if (way2.size() == 0) way2 = new ArrayList<Point>(way1.size() + 1);
+				if (yy != desty) {
+					int i, j;
+					for (i = xx; i >= 0; i--) {
+						if (getMaxSpeedY(f, i, yy, e.w, e.h, yMov, speed) > 0) break;
+					}
+					for (j = xx; j < f.getWidth(); j++) {
+						if (getMaxSpeedY(f, j, yy, e.w, e.h, yMov, speed) > 0) break;
+					}
 
-				ArrayList<Point> shorter = way1.size() < way2.size() ? way1 : way2;
-				ArrayList<Point> wayToStartOfShorter = way1.size() < way2.size() ? getPath(f, srcx, srcy, tmp.x, i - e.w, speed, e, depth - 1) : getPath(f, srcx, srcy, tmp.x, j + e.w, speed, e, depth - 1);
+					double w1 = Hypothenuse(Math.abs(xx) - i, yy - srcy);
+					double w2 = Hypothenuse(Math.abs(xx) + j, yy - srcy);
 
-				path = join(shorter, wayToStartOfShorter);
+					// TODO Add more precise path length methods to find the nearest path
 
-				System.out.println(way1.size() + ":" + way2.size());
-			}
+					if (w1 < w2) xx = i;
+					else xx = j;
 
-			Point next = new Point(tmp.x + (xd * dx), tmp.y + (yd * dy), tmp);
-
-			if (!checkPoint(visited, next)) {
-				on.push(next);
-				visited.add(next);
-			}
-
-			if (checkPoint(tmp, new Point(destx, desty, null))) {
-				if (DEBUG) System.out.println("Found Path");
-				path.add(tmp);
-				while (tmp.prev != null) {
-					tmp = tmp.prev;
-					path.add(tmp);
+					path.add(new Point(xx, yy));
+					
+					continue;
 				}
-				if (path.size() > 1) printlnPoint(path.get(path.size() - 2), "Position to go");
-				return (path);
 			}
+
+			if (xx != destx) xx += xSpeed;
+			if (yy != desty) yy += ySpeed;
 		}
 
-		return (path);
+		return path;
+	}
+
+	public static ArrayList<Point> getPathSimple(Frame f, int srcx, int srcy, int destx, int desty, int speed, Entity e) {
+		ArrayList<Point> path = new ArrayList<Point>();
+		int xx = srcx;
+		int yy = srcy;
+		path.add(new Point(xx, yy));
+
+		int xMov = 0;
+		int yMov = 0;
+
+		if (xx < destx) xMov++;
+		if (xx > destx) xMov--;
+		if (yy < desty) yMov++;
+		if (yy > desty) yMov--;
+
+		while (xx != destx || yy != desty) {
+			int xSpeed = getMaxSpeedX(f, xx, yy, e.w, e.h, xMov, Math.min(speed, Math.abs(xx - destx))) * xMov;
+			int ySpeed = getMaxSpeedY(f, xx, yy, e.w, e.h, yMov, Math.min(speed, Math.abs(yy - desty))) * yMov;
+
+			if (xx != destx) xx += xSpeed;
+			if (yy != desty) yy += ySpeed;
+
+			if (xSpeed == 0 && ySpeed == 0) {
+				if (xx != destx || yy != desty) {
+					Point p = getPath(f, srcx, srcy, destx, desty, speed, e, 5).get(1);
+					return getPathSimple(f, srcx, srcy, p.x, p.y, speed, e);
+				}
+			}
+
+			path.add(new Point(xx, yy));
+		}
+
+		/**
+		 * for (int i = 0; i < path.size(); i++) { printlnPoint(path.get(i), "Path (" + i + ")"); }
+		 */
+
+		return path;
 	}
 
 	public static boolean checkPoint(Point p1, Point p2) {
@@ -112,7 +142,7 @@ public class Path {
 	}
 
 	public static void printPoint(Point p, String s) {
-		System.out.print(s + ": (" + p.x + "|" + p.y + ")");
+		System.out.print(s + ": (" + p.x + "|" + p.y + ") ");
 	}
 
 	public static ArrayList<Point> join(ArrayList<Point> a1, ArrayList<Point> a2) {
@@ -121,7 +151,8 @@ public class Path {
 			a3.add(p);
 		for (Point p : a2)
 			a3.add(p);
-		return a1;
+
+		return a3;
 	}
 
 	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
@@ -147,14 +178,20 @@ public class Path {
 		return ret;
 	}
 
-	static class Point {
-		public int x, y;
-		public Point prev;
+	// /|
+	// / |
+	// / |
+	// length/ |
+	// / | yd
+	// / |
+	// / |
+	// /_______|
+	// xd
+	public static final double Hypothenuse(double Kathete1, double Kathete2) {
+		return Math.sqrt(Math.pow(Kathete1, 2) + Math.pow(Kathete2, 2));
+	}
 
-		public Point(int x, int y, Point prev) {
-			this.x = x;
-			this.y = y;
-			this.prev = prev;
-		}
+	public static final double Kathete(double Hypothenuse, double Kathete1) {
+		return Math.sqrt(Math.pow(Hypothenuse, 2) - Math.pow(Kathete1, 2));
 	}
 }

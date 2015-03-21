@@ -112,7 +112,7 @@ public abstract class Mob extends Entity {
 	 * @return A List with all steps the source has to take to get to the location. Ideally for moving objects with collision detection
 	 */
 	public static ArrayList<Point> getPathTo(Frame f, Entity e, int destx, int desty, float speed0) {
-		return Path.convert(Path.getPath(f, e.x, e.y, destx, desty, (int) speed0, e, 5));
+		return Path.getPathSimple(f, e.x, e.y, destx, desty, (int) speed0, e);
 	}
 
 	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
@@ -136,7 +136,7 @@ public abstract class Mob extends Entity {
 
 	public Point pathFind(Frame f, int x, int y, float speed) {
 		ArrayList<Point> path = getPathTo(f, this, x, y, speed);
-		if (path.size() > 1) return path.get(path.size() - 2);
+		if (path.size() > 1) return path.get(1);
 		else return new Point(0, 0);
 	}
 }

@@ -9,5 +9,6 @@ public class Default {
     public static final int keyA=32;
     public static final int keyMenu=88;
     public static final boolean setupCorrect=false;
+    public static final String font="user/fonts/Raleway-Regular.ttf";
 
 }

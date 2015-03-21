@@ -37,6 +37,10 @@ echo "" >> "./src/ch/aiko/pokemon/settings/Default.java"
 while read line
 do
   type=$(get $line)
+  if [ $type == "String" ]; then
+    line="${line//[=]/=\"}"
+    line="$line\""
+  fi
   echo "    public static final $type $line;" >> "./src/ch/aiko/pokemon/settings/Default.java"
   i=$(($i+1))
 done < "./assets/settings/fields"
