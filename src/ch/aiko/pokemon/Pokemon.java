@@ -58,7 +58,7 @@ public class Pokemon {
 				
 		TeamPokemon teampokemon1 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 0, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		TeamPokemon teampokemon2 = new TeamPokemon(player, Pokemons.get("Sandamer"), 1, 1, 1, 1, 1, 1, 1, 1, 1, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
-		TeamPokemon teampokemon3 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 2, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
+		TeamPokemon teampokemon3 = new TeamPokemon(player, Pokemons.get("Taubsi"), 1, 1, 1, 1, 1, 1, 1, 1, 2, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		TeamPokemon teampokemon4 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 3, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		TeamPokemon teampokemon5 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 4, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
@@ -92,7 +92,7 @@ public class Pokemon {
 	}
 	
 	public static void save() {
-		
+		System.out.println("Saving current Configuration to: " + Settings.getPath() + "/settings/settings.cfg");
 	}
 	
 	public static void reloadTextures() {
