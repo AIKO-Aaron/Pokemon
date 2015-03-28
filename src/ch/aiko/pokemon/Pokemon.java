@@ -26,9 +26,9 @@ public class Pokemon {
 	public static Player player;
 	public static Level level1, level2;
 
-	public static SpriteSheet sheet = new SpriteSheet("/textures/img.jpg", 100, 100);
-	public static SpriteSheet sheet1 = new SpriteSheet("/textures/Sprites.png", 16, 16);
-	public static SpriteSheet pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", 80, 80);
+	public static SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/img.jpg", 100, 100);
+	public static SpriteSheet sheet1 = new SpriteSheet("/ch/aiko/pokemon/textures/Sprites.png", 16, 16);
+	public static SpriteSheet pokemons = new SpriteSheet("/ch/aiko/pokemon/textures/diamond-pearl-frame2.png", 80, 80);
 	
 	public static Pokemons pokes;
 	public static Moves moves;
@@ -53,8 +53,8 @@ public class Pokemon {
 		moves = new Moves();
 		
 		player = new Player(sheet1.getSprite(2, 0), 320, 320, 32, 32);
-		level1 = new Level(player, "/level/Level.png", generateCoding(true), 16, 16);
-		level2 = new Level(player, "/level/Level2.png", generateCoding(true), 8, 8);
+		level1 = new Level(player, "/ch/aiko/pokemon/level/Level.png", generateCoding(true), 16, 16);
+		level2 = new Level(player, "/ch/aiko/pokemon/level/Level2.png", generateCoding(true), 8, 8);
 				
 		TeamPokemon teampokemon1 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 0, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		TeamPokemon teampokemon2 = new TeamPokemon(player, Pokemons.get("Sandamer"), 1, 1, 1, 1, 1, 1, 1, 1, 1, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
@@ -64,12 +64,12 @@ public class Pokemon {
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		teampokemon1.xp(1);
 
-		Trainer test = new Trainer(320, 320, 1){
+		Trainer test = new Trainer(320, 320, 1, true, true, new TeamPokemon[]{teampokemon6}){
 			Animation t;
 			
 			public void userInit() {
 				System.out.println("Initializing: " + t);
-				t = new Animation(new SpriteSheet("/textures/TrainerSprites.png", 32, 32), 60);
+				t = new Animation(new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32, 32), 60);
 				System.out.println("Initialized: " + t);
 			}
 			

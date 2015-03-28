@@ -16,7 +16,7 @@ import ch.aiko.util.PropertyUtil;
 public class Language extends PropertyUtil {
 
 	public static final String defaultLang = "de_de";
-	public static final String pathToLanguageFiles = "lang";
+	public static final String pathToLanguageFiles = "ch.aiko.pokemon.lang";
 	private static HashMap<String, Language> languages = new HashMap<String, Language>();
 	public static Language current;
 	
@@ -31,13 +31,16 @@ public class Language extends PropertyUtil {
 	public static void setup() {
 		Set<String> langFiles = new Reflections(pathToLanguageFiles, new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() {
 			public boolean apply(String arg0) {
+				System.out.println("Found file: " + arg0);
 				return true;
 			}
 		});
 		
+		System.out.println("Init");
+		
 		for(String f : langFiles) {
 			if(f.startsWith(".") || !f.endsWith(".lang")) continue;
-			languages.put(f.replace("lang", "").replace(".", "").replace("/", ""), new Language(f));
+			languages.put(f.replace("lang", "").replace(".", "").split("/")[f.replace("lang", "").replace(".", "").split("/").length-1].replace("/", ""), new Language(f));
 		}
 		
 		loadLanguage(defaultLang);

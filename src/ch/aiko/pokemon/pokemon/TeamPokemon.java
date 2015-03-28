@@ -2,6 +2,7 @@ package ch.aiko.pokemon.pokemon;
 
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.mob.Trainer;
 import ch.aiko.pokemon.pokemon.attack.Move;
 import ch.aiko.pokemon.sprite.Sprite;
 
@@ -9,11 +10,25 @@ public class TeamPokemon {
 
 	protected Move[] moves = new Move[4];
 	protected int lvl, hp, maxHP, att, satt, def, sdef, xpToLvl, pos;
-	protected Player p;
 	protected Pokemon pokemon;
 
+	public TeamPokemon(Trainer t, Pokemon pok, int lvl, int hp, int maxHP, int Att, int Satt, int def, int Sdef, int xpToLvl, int pos, Move[] moves) {
+		this.lvl = lvl;
+		this.hp = hp;
+		this.maxHP = maxHP;
+		this.att = Att;
+		this.satt = Satt;
+		this.def = def;
+		this.sdef = Sdef;
+		this.xpToLvl = xpToLvl;
+		this.pos = pos;
+		this.pokemon = pok;
+		this.moves = moves;
+		
+		t.setTeamPokemon(pos, this);
+	}
+	
 	public TeamPokemon(Player p, Pokemon pok, int lvl, int hp, int maxHP, int Att, int Satt, int def, int Sdef, int xpToLvl, int pos, Move[] moves) {
-		this.p = p;
 		this.lvl = lvl;
 		this.hp = hp;
 		this.maxHP = maxHP;

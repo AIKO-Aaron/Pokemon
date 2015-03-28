@@ -1,5 +1,6 @@
 package ch.aiko.pokemon.mob;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -17,7 +18,7 @@ public class Player extends Mob {
 	public TeamPokemon[] team = new TeamPokemon[6];
 
 	public int speed = 4;
-	private boolean isPaused;
+	private boolean isPaused, fighting;
 	private boolean walking = false;
 	private boolean opened = false;
 	
@@ -98,7 +99,8 @@ public class Player extends Mob {
 	}
 
 	public void paint(Graphics g, Frame f) {
-
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRect(x, y, w, h);
 	}
 
 	public void teleport(Frame f, Level l, int x, int y) {
@@ -108,7 +110,8 @@ public class Player extends Mob {
 	}
 
 	public void paintOverPlayer(Graphics g, Frame f) {
-
+		g.setColor(Color.RED);
+		g.fillRect(x, y, w, h);
 	}
 
 	public void setPokemon(int pos, TeamPokemon teamPokemon) {
@@ -142,7 +145,7 @@ public class Player extends Mob {
 	}
 
 	public void paint(Drawer d) {
-
+		
 	}
 
 	public int getXOnScreen(Drawer d) {
@@ -161,5 +164,13 @@ public class Player extends Mob {
 	public int getY() {
 		if(lastPlace == null) return 0;
 		return y - lastPlace.y + 22;
+	}
+	
+	public boolean isInFight() {
+		return fighting;
+	}
+	
+	public void setFighting(boolean value) {
+		fighting = value;
 	}
 }

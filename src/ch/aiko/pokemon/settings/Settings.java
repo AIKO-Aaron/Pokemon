@@ -35,7 +35,7 @@ public class Settings extends PropertyUtil {
 			instance.setValue("setupCorrect", "true");
 		}
 		
-		for(Entry<String, String> entry : PropertyUtil.LoadFileInClassPath("/settings/fields").getEntrySet().entrySet()) {
+		for(Entry<String, String> entry : PropertyUtil.LoadFileInClassPath("/ch/aiko/pokemon/settings/fields").getEntrySet().entrySet()) {
 			System.out.println("Checking for key: " + entry.getKey());
 			if(!instance.exists(entry.getKey())) instance.setValue(entry.getKey(), entry.getValue());
 		}		

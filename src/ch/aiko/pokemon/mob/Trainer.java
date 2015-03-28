@@ -1,17 +1,24 @@
 package ch.aiko.pokemon.mob;
 
+import static ch.aiko.pokemon.mob.Direction.DOWN;
+import static ch.aiko.pokemon.mob.Direction.LEFT;
+import static ch.aiko.pokemon.mob.Direction.RIGHT;
+import static ch.aiko.pokemon.mob.Direction.UP;
+
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 
 import ch.aiko.pokemon.Drawer;
 import ch.aiko.pokemon.Frame;
+import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.pokemon.TeamPokemon;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class Trainer extends Mob {
 
-	private static SpriteSheet sheet = new SpriteSheet("/textures/TrainerSprites.png", 32 * 3, 32 * 4);
+	private static SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32 * 3, 32 * 4);
 	private static final int speed = 1;
 	private static final int anim = 60;
 
@@ -22,28 +29,29 @@ public class Trainer extends Mob {
 	private boolean walking;
 	private boolean oneDir = false; // experimental
 
+	private Direction dir = Direction.LEFT;
 	private boolean wantToFight, doesMove;
 	private int seeWidth;
-	private TeamPokemon[] team;
-	
+	private ArrayList<TeamPokemon> team = new ArrayList<TeamPokemon>();
+
 	public Trainer(int x, int y, int trainerType) {
-		this(x, y, trainerType, false, false, null, 0);
+		this(x, y, trainerType, false, false, 0, new TeamPokemon[] {});
 	}
-	
+
 	public Trainer(int x, int y, int trainerType, boolean stationnairy) {
-		this(x, y, trainerType, stationnairy, false, null, 0);
+		this(x, y, trainerType, stationnairy, false, 0, new TeamPokemon[] {});
 	}
-	
+
 	public Trainer(int x, int y, int type, boolean statio, boolean wantToFight, TeamPokemon[] team) {
-		this(x, y, type, statio, wantToFight, team, 10);
+		this(x, y, type, statio, wantToFight, 10, team);
 	}
-	
-	public Trainer(int x, int y, int trainerType, boolean stationnairy, boolean fight, TeamPokemon[] team, int seight) {
+
+	public Trainer(int x, int y, int trainerType, boolean stationnairy, boolean fight, int seight, TeamPokemon... pokemons) {
 		super(new Sprite(0, 1, 1), x, y);
 		w = 32;
 		h = 32;
-		
-		this.team = team;
+
+		this.team = convert(pokemons);
 		this.seeWidth = seight;
 		this.doesMove = !stationnairy;
 		this.wantToFight = fight;
@@ -64,20 +72,44 @@ public class Trainer extends Mob {
 		rightMoving2 = local.getSprite(7).removeColor(0xFFFFFFFF);
 		leftMoving2 = local.getSprite(9).removeColor(0xFFFFFFFF);
 		downMoving2 = local.getSprite(11).removeColor(0xFFFFFFFF);
-		
+
 		userInit();
 	}
-	
+
 	public void userUpdate(Drawer d) {
-		
+
 	}
 
 	public final void update(Frame f) {
 		userUpdate(f.getDrawer());
 		
-		
-		if(!doesMove) return;
-		
+		Player p1 = f.getLevel().getPlayer();
+
+		for (int i = 0; i < seeWidth && wantToFight; i++) {
+			int xPos = (dir == LEFT || dir == RIGHT) ? speed * i + x : x;
+			int yPos = (dir == UP || dir == DOWN) ? speed * i + y : y;
+			
+			if(p1.x + p1.w >= xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
+				System.out.println("Fight");
+				new Fight(p1, this);
+			}
+		}
+
+		if (!doesMove) {
+			switch (dir) {
+				case LEFT:
+					current = leftStill;
+				case RIGHT:
+					current = rightStill;
+				case DOWN:
+					current = downStill;
+				case UP:
+					current = upStill;
+			}
+		}
+
+		if (!doesMove) return;
+
 		Point p = pathFind(f, f.getLevel().getPlayer().x, f.getLevel().getPlayer().y, speed);
 		if (oneDir) {
 			if (p.x != 0 && !checkCollisionX(f, p.x, speed)) {
@@ -183,16 +215,16 @@ public class Trainer extends Mob {
 
 	public final void paint(Graphics g, Frame f) {
 		userDraw(f.getDrawer());
-		
+
 		if (current != null) f.getLevel().drawTile(current, x, y);
 	}
-	
+
 	public void userDraw(Drawer d) {
-		
+
 	}
-	
+
 	public void userInit() {
-		
+
 	}
 
 	public void paintOverPlayer(Graphics g, Frame f) {
@@ -203,4 +235,14 @@ public class Trainer extends Mob {
 		sheet = new SpriteSheet("/textures/TrainerSprites.png", 32 * 3, 32 * 4);
 	}
 
+	public void setTeamPokemon(int pos, TeamPokemon teamPokemon) {
+		team.set(pos, teamPokemon);
+	}
+
+	public ArrayList<TeamPokemon> convert(TeamPokemon[] tem) {
+		ArrayList<TeamPokemon> out = new ArrayList<TeamPokemon>();
+		for (TeamPokemon pok : tem)
+			out.add(pok);
+		return out;
+	}
 }

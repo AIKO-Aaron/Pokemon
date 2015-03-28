@@ -9,7 +9,7 @@ public class Pokemon {
 	public static final int HEIGHT = 80;
 	public static final int WIDTH = 80;
 	
-	public static SpriteSheet pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", WIDTH, HEIGHT);
+	public static SpriteSheet pokemons = new SpriteSheet("/ch/aiko/pokemon/textures/diamond-pearl-frame2.png", WIDTH, HEIGHT);
 
 	protected int id, l;
 	protected String name;

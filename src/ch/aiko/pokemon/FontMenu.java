@@ -29,7 +29,7 @@ public class FontMenu extends Menu {
 		fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 		ArrayList<Font> userFonts = new ArrayList<Font>();
 
-		Set<String> files = new Reflections("fonts", new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() {
+		Set<String> files = new Reflections("ch/aiko/pokemon/fonts", new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() {
 			public boolean apply(String arg0) {
 				return true;
 			}

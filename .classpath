@@ -13,5 +13,15 @@
 	<classpathentry kind="lib" path="libs/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-simple-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/xml-apis-1.0.b2.jar"/>
+	<classpathentry kind="lib" path="libs/basicplayer3.0.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-api.jar"/>
+	<classpathentry kind="lib" path="libs/jl1.0.jar"/>
+	<classpathentry kind="lib" path="libs/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="libs/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="libs/jspeex0.9.7.jar"/>
+	<classpathentry kind="lib" path="libs/mp3spi1.9.4.jar"/>
+	<classpathentry kind="lib" path="libs/PNGDecoder.jar"/>
+	<classpathentry kind="lib" path="libs/tritonus_share.jar"/>
+	<classpathentry kind="lib" path="libs/vorbisspi1.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

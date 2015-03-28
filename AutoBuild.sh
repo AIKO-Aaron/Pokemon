@@ -43,7 +43,7 @@ do
   fi
   echo "    public static final $type $line;" >> "./src/ch/aiko/pokemon/settings/Default.java"
   i=$(($i+1))
-done < "./assets/settings/fields"
+done < "./assets/ch/aiko/pokemon/settings/fields"
 echo "" >> "./src/ch/aiko/pokemon/settings/Default.java"
 echo "}" >> "./src/ch/aiko/pokemon/settings/Default.java"
 
