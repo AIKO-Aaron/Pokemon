@@ -10,6 +10,9 @@ public class SpriteSheet {
 	private BufferedImage img;
 	private int spriteWidth;
 	private int spriteHeight;
+	
+	private int entireWidth, entireHeight;
+	
 
 	public SpriteSheet(BufferedImage img, int sW, int sH) {
 		this.spriteWidth = sW;
@@ -17,6 +20,9 @@ public class SpriteSheet {
 		this.img = img;
 		pixels = new int[img.getWidth() * img.getHeight()];
 		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
+		
+		entireWidth = img.getWidth();
+		entireHeight = img.getHeight();
 	}
 	
 	public SpriteSheet(String imgpath, int sW, int sH) {
@@ -26,6 +32,9 @@ public class SpriteSheet {
 		this.img = img;
 		pixels = new int[img.getWidth() * img.getHeight()];
 		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
+		
+		entireWidth = img.getWidth();
+		entireHeight = img.getHeight();
 	}
 	
 	public SpriteSheet(Sprite s, int w, int h) {
@@ -33,6 +42,9 @@ public class SpriteSheet {
 		this.spriteHeight = h;
 		this.img = s.getImage();
 		this.pixels = s.getPixels();
+		
+		entireWidth = img.getWidth();
+		entireHeight = img.getHeight();
 	}
 	
 	public Sprite getSprite(int x, int y) {
@@ -42,5 +54,25 @@ public class SpriteSheet {
 	public Sprite getSprite(int i) {
 		int w = img.getWidth() / spriteWidth;
 		return new Sprite(img, (i%w) * spriteWidth, (i/w) * spriteHeight, spriteWidth, spriteHeight);
+	}
+	
+	public int getSpriteWidth() {
+		return spriteWidth;
+	}
+	
+	public int getSpriteHeight() {
+		return spriteHeight;
+	}
+	
+	public int getSheetWidth() {
+		return entireWidth;
+	}
+	
+	public int getSheetHeight() {
+		return entireHeight;
+	}
+	
+	public int getSpriteCount() {
+		return (getSheetWidth() / getSpriteWidth()) * (getSheetWidth() / getSpriteWidth());
 	}
 }

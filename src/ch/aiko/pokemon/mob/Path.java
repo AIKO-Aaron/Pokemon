@@ -7,9 +7,11 @@ import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.entity.Entity;
 
 public class Path {
-
+	
+	@SuppressWarnings("unused")
 	private static final boolean DEBUG = false;
 
+	@SuppressWarnings("unused")
 	public static ArrayList<Point> getPath(Frame f, int srcx, int srcy, int destx, int desty, int speed, Entity e, int depth) {
 		ArrayList<Point> path = new ArrayList<Point>();
 		path.add(new Point(srcy, srcy));

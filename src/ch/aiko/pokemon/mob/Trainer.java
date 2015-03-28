@@ -3,7 +3,9 @@ package ch.aiko.pokemon.mob;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import ch.aiko.pokemon.Drawer;
 import ch.aiko.pokemon.Frame;
+import ch.aiko.pokemon.pokemon.TeamPokemon;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
@@ -20,10 +22,31 @@ public class Trainer extends Mob {
 	private boolean walking;
 	private boolean oneDir = false; // experimental
 
+	private boolean wantToFight, doesMove;
+	private int seeWidth;
+	private TeamPokemon[] team;
+	
 	public Trainer(int x, int y, int trainerType) {
+		this(x, y, trainerType, false, false, null, 0);
+	}
+	
+	public Trainer(int x, int y, int trainerType, boolean stationnairy) {
+		this(x, y, trainerType, stationnairy, false, null, 0);
+	}
+	
+	public Trainer(int x, int y, int type, boolean statio, boolean wantToFight, TeamPokemon[] team) {
+		this(x, y, type, statio, wantToFight, team, 10);
+	}
+	
+	public Trainer(int x, int y, int trainerType, boolean stationnairy, boolean fight, TeamPokemon[] team, int seight) {
 		super(new Sprite(0, 1, 1), x, y);
 		w = 32;
 		h = 32;
+		
+		this.team = team;
+		this.seeWidth = seight;
+		this.doesMove = !stationnairy;
+		this.wantToFight = fight;
 
 		SpriteSheet local = new SpriteSheet(sheet.getSprite(trainerType), 32, 32);
 
@@ -41,9 +64,20 @@ public class Trainer extends Mob {
 		rightMoving2 = local.getSprite(7).removeColor(0xFFFFFFFF);
 		leftMoving2 = local.getSprite(9).removeColor(0xFFFFFFFF);
 		downMoving2 = local.getSprite(11).removeColor(0xFFFFFFFF);
+		
+		userInit();
+	}
+	
+	public void userUpdate(Drawer d) {
+		
 	}
 
-	public void update(Frame f) {
+	public final void update(Frame f) {
+		userUpdate(f.getDrawer());
+		
+		
+		if(!doesMove) return;
+		
 		Point p = pathFind(f, f.getLevel().getPlayer().x, f.getLevel().getPlayer().y, speed);
 		if (oneDir) {
 			if (p.x != 0 && !checkCollisionX(f, p.x, speed)) {
@@ -147,8 +181,18 @@ public class Trainer extends Mob {
 		}
 	}
 
-	public void paint(Graphics g, Frame f) {
+	public final void paint(Graphics g, Frame f) {
+		userDraw(f.getDrawer());
+		
 		if (current != null) f.getLevel().drawTile(current, x, y);
+	}
+	
+	public void userDraw(Drawer d) {
+		
+	}
+	
+	public void userInit() {
+		
 	}
 
 	public void paintOverPlayer(Graphics g, Frame f) {

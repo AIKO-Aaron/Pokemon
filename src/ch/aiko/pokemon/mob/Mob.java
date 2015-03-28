@@ -91,7 +91,7 @@ public abstract class Mob extends Entity {
 	}
 
 	/**
-	 * Tries to find a path through the Level. Return empty List if no path coulll be found
+	 * Tries to find a path through the Level. Return empty List if no path could be found
 	 * 
 	 * @param f
 	 *            The mainFrame. Used to get the Level with its collision-detection
@@ -134,9 +134,16 @@ public abstract class Mob extends Entity {
 		this.y = p.y;
 	}
 
-	public Point pathFind(Frame f, int x, int y, float speed) {
-		ArrayList<Point> path = getPathTo(f, this, x, y, speed);
-		if (path.size() > 1) return path.get(1);
-		else return new Point(0, 0);
+	public Point pathFind(Frame f, int x, int y, int speed) {
+		int xMov = 0;
+		int yMov = 0;
+
+		if (this.x < x) xMov++;
+		if (this.x > x) xMov--;
+		if (this.y < y) yMov++;
+		if (this.y > y) yMov--;
+		
+		
+		return new Point(xMov, yMov);
 	}
 }

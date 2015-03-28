@@ -27,6 +27,7 @@ public abstract class Entity extends Tile {
 	public abstract void paintOverPlayer(Graphics g, Frame f);
 
 	public int getX() {
+		
 		return x;
 	}
 

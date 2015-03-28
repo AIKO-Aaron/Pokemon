@@ -1,6 +1,7 @@
 package ch.aiko.pokemon.mob;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import ch.aiko.pokemon.Drawer;
@@ -20,6 +21,8 @@ public class Player extends Mob {
 	private boolean walking = false;
 	private boolean opened = false;
 	
+	private Point lastPlace;
+	
 	//Auto-path finding creates error if false
 	private static final boolean collide = true;
 
@@ -31,10 +34,11 @@ public class Player extends Mob {
 		super(s, x, y, w, h);
 	}
 
-	//@SuppressWarnings("unused")
 	public void update(Frame f) {
 		if (isPaused) return;
 		if (isOnTile(f)) ;
+		
+		this.lastPlace = f.getLevel().getCamera();
 
 		int xmovement = 0;
 		int ymovement = 0;
@@ -141,11 +145,21 @@ public class Player extends Mob {
 
 	}
 
-	private int getXOnScreen(Drawer d) {
-		return getX() - d.getFrame().getLevel().getCamera().x;
+	public int getXOnScreen(Drawer d) {
+		return x - d.getFrame().getLevel().getCamera().x;
 	}
 
-	private int getYOnScreen(Drawer d) {
-		return getY() - d.getFrame().getLevel().getCamera().y + 22;
+	public int getYOnScreen(Drawer d) {
+		return y - d.getFrame().getLevel().getCamera().y + 22;
+	}
+	
+	public int getX() {
+		if(lastPlace == null) return 0;
+		return x - lastPlace.x;
+	}
+	
+	public int getY() {
+		if(lastPlace == null) return 0;
+		return y - lastPlace.y + 22;
 	}
 }

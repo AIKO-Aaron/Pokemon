@@ -5,24 +5,14 @@ import java.awt.Point;
 
 import ch.aiko.pokemon.Drawer;
 import ch.aiko.pokemon.Frame;
-import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.sprite.Sprite;
 
 public class TestMob extends Mob {
 
-	private static final float speed = 1F;
+	private static final int speed = 1;
 
 	public TestMob(Sprite s, int x, int y) {
 		super(s, x, y);
-
-		new Thread("Hello") {
-			public void run() {
-				while (true) {
-					//System.err.println("err");
-					//if(Pokemon.getMainFrame() != null) Pokemon.getMainFrame().repaint();
-				}
-			}
-		}.start();
 	}
 
 	public TestMob(Sprite s, int x, int y, int w, int h) {
@@ -31,12 +21,13 @@ public class TestMob extends Mob {
 
 	public void update(Frame mainFrame) {
 		Point p = pathFind(mainFrame, mainFrame.getLevel().getPlayer().x, mainFrame.getLevel().getPlayer().y, speed);
-
-		if (p.x != 0) x = p.x;
-		if (p.y != 0) y = p.y;
+		
+		x += getMaxSpeedX(mainFrame, -p.x, speed);
+		y += getMaxSpeedY(mainFrame, -p.y, speed);
 	}
 
 	public void paint(Graphics g, Frame mainFrame) {
+		mainFrame.getDrawer().fillRect(mainFrame.getLevel().getPlayer().getX(), mainFrame.getLevel().getPlayer().getY()-mainFrame.getLevel().getPlayer().h + 10, 32, 32, 0xFFFF00FF);
 	}
 
 	public void paint(Drawer d, Point camera) {

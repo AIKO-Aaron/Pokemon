@@ -5,10 +5,10 @@ import java.util.HashMap;
 import javax.swing.UIManager;
 
 import ch.aiko.pokemon.entity.PressurePlate;
+import ch.aiko.pokemon.graphics.Animation;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.mob.Player;
-import ch.aiko.pokemon.mob.TestMob;
 import ch.aiko.pokemon.mob.Trainer;
 import ch.aiko.pokemon.pokemon.Pokemons;
 import ch.aiko.pokemon.pokemon.TeamPokemon;
@@ -64,8 +64,24 @@ public class Pokemon {
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		teampokemon1.xp(1);
 
-		TestMob mob = new TestMob(sheet1.getSprite(0, 0), 320, 320);
-		level1.addMob(mob);
+		Trainer test = new Trainer(320, 320, 1){
+			Animation t;
+			
+			public void userInit() {
+				System.out.println("Initializing: " + t);
+				t = new Animation(new SpriteSheet("/textures/TrainerSprites.png", 32, 32), 60);
+				System.out.println("Initialized: " + t);
+			}
+			
+			public void userUpdate(Drawer d) {
+				
+			}
+			
+			public void userDraw(Drawer d) {
+				t.drawNext(d, x, y);
+			}
+		};
+		level1.addMob(test);
 		
 		Trainer profOak = new Trainer(320, 320, 0);
 		level2.addMob(profOak);
