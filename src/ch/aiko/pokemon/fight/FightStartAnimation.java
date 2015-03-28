@@ -11,7 +11,5 @@ public class FightStartAnimation extends Animation {
 		
 		AudioUtil.playSound("ch/aiko/pokemon/sounds/fightOpening.mp3");
 	}
-	
-	
 
 }
