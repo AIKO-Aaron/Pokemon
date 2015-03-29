@@ -68,9 +68,7 @@ public class Pokemon {
 			Animation t;
 			
 			public void userInit() {
-				System.out.println("Initializing: " + t);
-				t = new Animation(new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32, 32), 60);
-				System.out.println("Initialized: " + t);
+				t = new Animation(new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32 * 3, 32 * 4), 1);
 			}
 			
 			public void userUpdate(Drawer d) {
@@ -78,7 +76,7 @@ public class Pokemon {
 			}
 			
 			public void userDraw(Drawer d) {
-				t.drawNext(d, x, y);
+				t.drawNext(d, d.getFrame().getLevel().getPlayer().getX(), d.getFrame().getLevel().getPlayer().getY());
 			}
 		};
 		level1.addMob(test);

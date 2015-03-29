@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="libs/PNGDecoder.jar"/>
 	<classpathentry kind="lib" path="libs/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="libs/vorbisspi1.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/vlcj-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

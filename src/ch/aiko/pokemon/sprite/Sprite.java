@@ -11,10 +11,19 @@ public class Sprite {
 	private int[] pixels;
 	private BufferedImage img;
 	private int width, height;
+	private int x = 0, y = 0;
 
 	public Sprite(BufferedImage img, int x, int y, int width, int height) {
+		width = maxWidth(x, width, img);
+		height = maxHeight(y, height, img);
+		
+		this.x = x;
+		this.y = y;
 		this.width = width;
 		this.height = height;
+		
+		if(width * height < 0) return;
+		
 		pixels = new int[width * height];
 		pixels = img.getRGB(x, y, width, height, pixels, 0, width);
 		this.img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -79,6 +88,14 @@ public class Sprite {
 		return height;
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+	
 	public Tile toTile(int x, int y) {
 		return new Tile(this, x, y, false);
 	}
@@ -251,5 +268,15 @@ public class Sprite {
 			if(pixels[i] == color) pixels[i] = 0;
 		}
 		return this;
+	}
+	
+	public int maxWidth(int x, int width, BufferedImage img) {
+		if(img.getWidth() <= x + width) return img.getWidth() - x;
+		else return width;
+	}
+	
+	public int maxHeight(int y, int height, BufferedImage img) {
+		if(img.getHeight() <= y + height) return img.getHeight() - y;
+		else return height;
 	}
 }

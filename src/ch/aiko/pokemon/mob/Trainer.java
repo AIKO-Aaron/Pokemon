@@ -33,6 +33,9 @@ public class Trainer extends Mob {
 	private boolean wantToFight, doesMove;
 	private int seeWidth;
 	private ArrayList<TeamPokemon> team = new ArrayList<TeamPokemon>();
+	
+	private Fight fight;
+	private boolean fighting;
 
 	public Trainer(int x, int y, int trainerType) {
 		this(x, y, trainerType, false, false, 0, new TeamPokemon[] {});
@@ -83,6 +86,10 @@ public class Trainer extends Mob {
 	public final void update(Frame f) {
 		userUpdate(f.getDrawer());
 		
+		if(fighting && fight != null) {
+			fight.update(f);
+		}
+		
 		Player p1 = f.getLevel().getPlayer();
 
 		for (int i = 0; i < seeWidth && wantToFight; i++) {
@@ -91,7 +98,8 @@ public class Trainer extends Mob {
 			
 			if(p1.x + p1.w >= xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
 				System.out.println("Fight");
-				new Fight(p1, this);
+				fighting = true;
+				fight = new Fight(p1, this);
 			}
 		}
 
@@ -215,6 +223,10 @@ public class Trainer extends Mob {
 
 	public final void paint(Graphics g, Frame f) {
 		userDraw(f.getDrawer());
+		
+		if(fighting && fight != null) {
+			fight.draw(f);
+		}
 
 		if (current != null) f.getLevel().drawTile(current, x, y);
 	}

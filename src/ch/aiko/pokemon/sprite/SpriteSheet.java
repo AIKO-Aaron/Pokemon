@@ -53,7 +53,9 @@ public class SpriteSheet {
 
 	public Sprite getSprite(int i) {
 		int w = img.getWidth() / spriteWidth;
-		return new Sprite(img, (i%w) * spriteWidth, (i/w) * spriteHeight, spriteWidth, spriteHeight);
+		int x = (i%w) * spriteWidth;
+		int y = (i/w) * spriteHeight;		
+		return new Sprite(img, x, y, spriteWidth, spriteHeight);
 	}
 	
 	public int getSpriteWidth() {
