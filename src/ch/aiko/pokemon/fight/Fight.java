@@ -2,7 +2,7 @@ package ch.aiko.pokemon.fight;
 
 import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
-import ch.aiko.pokemon.graphics.Menu;
+import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.mob.Trainer;
 

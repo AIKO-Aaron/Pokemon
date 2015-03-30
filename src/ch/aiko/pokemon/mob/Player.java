@@ -7,8 +7,8 @@ import java.awt.event.KeyEvent;
 
 import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
-import ch.aiko.pokemon.graphics.Menu;
-import ch.aiko.pokemon.graphics.PlayerMenu;
+import ch.aiko.pokemon.graphics.menu.Menu;
+import ch.aiko.pokemon.graphics.menu.PlayerMenu;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemon.TeamPokemon;
 import ch.aiko.pokemon.settings.Settings;

@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.level.Level;
 
 public class Frame extends Window {

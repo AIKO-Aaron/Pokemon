@@ -1,8 +1,9 @@
-package ch.aiko.pokemon.graphics;
+package ch.aiko.pokemon.graphics.menu;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.settings.Settings;

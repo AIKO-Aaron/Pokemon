@@ -1,6 +1,8 @@
-package ch.aiko.pokemon.graphics;
+package ch.aiko.pokemon.graphics.menu;
 
 import java.awt.Graphics;
+
+import ch.aiko.pokemon.graphics.Drawer;
 
 
 public  abstract class Menu {

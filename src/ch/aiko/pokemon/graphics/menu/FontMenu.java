@@ -1,4 +1,4 @@
-package ch.aiko.pokemon.graphics;
+package ch.aiko.pokemon.graphics.menu;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -12,6 +12,7 @@ import java.util.Set;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
+import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.settings.Settings;
 
