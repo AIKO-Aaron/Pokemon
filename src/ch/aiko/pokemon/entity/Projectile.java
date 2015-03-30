@@ -2,8 +2,8 @@ package ch.aiko.pokemon.entity;
 
 import java.awt.Graphics;
 
-import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.entity.particle.Particle;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.sprite.Sprite;
 
 public class Projectile extends Entity {

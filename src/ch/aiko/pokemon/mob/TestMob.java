@@ -3,8 +3,8 @@ package ch.aiko.pokemon.mob;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import ch.aiko.pokemon.Drawer;
-import ch.aiko.pokemon.Frame;
+import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.sprite.Sprite;
 
 public class TestMob extends Mob {

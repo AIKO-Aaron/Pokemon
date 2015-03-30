@@ -1,14 +1,10 @@
-package ch.aiko.pokemon.mob;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import ch.aiko.pokemon.Drawer;
-import ch.aiko.pokemon.MainMenu;
-import ch.aiko.pokemon.Menu;
 import ch.aiko.pokemon.language.Language;
-import ch.aiko.pokemon.language.LanguageMenu;
-import ch.aiko.pokemon.pokemon.PokemonMenu;
+import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.settings.Settings;
 
 public class PlayerMenu extends Menu {
@@ -44,6 +40,10 @@ public class PlayerMenu extends Menu {
 
 	public PlayerMenu(Player p) {
 		this.p = p;
+	}
+	
+	public String name() {
+		return "SideMenu";
 	}
 
 	public void onOpen(Drawer d) {

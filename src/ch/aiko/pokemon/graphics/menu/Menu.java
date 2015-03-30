@@ -1,9 +1,11 @@
-package ch.aiko.pokemon;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.Graphics;
 
 
-public class Menu {
+public  abstract class Menu {
+	
+	public abstract String name();
 	
 	public void update(Drawer d) {
 		

@@ -9,9 +9,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import ch.aiko.pokemon.Drawer;
-import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.fight.Fight;
+import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.pokemon.TeamPokemon;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.SpriteSheet;
@@ -86,9 +86,11 @@ public class Trainer extends Mob {
 	public final void update(Frame f) {
 		userUpdate(f.getDrawer());
 		
-		if(fighting && fight != null) {
+		
+		
+		/**if(fighting && fight != null) {
 			fight.update(f);
-		}
+		}*/
 		
 		Player p1 = f.getLevel().getPlayer();
 
@@ -244,7 +246,7 @@ public class Trainer extends Mob {
 	}
 
 	public static void reloadTextures() {
-		sheet = new SpriteSheet("/textures/TrainerSprites.png", 32 * 3, 32 * 4);
+		sheet = new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32 * 3, 32 * 4);
 	}
 
 	public void setTeamPokemon(int pos, TeamPokemon teamPokemon) {

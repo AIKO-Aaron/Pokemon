@@ -1,4 +1,4 @@
-package ch.aiko.pokemon;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;

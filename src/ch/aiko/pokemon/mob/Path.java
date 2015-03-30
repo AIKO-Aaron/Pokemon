@@ -3,8 +3,8 @@ package ch.aiko.pokemon.mob;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.entity.Entity;
+import ch.aiko.pokemon.graphics.Frame;
 
 public class Path {
 	

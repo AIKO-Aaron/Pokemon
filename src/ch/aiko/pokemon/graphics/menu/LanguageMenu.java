@@ -1,10 +1,9 @@
-package ch.aiko.pokemon.language;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import ch.aiko.pokemon.Drawer;
-import ch.aiko.pokemon.Menu;
+import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.settings.Settings;
 
@@ -52,4 +51,7 @@ public class LanguageMenu extends Menu {
 		if(index - starting_point + 1 >= max) starting_point++;
 	}
 	
+	public String name() {
+		return "LanguageSelection";
+	}
 }

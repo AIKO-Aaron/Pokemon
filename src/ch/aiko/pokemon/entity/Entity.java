@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import ch.aiko.pokemon.Frame;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.Tile;
 

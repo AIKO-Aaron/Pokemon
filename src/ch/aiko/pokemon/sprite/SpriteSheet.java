@@ -37,6 +37,24 @@ public class SpriteSheet {
 		entireHeight = img.getHeight();
 	}
 	
+	public SpriteSheet(String imgpath, int sW, int sH, int nW, int nH) {
+		BufferedImage img = ImageUtil.loadImageInClassPath(imgpath);
+		this.spriteWidth = nW;
+		this.spriteHeight = nH;
+		
+		int width = img.getWidth() / sW * nW;
+		int height = img.getHeight() / sH * nH;
+		
+		img = ImageUtil.toBufferedImage(img.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH));
+		
+		this.img = img;
+		pixels = new int[img.getWidth() * img.getHeight()];
+		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
+		
+		entireWidth = img.getWidth();
+		entireHeight = img.getHeight();
+	}
+	
 	public SpriteSheet(Sprite s, int w, int h) {
 		this.spriteWidth = w;
 		this.spriteHeight = h;

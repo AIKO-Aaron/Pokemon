@@ -1,4 +1,4 @@
-package ch.aiko.pokemon;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -139,4 +139,8 @@ public class FontMenu extends Menu {
 		}
 	}
 
+	public String name() {
+		return "FontSelection";
+	}
+	
 }

@@ -10,7 +10,7 @@ public class FightStartAnimation extends Animation {
 	public static Sprite grass_day = new Sprite(ImageUtil.loadImageInClassPath("/ch/aiko/pokemon/textures/fight_ground/grass_day.png"));
 	
 	public FightStartAnimation() {
-		super(new SpriteSheet("/ch/aiko/pokemon/textures/test.png", 16, 16), 60, false);
+		super(new SpriteSheet("/ch/aiko/pokemon/textures/test.png", 16, 16, 32, 32), 60, false);
 		
 		//AudioUtil.playSound("ch/aiko/pokemon/sounds/fightOpening.mp3");
 	}

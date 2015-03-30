@@ -1,4 +1,4 @@
-package ch.aiko.pokemon;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.Graphics;
 import java.awt.event.HierarchyEvent;
@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.level.Level;
 
 public class Frame extends Window {

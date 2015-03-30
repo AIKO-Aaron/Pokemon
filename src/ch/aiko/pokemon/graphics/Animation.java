@@ -1,6 +1,5 @@
 package ch.aiko.pokemon.graphics;
 
-import ch.aiko.pokemon.Drawer;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class Animation {
@@ -46,10 +45,12 @@ public class Animation {
 		if(tmpIndex >= time) {			
 			tmpIndex = 0;
 			index++;
-			index %= maxIndex;
-			
-			if(!repeat && index == maxIndex) finished = true;
+			if(!repeat && index == maxIndex) {finished = true; return;}
+			index %= maxIndex;			
 		}
 	}
 	
+	public boolean isFinished() {
+		return finished;
+	}
 }

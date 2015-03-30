@@ -1,10 +1,9 @@
-package ch.aiko.pokemon.pokemon;
+package ch.aiko.pokemon.graphics;
 
 import java.awt.event.KeyEvent;
 
-import ch.aiko.pokemon.Drawer;
-import ch.aiko.pokemon.Menu;
 import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.pokemon.Pokemon;
 
 public class PokemonMenu extends Menu {
 
@@ -41,6 +40,10 @@ public class PokemonMenu extends Menu {
 
 		if (d.getFrame().getTimesPressed(KeyEvent.VK_UP) > 0) index = (index - 1 + 6) % p.getTeamSize();
 		if (d.getFrame().getTimesPressed(KeyEvent.VK_DOWN) > 0) index = (index + 1 + 6) % p.getTeamSize();
+	}
+	
+	public String name() {
+		return "PokemonSelection";
 	}
 
 }

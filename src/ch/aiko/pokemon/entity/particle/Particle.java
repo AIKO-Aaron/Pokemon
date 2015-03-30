@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.entity.Entity;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.sprite.Sprite;
 

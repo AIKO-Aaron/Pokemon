@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import ch.aiko.pokemon.Drawer;
-import ch.aiko.pokemon.Frame;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.PressurePlate;
+import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.mob.Mob;
 import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.sprite.Sprite;
