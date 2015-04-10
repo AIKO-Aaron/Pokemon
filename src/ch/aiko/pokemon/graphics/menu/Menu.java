@@ -28,5 +28,9 @@ public  abstract class Menu {
 	public void paint(Graphics g) {
 		
 	}
+	
+	public boolean canClose() {
+		return true;
+	}
 
 }

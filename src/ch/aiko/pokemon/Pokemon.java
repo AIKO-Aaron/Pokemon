@@ -64,12 +64,12 @@ public class Pokemon {
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		teampokemon1.xp(1);
 
-		Trainer test = new Trainer(320, 320, 1, true, true, new TeamPokemon[]{teampokemon6});
+		Trainer test = new Trainer(480, 190, 1, true, true, new TeamPokemon[]{teampokemon6});
 		level1.addMob(test);
 		
 		Trainer profOak = new Trainer(320, 320, 0);
 		level2.addMob(profOak);
-		
+				
 		//level1.addTile(new Tile(sheet1.getSprite(0), 434, 240, false));
 		
 		frame = new Frame(level1);

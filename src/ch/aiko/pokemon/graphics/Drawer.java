@@ -115,6 +115,28 @@ public class Drawer {
 
 		}
 	}
+	
+	/**
+	 * Draws an Image. White background gets replaced by the third argument.
+	 * After that it gets drawn to the screen.
+	 * 
+	 * @param img The Image that is going to be drawn, as a Sprite instance.
+	 * @param x The x coordinate of the start.
+	 * @param y The y coordinate of the start.
+	 * @param backCol The background color that should be put in instead of black.
+	 */
+	public void drawTile(Sprite img, int x, int y, int backCol) {
+		int[] pi = img.getPixels();
+		for (int i = 0; i < img.getWidth() + img.getHeight() * f.getWidth(); i++) {
+			int xx = (i % img.getWidth() + x);
+			int yy = (i / img.getWidth() + y + 22);
+
+			if (xx < 0 || xx >= f.getWidth()) continue;
+
+			if (xx + yy * f.getWidth() < f.pixels.length && i < pi.length && i >= 0 && xx + yy * f.getWidth() >= 0) f.pixels[xx + yy * f.getWidth()] = pi[i] == 0 ? backCol : pi[i];
+
+		}
+	}
 
 	public void drawTile(Sprite img, int x, int y, int w, int h) {
 		drawTile(new Sprite(img.getImage(w, h)), x, y);

@@ -37,7 +37,7 @@ public class Frame extends Window {
 	}
 
 	public void update() {
-		if (getTimesPressed(KeyEvent.VK_ESCAPE) > 0) if(isMenuOpened) closeMenu(); else quit();
+		if (getTimesPressed(KeyEvent.VK_ESCAPE) > 0) if(isMenuOpened && openedMenu.canClose()) closeMenu(); else quit();
 
 		if(level == null) return;
 		level.update(Frame.this);

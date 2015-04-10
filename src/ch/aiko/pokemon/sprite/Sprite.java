@@ -1,6 +1,5 @@
 package ch.aiko.pokemon.sprite;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
@@ -109,25 +108,13 @@ public class Sprite {
 	}
 
 	public Sprite setImage(Image i) {
-		BufferedImage image = toBufferedImage(i);
+		BufferedImage image = ImageUtil.toBufferedImage(i);
 		if (i == null) return this;
 		img = image;
 		width = image.getWidth();
 		height = image.getHeight();
 		loadPixels();
 		return this;
-	}
-
-	public static BufferedImage toBufferedImage(Image img) {
-		if (img instanceof BufferedImage) { return (BufferedImage) img; }
-
-		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		Graphics2D bGr = bimage.createGraphics();
-		bGr.drawImage(img, 0, 0, null);
-		bGr.dispose();
-
-		return bimage;
 	}
 
 	public Sprite copy() {
@@ -278,5 +265,9 @@ public class Sprite {
 	public int maxHeight(int y, int height, BufferedImage img) {
 		if(img.getHeight() <= y + height) return img.getHeight() - y;
 		else return height;
+	}
+	
+	public Sprite getScaledInstance(int newWidth, int newHeight) {
+		return new Sprite(ImageUtil.toBufferedImage(img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH)));
 	}
 }

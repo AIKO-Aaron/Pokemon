@@ -1,6 +1,5 @@
 package ch.aiko.pokemon.mob;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -39,7 +38,7 @@ public class Player extends Mob {
 	public void update(Frame f) {
 		if (isPaused) return;
 		if (isOnTile(f)) ;
-		
+				
 		this.lastPlace = f.getLevel().getCamera();
 
 		int xmovement = 0;
@@ -103,8 +102,8 @@ public class Player extends Mob {
 	}
 
 	public void paint(Graphics g, Frame f) {
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(x, y, w, h);
+		//f.getDrawer().fillRect(getX(), getY() - 22, 32, 32, 0xFFFFFFFF);
+		f.getDrawer().drawTile(sprite, x - f.getLevel().getCamera().x, y - f.getLevel().getCamera().y - 22, 0xFFFF00FF);
 	}
 
 	public void teleport(Frame f, Level l, int x, int y) {
@@ -114,8 +113,7 @@ public class Player extends Mob {
 	}
 
 	public void paintOverPlayer(Graphics g, Frame f) {
-		g.setColor(Color.RED);
-		g.fillRect(x, y, w, h);
+		
 	}
 
 	public void setPokemon(int pos, TeamPokemon teamPokemon) {

@@ -4,10 +4,10 @@ import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class Animation {
 
-	private SpriteSheet sheet;
-	private int maxIndex, index, tmpIndex, time;
-	private boolean repeat = true;
-	private boolean finished;
+	protected SpriteSheet sheet;
+	protected int maxIndex, index, tmpIndex, time;
+	protected boolean repeat = true;
+	protected boolean finished;
 	
 	/**
 	 * Tries to load the images from the SpriteSheet. It goes from upper left to the down right corner. 
@@ -34,12 +34,8 @@ public class Animation {
 			return;
 		}
 		
-		d.drawTile(sheet.getSprite(index), x, y);
-		
-		if(sheet.getSprite(index).getY() == 1024) System.err.println("dhelp");
-		
-		//System.out.println(sheet.getSprite(index).getX() + ":"+ sheet.getSprite(index).getY());
-		
+		d.drawTile(sheet.getSprite(index), x, y,0xFF00FF00);
+						
 		tmpIndex++;
 		
 		if(tmpIndex >= time) {			

@@ -33,9 +33,6 @@ public class Trainer extends Mob {
 	private boolean wantToFight, doesMove;
 	private int seeWidth;
 	private ArrayList<TeamPokemon> team = new ArrayList<TeamPokemon>();
-	
-	private Fight fight;
-	private boolean fighting;
 
 	public Trainer(int x, int y, int trainerType) {
 		this(x, y, trainerType, false, false, 0, new TeamPokemon[] {});
@@ -85,24 +82,26 @@ public class Trainer extends Mob {
 
 	public final void update(Frame f) {
 		userUpdate(f.getDrawer());
-		
-		
-		
-		/**if(fighting && fight != null) {
-			fight.update(f);
-		}*/
-		
+
 		Player p1 = f.getLevel().getPlayer();
 
 		for (int i = 0; i < seeWidth && wantToFight; i++) {
 			int xPos = (dir == LEFT || dir == RIGHT) ? speed * i + x : x;
 			int yPos = (dir == UP || dir == DOWN) ? speed * i + y : y;
-			
-			if(p1.x + p1.w >= xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
-				System.out.println("Fight");
-				fighting = true;
-				fight = new Fight(p1, this);
+
+			if (p1.x + p1.w >= speed + xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
+				f.getDrawer().fillRect(xPos, yPos, 32, 32, 0xFFFFFFFF);
+				f.getLevel().getPlayer().setPaused(true);
+
+				Point p = pathFind(f, xPos, yPos, speed);
+
+				x += p.x * speed;
+				y += p.y * speed;
 			}
+		}
+
+		if (p1.x + p1.w >= speed + x && p1.x <= x && p1.y + p1.h >= y && p1.y <= y && !p1.isInFight()) {
+			f.openMenu(new Fight(p1, this));
 		}
 
 		if (!doesMove) {
@@ -225,16 +224,29 @@ public class Trainer extends Mob {
 
 	public final void paint(Graphics g, Frame f) {
 		userDraw(f.getDrawer());
+
+		Player p1 = f.getLevel().getPlayer();
 		
-		if(fighting && fight != null) {
-			fight.draw(f);
+		for (int i = 0; i < seeWidth && wantToFight; i++) {
+			int xPos = (dir == LEFT || dir == RIGHT) ? speed * i + x : x;
+			int yPos = (dir == UP || dir == DOWN) ? speed * i + y : y;
+			
+			f.getDrawer().fillRect(x + xPos-f.getLevel().getCamera().x, y + yPos-f.getLevel().getCamera().y, 32, 32, 0xFFFFFFFF);
+			
+			if (p1.x + p1.w >= speed + xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
+				f.getLevel().getPlayer().setPaused(true);
+				
+				Point p = pathFind(f, xPos, yPos, speed);
+				
+				x += p.x * speed;
+				y += p.y * speed;
+			}
 		}
 
 		if (current != null) f.getLevel().drawTile(current, x, y);
 	}
 
 	public void userDraw(Drawer d) {
-
 	}
 
 	public void userInit() {
