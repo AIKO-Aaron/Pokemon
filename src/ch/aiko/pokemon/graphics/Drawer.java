@@ -71,7 +71,7 @@ public class Drawer {
 		
 		Font f = new Font(font, 0, size);
 		Point p = getLength(f, text);
-		BufferedImage img = new BufferedImage(p.x + 3, p.y + size / 4, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(p.x + 3, p.y + size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();
 		g.setColor(new Color(1F, 1F, 1F, 0F));
 		g.fillRect(0, 0, p.x, p.y);

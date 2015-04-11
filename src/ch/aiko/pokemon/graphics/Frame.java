@@ -155,4 +155,8 @@ public class Frame extends Window {
 	public static void reloadTextures() {
 		
 	}
+
+	public Menu getOpenedMenu() {
+		return openedMenu;
+	}
 }

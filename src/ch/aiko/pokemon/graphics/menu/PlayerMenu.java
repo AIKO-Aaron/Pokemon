@@ -47,7 +47,7 @@ public class PlayerMenu extends Menu {
 		return "SideMenu";
 	}
 
-	public void onOpen(Drawer d) {
+	public void onOpen(final Drawer d) {
 		//Pause the actions of the Player
 		p.setPaused(true);
 		

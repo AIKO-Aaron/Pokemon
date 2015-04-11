@@ -89,3 +89,6 @@ LANGUAGE=Sprache
 SELECTED=(!)
 REL_TEX=Lade Texturen neu
 FONT=Schriftart
+
+//Text
+DefaultTrainerText=Hallo. Ich bin ein Trainer. Ich will gegen dich kämpfen. Und zwar JETZT!!!

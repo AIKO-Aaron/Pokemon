@@ -1,0 +1,33 @@
+Pokemon in Java © AIKO
+
+This application is entirly programmed in Java.
+We used many libraries. Some just for logging, which the end user
+doesn't even need to mp3 encoder libraries.
+
+Here's a list of them:
+	-dom4j (1.6.1)
+	-gson (1.4)
+	-guava (11.0.2)
+	-javassist (3.16.1-GA)
+	-jsr305 (1.3.9)
+	-reflections (0.9.9-RC-1)
+	-slf4j-api & slf4j-simple (1.6.1)
+	-xml-apis (1.0.b2)
+	-basicplayer (3.0)
+	-commons-logging-api
+	-jl (1.0)
+	-jogg (0.0.7)
+	-jorbis (0.0.15)
+	-jspeex (0.9.7)
+	-mp3spi (1.9.4)
+	-PNGDecoder
+	-tritonus_share
+	-vorbisspi (1.0.2)
+	-vlcj (3.6.0)
+	-AikoUtil (Util Library for all my programs)
+	
+Compiled with Java 6
+
+
+
+Fight background Textures by KLNOTHINCOMIN

@@ -89,3 +89,6 @@ SELECTED=(!)
 LANGUAGE=language
 REL_TEX=Reload Textures
 FONT=Font
+
+//Text
+DefaultTrainerText=I'm a Trainer. I want to fight with you. NOW!!!

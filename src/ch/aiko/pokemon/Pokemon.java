@@ -26,7 +26,6 @@ public class Pokemon {
 	public static Player player;
 	public static Level level1, level2;
 
-	public static SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/img.jpg", 100, 100);
 	public static SpriteSheet sheet1 = new SpriteSheet("/ch/aiko/pokemon/textures/Sprites.png", 16, 16);
 	public static SpriteSheet pokemons = new SpriteSheet("/ch/aiko/pokemon/textures/diamond-pearl-frame2.png", 80, 80);
 	
@@ -64,7 +63,7 @@ public class Pokemon {
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		teampokemon1.xp(1);
 
-		Trainer test = new Trainer(480, 190, 1, true, true, new TeamPokemon[]{teampokemon6});
+		Trainer test = new Trainer(480, 190, 1, true, true, "Hi", new TeamPokemon[]{teampokemon6});
 		level1.addMob(test);
 		
 		Trainer profOak = new Trainer(320, 320, 0);
@@ -96,7 +95,6 @@ public class Pokemon {
 	}
 	
 	public static void reloadTextures() {
-		sheet = new SpriteSheet("/textures/img.jpg", 100, 100);
 		sheet1 = new SpriteSheet("/textures/Sprites.png", 16, 16);
 		pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", 80, 80);
 	}

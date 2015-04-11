@@ -74,6 +74,7 @@ public class Language extends PropertyUtil {
 	}
 	
 	public static String translate(String s) {
+		System.out.println(s);
 		s = s.replace("/", " / ");
 		String ret = "";
 		for(String part : s.split(" ")) {

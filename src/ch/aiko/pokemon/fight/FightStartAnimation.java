@@ -13,7 +13,7 @@ public class FightStartAnimation extends MoveAnimation {
 	//256, 128
 	
 	public FightStartAnimation() {
-		super(new SpriteSheet("/ch/aiko/pokemon/textures/fight_ground/grass_day.png", 256, 128, Pokemon.frame.getWidth(), Pokemon.frame.getHeight()), 60, 0, 0, false);
+		super(new SpriteSheet("/ch/aiko/pokemon/textures/fight_ground/grass_day.png", 256, 128, Pokemon.frame.getWidth(), Pokemon.frame.getHeight()), 60, 0, 0, false, 0x00FFFFFF);
 		setSpeed(10);
 	}
 

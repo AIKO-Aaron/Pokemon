@@ -18,6 +18,7 @@ import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class Trainer extends Mob {
 
+	
 	private static SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32 * 3, 32 * 4);
 	private static final int speed = 1;
 	private static final int anim = 60;
@@ -31,22 +32,29 @@ public class Trainer extends Mob {
 
 	private Direction dir = Direction.LEFT;
 	private boolean wantToFight, doesMove;
+	private Fight fight;
 	private int seeWidth;
 	private ArrayList<TeamPokemon> team = new ArrayList<TeamPokemon>();
 
+	private String fightKey;
+	
 	public Trainer(int x, int y, int trainerType) {
-		this(x, y, trainerType, false, false, 0, new TeamPokemon[] {});
+		this(x, y, trainerType, false, false, 0, "", new TeamPokemon[] {});
 	}
 
 	public Trainer(int x, int y, int trainerType, boolean stationnairy) {
-		this(x, y, trainerType, stationnairy, false, 0, new TeamPokemon[] {});
+		this(x, y, trainerType, stationnairy, false, 0, "", new TeamPokemon[] {});
 	}
 
 	public Trainer(int x, int y, int type, boolean statio, boolean wantToFight, TeamPokemon[] team) {
-		this(x, y, type, statio, wantToFight, 10, team);
+		this(x, y, type, statio, wantToFight, 10, "DefaultTrainerText", team);
+	}
+	
+	public Trainer(int x, int y, int type, boolean statio, boolean wantToFight, String text, TeamPokemon[] team) {
+		this(x, y, type, statio, wantToFight, 10, text, team);
 	}
 
-	public Trainer(int x, int y, int trainerType, boolean stationnairy, boolean fight, int seight, TeamPokemon... pokemons) {
+	public Trainer(int x, int y, int trainerType, boolean stationnairy, boolean fight, int seight, String fightText, TeamPokemon... pokemons) {
 		super(new Sprite(0, 1, 1), x, y);
 		w = 32;
 		h = 32;
@@ -55,6 +63,7 @@ public class Trainer extends Mob {
 		this.seeWidth = seight;
 		this.doesMove = !stationnairy;
 		this.wantToFight = fight;
+		this.fightKey = fightText;
 
 		SpriteSheet local = new SpriteSheet(sheet.getSprite(trainerType), 32, 32);
 
@@ -82,7 +91,7 @@ public class Trainer extends Mob {
 
 	public final void update(Frame f) {
 		userUpdate(f.getDrawer());
-
+		
 		Player p1 = f.getLevel().getPlayer();
 
 		for (int i = 0; i < seeWidth && wantToFight; i++) {
@@ -100,9 +109,11 @@ public class Trainer extends Mob {
 			}
 		}
 
-		if (p1.x + p1.w >= speed + x && p1.x <= x && p1.y + p1.h >= y && p1.y <= y && !p1.isInFight()) {
-			f.openMenu(new Fight(p1, this));
+		if (p1.x + p1.w >= speed + x && p1.x <= x && p1.y + p1.h >= y && p1.y <= y && !p1.isInFight() && fight == null) {
+			fight = new Fight(f, p1, this);
 		}
+		
+		if(fight != null && !fight.opened() && f.getOpenedMenu() != fight) f.openMenu(fight);
 
 		if (!doesMove) {
 			switch (dir) {
@@ -224,7 +235,6 @@ public class Trainer extends Mob {
 
 	public final void paint(Graphics g, Frame f) {
 		userDraw(f.getDrawer());
-
 		Player p1 = f.getLevel().getPlayer();
 		
 		for (int i = 0; i < seeWidth && wantToFight; i++) {
@@ -270,5 +280,9 @@ public class Trainer extends Mob {
 		for (TeamPokemon pok : tem)
 			out.add(pok);
 		return out;
+	}
+
+	public String getText() {
+		return fightKey;
 	}
 }
