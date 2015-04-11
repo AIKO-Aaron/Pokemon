@@ -47,4 +47,6 @@ done < "./assets/ch/aiko/pokemon/settings/fields"
 echo "" >> "./src/ch/aiko/pokemon/settings/Default.java"
 echo "}" >> "./src/ch/aiko/pokemon/settings/Default.java"
 
+cp -f "/Users/aaron/Dropbox/Public/Pokemon.jar" "/Users/aaron/Dropbox/Eclipse Workspace/Pokemon/builds/newest.jar"
+
 echo "Done"

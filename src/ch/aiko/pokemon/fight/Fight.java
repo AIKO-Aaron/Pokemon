@@ -29,6 +29,9 @@ public class Fight extends Menu {
 	FightStartAnimation anim;
 	
 	private BasicPlayer player;
+	
+	private Sprite ground;
+	private Sprite background;
 
 	public Fight(Frame f, Player p, Trainer t) {
 		p.setFighting(true);
@@ -108,12 +111,16 @@ public class Fight extends Menu {
 	public void update(Frame f) {}
 
 	public void draw(Frame f) {
-		f.getDrawer().drawTile(new Sprite(ImageUtil.loadImageInClassPath("/ch/aiko/pokemon/textures/fight_background/grass_day.png")), 0, 0, f.getWidth(), f.getHeight());
 		if (anim == null) return;
 
+		f.getDrawer().drawTile(new Sprite(ImageUtil.loadImageInClassPath("/ch/aiko/pokemon/textures/fight_background/grass_day.png")), 0, 0, f.getWidth(), f.getHeight());
 		
-		if (!anim.isFinished()) anim.drawNext(f.getDrawer(), -Pokemon.frame.getWidth(), 0);
-		else f.getDrawer().drawTile(new Sprite(ImageUtil.loadImageInClassPath("/ch/aiko/pokemon/textures/fight_ground/grass_day.png")), 0, 0, f.getWidth(), f.getHeight());
+		if (!anim.isFinished()) {
+			anim.drawNext(f.getDrawer(), -Pokemon.frame.getWidth(), 0);
+		}
+		else {
+			f.getDrawer().drawTile(new Sprite(ImageUtil.loadImageInClassPath("/ch/aiko/pokemon/textures/fight_ground/grass_day.png")), 0, 0, f.getWidth(), f.getHeight());
+		}
 	}
 
 	public void onOpen(Drawer d) {
