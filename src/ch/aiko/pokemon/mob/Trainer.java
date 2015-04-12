@@ -9,16 +9,17 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
+import ch.aiko.pokemon.level.Level;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.pokemon.TeamPokemon;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class Trainer extends Mob {
-
-	
 	private static SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/TrainerSprites.png", 32 * 3, 32 * 4);
 	private static final int speed = 1;
 	private static final int anim = 60;
@@ -35,6 +36,8 @@ public class Trainer extends Mob {
 	private Fight fight;
 	private int seeWidth;
 	private ArrayList<TeamPokemon> team = new ArrayList<TeamPokemon>();
+	
+	private Level currentLevel;
 
 	private String fightKey;
 	
@@ -90,6 +93,8 @@ public class Trainer extends Mob {
 	}
 
 	public final void update(Frame f) {
+		currentLevel = f.getLevel();
+		
 		userUpdate(f.getDrawer());
 		
 		Player p1 = f.getLevel().getPlayer();
@@ -110,7 +115,7 @@ public class Trainer extends Mob {
 		}
 
 		if (p1.x + p1.w >= speed + x && p1.x <= x && p1.y + p1.h >= y && p1.y <= y && !p1.isInFight() && fight == null) {
-			fight = new Fight(f, p1, this);
+			fight = new Fight(f, p1, this, currentLevel.getLocation(), Pokemon.getTime());
 		}
 		
 		if(fight != null && !fight.opened() && f.getOpenedMenu() != fight) f.openMenu(fight);
@@ -235,9 +240,9 @@ public class Trainer extends Mob {
 
 	public final void paint(Graphics g, Frame f) {
 		userDraw(f.getDrawer());
-		Player p1 = f.getLevel().getPlayer();
+		//Player p1 = f.getLevel().getPlayer();
 		
-		for (int i = 0; i < seeWidth && wantToFight; i++) {
+		/**for (int i = 0; i < seeWidth && wantToFight; i++) {
 			int xPos = (dir == LEFT || dir == RIGHT) ? speed * i + x : x;
 			int yPos = (dir == UP || dir == DOWN) ? speed * i + y : y;
 			
@@ -251,7 +256,7 @@ public class Trainer extends Mob {
 				x += p.x * speed;
 				y += p.y * speed;
 			}
-		}
+		}*/
 
 		if (current != null) f.getLevel().drawTile(current, x, y);
 	}

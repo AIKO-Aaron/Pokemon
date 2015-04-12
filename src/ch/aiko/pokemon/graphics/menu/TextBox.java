@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform;
 import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
-import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.util.PokemonList;
 
@@ -28,7 +28,7 @@ public class TextBox extends Menu {
 		text = Language.translate(textKey);
 		this.f = frame;
 
-		length = f.getWidth() - 20;
+		length = Frame.WIDTH - 20;
 
 		doMaths();
 
@@ -44,6 +44,7 @@ public class TextBox extends Menu {
 			for (int i = start; i < text.split(" ").length; i++) {
 				s += text.split(" ")[i] + " ";
 				if (lengthof(s) >= length) {
+					s.replace("\\n", "\n");
 					size = s.length() - text.split(" ")[i].length() - 1;
 					starts.add(starts.get(starts.size() - 1) + size);
 					start = i;
@@ -72,10 +73,10 @@ public class TextBox extends Menu {
 	}
 
 	public void paint(Drawer d) {
-		d.fillRect(0, d.getFrame().getHeight() - 75, d.getFrame().getWidth(), 75, 0xFFFFFFFF);
-		d.drawRect(0, d.getFrame().getHeight() - 75, d.getFrame().getWidth(), 75, 0xFF000000);
-		d.drawText(text.substring(starts.get(index - 1), starts.get(index + 0)), 0, d.getFrame().getHeight() - 100, 25, 0xFF000000);
-		if (index < maxIndex) d.drawText(text.substring(starts.get(index + 0), starts.get(index + 1)), 0, d.getFrame().getHeight() - 66, 25, 0xFF000000);
+		d.fillRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFFFFFFFF);
+		d.drawRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFF000000);
+		d.drawText(text.substring(starts.get(index - 1), starts.get(index + 0)), 0, Frame.HEIGHT - 100, 25, 0xFF000000);
+		if (index < maxIndex) d.drawText(text.substring(starts.get(index + 0), starts.get(index + 1)), 0, Frame.HEIGHT - 66, 25, 0xFF000000);
 	}
 
 	public void update(Drawer d) {

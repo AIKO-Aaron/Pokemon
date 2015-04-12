@@ -21,7 +21,7 @@ public abstract class Mob extends Entity {
 		super(x, y, s);
 		this.w = w;
 		this.h = h;
-		sprite.setImage(ImageUtil.resize2(s.getImage(), (float) w / (float) sprite.getWidth(), (float) h / (float) sprite.getHeight()));
+		if(sprite != null) sprite.setImage(ImageUtil.resize2(s.getImage(), (float) w / (float) sprite.getWidth(), (float) h / (float) sprite.getHeight()));
 	}
 
 	public int getWidth() {

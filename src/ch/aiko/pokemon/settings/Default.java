@@ -9,6 +9,7 @@ public class Default {
     public static final int keyA=32;
     public static final int keyMenu=88;
     public static final boolean setupCorrect=false;
-    public static final String font="user/fonts/Raleway-Regular.ttf";
+    public static final String font="user/ch/aiko/pokemon/fonts/Raleway-Regular.ttf";
+    public static final String gain="-30.0";
 
 }

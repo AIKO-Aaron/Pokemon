@@ -4,15 +4,15 @@ import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class MoveAnimation extends Animation {
 
-	private int destx, desty, xOff, yOff, color, speed = 1;
-	protected boolean doesStay, xF, yF;
+	private int destx, desty, xOff, yOff, color, speed = 1, time = 0;
+	protected boolean doesStay, xF, yF, timer;
 
 	public MoveAnimation(SpriteSheet pictures, int time, int destx, int desty, boolean b) {
 		super(pictures, time, false);
 		this.doesStay = b;
 		this.destx = destx;
 		this.desty = desty;
-		this.color = 0xFF000000;
+		this.setColor(0xFF000000);
 	}
 
 	public MoveAnimation(SpriteSheet pictures, int time, int destx, int desty, boolean b, int color) {
@@ -20,7 +20,7 @@ public class MoveAnimation extends Animation {
 		this.doesStay = b;
 		this.destx = destx;
 		this.desty = desty;
-		this.color = color;
+		this.setColor(color);
 	}
 
 	public void drawNext(Drawer d, int x, int y) {
@@ -29,13 +29,13 @@ public class MoveAnimation extends Animation {
 		}
 
 		if (x + this.xOff != destx && !xF) {
-			this.xOff += speed;
+			this.xOff += (this.xOff + x) - destx < 0 ? 1 * Math.min(speed, Math.abs((this.xOff + x) - destx)) : -1 * Math.min(speed, Math.abs((this.xOff + x) - destx));
 		} else if (!xF) {
 			xF = true;
 		}
 
 		if (y + this.yOff != desty && !yF) {
-			this.yOff += speed;
+			this.yOff += (this.yOff + y) - desty < 0 ? 1 * Math.min(speed, Math.abs((this.yOff + y) - desty)) : -1 * Math.min(speed, Math.abs((this.yOff + y) - desty));
 		} else if (!yF) {
 			yF = true;
 		}
@@ -43,10 +43,13 @@ public class MoveAnimation extends Animation {
 		x += this.xOff;
 		y += this.yOff;
 
-		
-		d.drawTile(sheet.getSprite(index), x, y, color);
+		d.drawTile(sheet.getSprite(index), x, y);
 
-		tmpIndex++;
+		if (time > 0) {
+			time--;
+			return;
+		} else if (timer && (!xF || !yF)) return;
+		else tmpIndex++;
 
 		if (tmpIndex >= time) {
 			tmpIndex = 0;
@@ -56,7 +59,23 @@ public class MoveAnimation extends Animation {
 	}
 
 	public void setSpeed(int newSpeed) {
-		this.speed = newSpeed;
+		this.speed = Math.abs(newSpeed);
 	}
-	
+
+	public void setStartTime(int time) {
+		this.time = time;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+	public void setStartingTime(boolean b) {
+		timer = b;
+	}
+
 }

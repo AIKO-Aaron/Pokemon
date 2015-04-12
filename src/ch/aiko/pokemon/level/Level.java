@@ -10,10 +10,11 @@ import java.util.Map.Entry;
 
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.PressurePlate;
+import ch.aiko.pokemon.fight.Location;
 import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.mob.Mob;
-import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.Tile;
 import ch.aiko.util.ImageUtil;
@@ -32,8 +33,10 @@ public class Level {
 	private int tileWidth, tileHeight;
 
 	public int displaywidth;
+	
+	private Location loc;
 
-	public Level(Player p, String image, HashMap<Integer, Tile> coding, int TileWidth, int TileHeight) {
+	public Level(Player p, Location loc, String image, HashMap<Integer, Tile> coding, int TileWidth, int TileHeight) {
 		if (p == null) System.exit(1);
 		this.p = p;
 
@@ -44,6 +47,8 @@ public class Level {
 		this.tileWidth = TileWidth;
 		this.tileHeight = TileHeight;
 
+		this.loc = loc;
+		
 		generate(coding);
 	}
 
@@ -118,10 +123,10 @@ public class Level {
 
 		if (tiles == null || mobs == null) return;
 
-		displaywidth = f.getWidth();
+		displaywidth = Frame.WIDTH;
 
 		for (Tile tile : tiles) {
-			if (tile == null || tile.x + tile.getWidth() < camera.x || tile.x > camera.x + displaywidth || tile.y + tile.getHeight() < camera.y || tile.y > camera.y + f.getHeight()) continue;
+			if (tile == null || tile.x + tile.getWidth() < camera.x || tile.x > camera.x + displaywidth || tile.y + tile.getHeight() < camera.y || tile.y > camera.y + Frame.HEIGHT) continue;
 			drawTile(tile);
 		}
 		for (int i = 0; i < mobs.size(); i++) {
@@ -131,7 +136,7 @@ public class Level {
 			tile.paint(g, f);
 		}
 
-		drawTile(p.getSprite(), p.getX(), p.getY());
+		//drawTile(p.getSprite(), p.getX(), p.getY());
 		p.paint(g, f);
 
 		for (int i = 0; i < mobs.size(); i++) {
@@ -147,7 +152,7 @@ public class Level {
 		int[] pi = img.getPixels();
 		for (int i = 0; i < img.getWidth() + img.getHeight() * displaywidth; i++) {
 			int xx = (i % img.getWidth() + x) - camera.x;
-			int yy = (i / img.getWidth() + y + 22) - camera.y;
+			int yy = (i / img.getWidth() + y) - camera.y;
 
 			if (xx < 0 || xx >= displaywidth) continue;
 
@@ -157,15 +162,15 @@ public class Level {
 	}
 
 	protected int getColor(int x, int y) {
-		if (x + y * f.getWidth() < 0 || x + y * f.getWidth() >= f.pixels.length) return 0;
-		return f.pixels[x + y * f.getWidth()];
+		if (x + y * Frame.WIDTH < 0 || x + y * Frame.WIDTH >= f.pixels.length) return 0;
+		return f.pixels[x + y * Frame.WIDTH];
 	}
 
 	public void drawTile(Tile t) {
 		int[] pi = t.getPixels();
 		for (int i = 0; i < t.getWidth() * t.getHeight(); i++) {
 			int xx = (i % t.getWidth() + t.x) - camera.x;
-			int yy = (i / t.getWidth() + t.y + 22) - camera.y;
+			int yy = (i / t.getWidth() + t.y) - camera.y;
 
 			if (xx < 0 || xx >= displaywidth) continue;
 
@@ -174,7 +179,7 @@ public class Level {
 	}
 
 	public Point getCamera() {
-		return new Point(camera.x, camera.y - 22);
+		return new Point(camera.x, camera.y);
 	}
 
 	public void setCamera(int x, int y) {
@@ -250,5 +255,9 @@ public class Level {
 	
 	public int getTileHeight() {
 		return tileHeight;
+	}
+
+	public Location getLocation() {
+		return loc;
 	}
 }

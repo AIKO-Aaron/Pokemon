@@ -13,7 +13,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
 import ch.aiko.pokemon.graphics.Drawer;
-import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.graphics.Frame;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.settings.Settings;
 
 public class FontMenu extends Menu {
@@ -51,16 +52,16 @@ public class FontMenu extends Menu {
 	};
 
 	public void paint(Drawer d) {
-		d.fillRect(0, 0, d.getFrame().getWidth(), d.getFrame().getHeight(), 0xFF000000);
+		d.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		if ((20 + (fonts.length - y)) * 25 > fonts.length) d.drawText("Default Fonts", 0, 0, 25, 0xFFFFFFFF);
 
-		for (int i = y; i < fonts.length - user.length + 2 && i < d.getFrame().getHeight() / 25 + index; i++) {
+		for (int i = y; i < fonts.length - user.length + 2 && i < Frame.HEIGHT / 25 + index; i++) {
 			if (i < 0 || i >= fonts.length) continue;
 			d.drawText(fonts[i].getFontName() + (fonts[i].getFontName().equalsIgnoreCase(Settings.font) ? " (!) " : "") + (i == index ? "  <---" : ""), 50, (i + 1 - y) * 25, 25, 0xFFFFFFFF, fonts[i].getFontName());
 			// System.out.println(fonts[i]);
 		}
 
-		if(y + d.getFrame().getHeight() / 25 < fonts.length) return;
+		if(y + Frame.HEIGHT / 25 < fonts.length) return;
 		
 		d.drawText("User Fonts", 10, (3 + (fonts.length - y)) * 25, 25, 0xFFFFFFFF);
 
@@ -71,7 +72,7 @@ public class FontMenu extends Menu {
 
 	public void update(Drawer d) {
 		// System.out.println(y);
-		int i = d.getFrame().getHeight() / 25;
+		int i = Frame.HEIGHT / 25;
 		if (d.getFrame().getTimesPressed(KeyEvent.VK_U) > 0) index = fonts.length - 1;
 		if (d.getFrame().getTimesPressed(Settings.getInteger("keyMenu")) > 0) d.getFrame().closeMenu();
 		if (d.getFrame().getTimesPressed(Settings.getInteger("keyUp")) > 0) {

@@ -25,11 +25,11 @@ public enum Location {
 	}
 
 	public String getGroundPath(Time t) {
-		return "ch/aiko/pokemon/textures/fight_ground/" + getString(1, t) + ".png";
+		return "/ch/aiko/pokemon/textures/fight_ground/" + getString(1, t) + ".png";
 	}
 	
 	public String getBackGroundPath(Time t) {
-		return "ch/aiko/pokemon/textures/fight_background/" + getString(0, t) + ".png";
+		return "/ch/aiko/pokemon/textures/fight_background/" + getString(0, t) + ".png";
 	}
 
 	/**

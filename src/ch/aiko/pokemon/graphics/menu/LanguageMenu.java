@@ -4,8 +4,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
-import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.settings.Settings;
 
 public class LanguageMenu extends Menu {
@@ -24,7 +25,7 @@ public class LanguageMenu extends Menu {
 	
 	public void onOpen(Drawer d) {
 		p.setPaused(true);
-		max = d.getFrame().getHeight() / Text_size;
+		max = Frame.HEIGHT / Text_size;
 	}
 	
 	public void onClose(Drawer d) {
@@ -32,7 +33,7 @@ public class LanguageMenu extends Menu {
 	}
 	
 	public void paint(Drawer d) {
-		d.fillRect(0, 0, d.getFrame().getWidth(), d.getFrame().getHeight(), Background_Color);
+		d.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, Background_Color);
 		
 		ArrayList<Language> langs = Language.getLanguages();
 		

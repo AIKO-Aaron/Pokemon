@@ -14,8 +14,10 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.solid = solid;
-		this.w = sprite.getWidth();
-		this.h = sprite.getHeight();
+		if (sprite != null) {
+			this.w = sprite.getWidth();
+			this.h = sprite.getHeight();
+		}
 	}
 
 	public Tile(Sprite sprite, int x, int y, int w, int h, boolean solid) {

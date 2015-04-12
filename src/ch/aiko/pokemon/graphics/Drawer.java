@@ -14,6 +14,7 @@ import java.io.InputStream;
 
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.pokemon.sprite.Sprite;
+import ch.aiko.util.ColorUtil;
 
 public class Drawer {
 
@@ -24,34 +25,38 @@ public class Drawer {
 	}
 
 	public void drawRect(int x, int y, int w, int h, int color) {
+		//y -= 22;
 		for (int i = 0; i < w; i++) {
-			if (i + x + y * f.getWidth() >= f.pixels.length) continue;
-			f.pixels[i + x + y * f.getWidth()] = color;
-			if (i + x + (y + h) * f.getWidth() >= f.pixels.length) continue;
-			f.pixels[i + x + (y + h) * f.getWidth()] = color;
+			if (i + x + y * Frame.WIDTH >= f.pixels.length || i + x + y * Frame.WIDTH < 0) continue;
+			f.pixels[i + x + y * Frame.WIDTH] = color;
+			if (i + x + (y + h) * Frame.WIDTH >= f.pixels.length || i + x + (y + h) * Frame.WIDTH < 0) continue;
+			f.pixels[i + x + (y + h) * Frame.WIDTH] = color;
 		}
 
 		for (int i = 0; i < h; i++) {
-			if ((y + i) * f.getWidth() + x >= f.pixels.length) continue;
-			f.pixels[(y + i) * f.getWidth() + x] = color;
-			if ((y + i) * f.getWidth() + x + w >= f.pixels.length) continue;
-			f.pixels[(y + i) * f.getWidth() + x + w] = color;
+			if ((y + i) * Frame.WIDTH + x >= f.pixels.length || (y + i) * Frame.WIDTH + x < 0) continue;
+			f.pixels[(y + i) * Frame.WIDTH + x] = color;
+			if ((y + i) * Frame.WIDTH + x + w >= f.pixels.length || (y + i) * Frame.WIDTH + x + w < 0) continue;
+			f.pixels[(y + i) * Frame.WIDTH + x + w] = color;
 		}
 	}
 
 	public void fillRect(int x, int y, int w, int h, int col) {
+		//y -= 22;
 		for (int i = 0; i < w * h; i++) {
-			if (x + (y + i / w) * f.getWidth() + i % w >= f.pixels.length || x + (y + i / w) * f.getWidth() + i % w < 0) continue;
-			f.pixels[x + (y + i / w) * f.getWidth() + i % w] = col;
+			if (x + (y + i / w) * Frame.WIDTH + i % w >= f.pixels.length || x + (y + i / w) * Frame.WIDTH + i % w < 0) continue;
+			f.pixels[x + (y + i / w) * Frame.WIDTH + i % w] = col;
 		}
 	}
 
 	public void drawText(String text, int x, int y, int size, int col, String font) {
+		y += 22;
 		Sprite sprite = new Sprite(createText(text, size, col, font));
 		drawTile(sprite, x, y);
 	}
 	
 	public void drawText(String text, int x, int y, int size, int col) {
+		y += 22;
 		Sprite sprite = new Sprite(createText(text, size, col, Settings.font));
 		drawTile(sprite, x, y);
 	}
@@ -105,13 +110,13 @@ public class Drawer {
 
 	public void drawTile(Sprite img, int x, int y) {
 		int[] pi = img.getPixels();
-		for (int i = 0; i < img.getWidth() + img.getHeight() * f.getWidth(); i++) {
+		for (int i = 0; i < img.getWidth() + img.getHeight() * Frame.WIDTH; i++) {
 			int xx = (i % img.getWidth() + x);
-			int yy = (i / img.getWidth() + y + 22);
+			int yy = (i / img.getWidth() + y);
 
-			if (xx < 0 || xx >= f.getWidth()) continue;
+			if (xx < 0 || xx >= Frame.WIDTH) continue;
 
-			if (xx + yy * f.getWidth() < f.pixels.length && i < pi.length && i >= 0 && xx + yy * f.getWidth() >= 0) f.pixels[xx + yy * f.getWidth()] = pi[i] == 0 ? getColor(xx, yy) : pi[i];
+			if (xx + yy * Frame.WIDTH < f.pixels.length && i < pi.length && i >= 0 && xx + yy * Frame.WIDTH >= 0) f.pixels[xx + yy * Frame.WIDTH] = pi[i] == 0 ? getColor(xx, yy) : pi[i];
 
 		}
 	}
@@ -126,14 +131,19 @@ public class Drawer {
 	 * @param backCol The background color that should be put in instead of black.
 	 */
 	public void drawTile(Sprite img, int x, int y, int backCol) {
+		if(new ColorUtil(backCol).getAlpha() == 0) {
+			drawTile(img, x, y);
+			return;
+		}
+		
 		int[] pi = img.getPixels();
-		for (int i = 0; i < img.getWidth() + img.getHeight() * f.getWidth(); i++) {
+		for (int i = 0; i < img.getWidth() + img.getHeight() * Frame.WIDTH; i++) {
 			int xx = (i % img.getWidth() + x);
-			int yy = (i / img.getWidth() + y + 22);
+			int yy = (i / img.getWidth() + y);
 
-			if (xx < 0 || xx >= f.getWidth()) continue;
+			if (xx < 0 || xx >= Frame.WIDTH) continue;
 
-			if (xx + yy * f.getWidth() < f.pixels.length && i < pi.length && i >= 0 && xx + yy * f.getWidth() >= 0) f.pixels[xx + yy * f.getWidth()] = pi[i] == 0 ? backCol : pi[i];
+			if (xx + yy * Frame.WIDTH < f.pixels.length && i < pi.length && i >= 0 && xx + yy * Frame.WIDTH >= 0) f.pixels[xx + yy * Frame.WIDTH] = pi[i] == 0 ? backCol : pi[i];
 
 		}
 	}
@@ -143,8 +153,8 @@ public class Drawer {
 	}
 
 	protected int getColor(int x, int y) {
-		if (x + y * f.getWidth() < 0 || x + y * f.getWidth() >= f.pixels.length) return 0;
-		return f.pixels[x + y * f.getWidth()];
+		if (x + y * Frame.WIDTH < 0 || x + y * Frame.WIDTH >= f.pixels.length) return 0;
+		return f.pixels[x + y * Frame.WIDTH];
 	}
 
 	public Frame getFrame() {

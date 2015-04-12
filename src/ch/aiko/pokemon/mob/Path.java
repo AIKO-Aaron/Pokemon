@@ -40,7 +40,7 @@ public class Path {
 					for (i = yy; i >= 0; i--) {
 						if (getMaxSpeedX(f, xx, i, e.w, e.h, xMov, speed) > 0) break;
 					}
-					for (j = yy; j < f.getHeight(); j++) {
+					for (j = yy; j < Frame.HEIGHT; j++) {
 						if (getMaxSpeedX(f, xx, j, e.w, e.h, xMov, speed) > 0) break;
 					}
 
@@ -65,7 +65,7 @@ public class Path {
 					for (i = xx; i >= 0; i--) {
 						if (getMaxSpeedY(f, i, yy, e.w, e.h, yMov, speed) > 0) break;
 					}
-					for (j = xx; j < f.getWidth(); j++) {
+					for (j = xx; j < Frame.WIDTH; j++) {
 						if (getMaxSpeedY(f, j, yy, e.w, e.h, yMov, speed) > 0) break;
 					}
 

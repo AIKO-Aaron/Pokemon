@@ -5,4 +5,5 @@ keyDown=40
 keyA=32
 keyMenu=88
 setupCorrect=false
-font=user/fonts/Raleway-Regular.ttf
+font=user/ch/aiko/pokemon/fonts/Raleway-Regular.ttf
+gain=-30.0

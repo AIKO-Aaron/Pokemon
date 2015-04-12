@@ -36,7 +36,7 @@ public class Language extends PropertyUtil {
 			}
 		});
 		
-		System.out.println("Init");
+		System.out.println("Init Languages");
 		
 		for(String f : langFiles) {
 			if(f.startsWith(".") || !f.endsWith(".lang")) continue;
@@ -74,7 +74,6 @@ public class Language extends PropertyUtil {
 	}
 	
 	public static String translate(String s) {
-		System.out.println(s);
 		s = s.replace("/", " / ");
 		String ret = "";
 		for(String part : s.split(" ")) {

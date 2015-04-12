@@ -105,7 +105,9 @@ public abstract class Window extends JFrame implements ActionListener, WindowLis
 
 	public void windowOpened(WindowEvent e) {}
 
-	public void windowClosing(WindowEvent e) {quit();}
+	public void windowClosing(WindowEvent e) {
+		quit();
+	}
 
 	public void windowClosed(WindowEvent e) {
 		quit();
@@ -175,7 +177,7 @@ public abstract class Window extends JFrame implements ActionListener, WindowLis
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if(!keys.containsKey(e.getKeyCode())) keys.put(e.getKeyCode(), 0);
+		if (!keys.containsKey(e.getKeyCode())) keys.put(e.getKeyCode(), 0);
 		keys.put(e.getKeyCode(), keys.get(e.getKeyCode()) + 1);
 	}
 
@@ -193,16 +195,16 @@ public abstract class Window extends JFrame implements ActionListener, WindowLis
 
 		return false;
 	}
-	
+
 	public int getTimesPressed(int keyCode) {
-		if(!keys.containsKey(keyCode)) return 0;
+		if (!keys.containsKey(keyCode)) return 0;
 		int ret = keys.get(keyCode);
-		if(ret > 0) keys.put(keyCode, keys.get(keyCode) - 1);
+		if (ret > 0) keys.put(keyCode, keys.get(keyCode) - 1);
 		return ret;
 	}
-	
+
 	public void press(int keyCode) {
-		if(!keys.containsKey(keyCode)) keys.put(keyCode, 1);
+		if (!keys.containsKey(keyCode)) keys.put(keyCode, 1);
 		else keys.put(keyCode, keys.get(keyCode) + 1);
 	}
 

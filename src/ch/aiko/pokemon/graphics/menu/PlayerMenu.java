@@ -4,15 +4,22 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
-import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.settings.Settings;
 
 public class PlayerMenu extends Menu {
 	private static ArrayList<PlayerMenuFields> fields = new ArrayList<PlayerMenuFields>();
 
 	public static enum PlayerMenuFields {
-		POKEDEX(null), POKEMON(null), BAG(null), MENU(null), LANGUAGE(null), SAVE(null), BACK(null);
+		POKEDEX(null),
+		POKEMON(null),
+		BAG(null),
+		MENU(null),
+		LANGUAGE(null),
+		SAVE(null),
+		BACK(null);
 
 		private Runnable r;
 
@@ -42,16 +49,16 @@ public class PlayerMenu extends Menu {
 	public PlayerMenu(Player p) {
 		this.p = p;
 	}
-	
+
 	public String name() {
 		return "SideMenu";
 	}
 
 	public void onOpen(final Drawer d) {
-		//Pause the actions of the Player
+		// Pause the actions of the Player
 		p.setPaused(true);
-		
-		//Init Actions of the Menu Fields
+
+		// Init Actions of the Menu Fields
 		PlayerMenuFields.BACK.setAction(new Runnable() {
 			public void run() {
 				d.getFrame().closeMenu();
@@ -75,12 +82,12 @@ public class PlayerMenu extends Menu {
 	}
 
 	public void onClose(Drawer d) {
-		//Unpause the Players actions
+		// Unpause the Players actions
 		p.setPaused(false);
 	}
 
 	public void update(Drawer d) {
-		//Key input
+		// Key input
 		if (d.getFrame().getTimesPressed(Settings.getInteger("keyMenu")) > 0) d.getFrame().closeMenu();
 		if (d.getFrame().getTimesPressed(Settings.getInteger("keyUp")) > 0) index = index > 0 ? index - 1 : 0;
 		if (d.getFrame().getTimesPressed(Settings.getInteger("keyDown")) > 0) index = index < fields.size() - 1 ? index + 1 : fields.size() - 1;
@@ -90,28 +97,28 @@ public class PlayerMenu extends Menu {
 
 	public void paint(Drawer d) {
 		PlayerMenuFields.class.getName();
-		int width = d.getFrame().getWidth() / 3;
-		int x = d.getFrame().getWidth() - width - 1;
-		int y = 22;
-		int height = d.getFrame().getHeight() - y - 1;
+		int width = Frame.WIDTH / 3;
+		int x = Frame.WIDTH - width - 1;
+		int y = 0;
+		int height = Frame.HEIGHT - y - 1;
 		int length = fields.size();
-		
-		//Background of the Menu
+
+		// Background of the Menu
 		d.fillRect(x, y, width, height, 0xFFFFFFFF);
 
-		//Black Rectangle around Background
+		// Black Rectangle around Background
 		d.drawRect(x, y, width, height, 0xFF000000);
 
-		//Menu Fields (look above)
+		// Menu Fields (look above)
 		for (int i = 0; i < length; i++) {
 			d.drawRect(x, (height / length) * i + y, width, 1, 0xFF000000);
 			d.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF);
 		}
 
-		//Rectangle around selected Menu Field
-		d.drawRect(x - 1, (height / length) * index + 1 + y, width + 1, height / length - 2, 0xFFFF00FF);
-		d.drawRect(x - 0, (height / length) * index + 0 + y, width + 0, height / length - 0, 0xFFFF00FF);
-		d.drawRect(x + 1, (height / length) * index - 1 + y, width - 2, height / length + 2, 0xFFFF00FF);
+		// Rectangle around selected Menu Field
+		d.drawRect(x - 1, Math.max(-1, (height / length) * index + 1 + y), width + 1, height / length - 2, 0xFFFF00FF);
+		d.drawRect(x - 0, Math.max(-1, (height / length) * index + 0 + y), width + 0, height / length - 0, 0xFFFF00FF);
+		d.drawRect(x + 1, Math.max(-1, (height / length) * index - 1 + y), width - 1, height / length + 2, 0xFFFF00FF);
 	}
 
 	public void run(int index) {

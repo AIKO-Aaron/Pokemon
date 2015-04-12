@@ -1,15 +1,20 @@
 package ch.aiko.pokemon;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.swing.UIManager;
 
 import ch.aiko.pokemon.entity.PressurePlate;
+import ch.aiko.pokemon.fight.Location;
+import ch.aiko.pokemon.fight.Time;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
-import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.mob.Trainer;
+import ch.aiko.pokemon.mob.player.Gender;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.pokemon.Pokemons;
 import ch.aiko.pokemon.pokemon.TeamPokemon;
 import ch.aiko.pokemon.pokemon.attack.Move;
@@ -28,7 +33,6 @@ public class Pokemon {
 
 	public static SpriteSheet sheet1 = new SpriteSheet("/ch/aiko/pokemon/textures/Sprites.png", 16, 16);
 	public static SpriteSheet pokemons = new SpriteSheet("/ch/aiko/pokemon/textures/diamond-pearl-frame2.png", 80, 80);
-	
 	public static Pokemons pokes;
 	public static Moves moves;
 	
@@ -51,9 +55,9 @@ public class Pokemon {
 		pokes = new Pokemons();
 		moves = new Moves();
 		
-		player = new Player(sheet1.getSprite(2, 0), 320, 320, 32, 32);
-		level1 = new Level(player, "/ch/aiko/pokemon/level/Level.png", generateCoding(true), 16, 16);
-		level2 = new Level(player, "/ch/aiko/pokemon/level/Level2.png", generateCoding(true), 8, 8);
+		player = new Player(320, 320, 32, 32, Gender.BOY);
+		level1 = new Level(player, Location.INDOOR, "/ch/aiko/pokemon/level/Level.png", generateCoding(true), 16, 16);
+		level2 = new Level(player, Location.CAVES, "/ch/aiko/pokemon/level/Level2.png", generateCoding(true), 8, 8);
 				
 		TeamPokemon teampokemon1 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 0, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		TeamPokemon teampokemon2 = new TeamPokemon(player, Pokemons.get("Sandamer"), 1, 1, 1, 1, 1, 1, 1, 1, 1, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
@@ -63,7 +67,7 @@ public class Pokemon {
 		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
 		teampokemon1.xp(1);
 
-		Trainer test = new Trainer(480, 190, 1, true, true, "Hi", new TeamPokemon[]{teampokemon6});
+		Trainer test = new Trainer(480, 190, 1, true, true, "Trainer000", new TeamPokemon[]{teampokemon6});
 		level1.addMob(test);
 		
 		Trainer profOak = new Trainer(320, 320, 0);
@@ -101,5 +105,16 @@ public class Pokemon {
 	
 	public static Frame getMainFrame() {
 		return frame;
+	}
+	
+	public static Time getTime() {
+		String s = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+		System.out.println(s);
+		
+		if(Integer.parseInt(s.split(":")[0]) < 12) return Time.DAY;
+		else if(Integer.parseInt(s.split(":")[0]) < 18) return Time.AFTERNOON;
+		else if(Integer.parseInt(s.split(":")[0]) < 24) return Time.NIGHT;
+		
+		return Time.DAY;
 	}
 }

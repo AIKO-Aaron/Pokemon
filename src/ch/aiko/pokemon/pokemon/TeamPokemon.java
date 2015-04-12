@@ -1,8 +1,8 @@
 package ch.aiko.pokemon.pokemon;
 
 import ch.aiko.pokemon.language.Language;
-import ch.aiko.pokemon.mob.Player;
 import ch.aiko.pokemon.mob.Trainer;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.pokemon.attack.Move;
 import ch.aiko.pokemon.sprite.Sprite;
 

@@ -19,6 +19,7 @@ public class Settings extends PropertyUtil {
 	public static boolean isFirstLaunch = false;
 	
 	public static Settings instance;
+	public static float GAIN = -10F;
 	
 	public static Settings getInstance() {
 		return instance;
@@ -45,6 +46,8 @@ public class Settings extends PropertyUtil {
 			isUserFont = true;
 			font = font.substring(5);
 		}
+		
+		GAIN = getFloat("gain");
 	}
 	
 	public static String getPath() {
@@ -63,6 +66,10 @@ public class Settings extends PropertyUtil {
 	
 	public static int getInteger(String key) {
 		return instance.getValue(key).equalsIgnoreCase(key) ? PropertyUtil.LoadFileInClassPath("/settings/fields").getIntegerValue(key) : instance.getIntegerValue(key);
+	}
+	
+	public static float getFloat(String key) {
+		return instance.getValue(key).equalsIgnoreCase(key) ? PropertyUtil.LoadFileInClassPath("/settings/fields").getFloatValue(key) : instance.getFloatValue(key);
 	}
 
 	public static double getDouble(String key) {

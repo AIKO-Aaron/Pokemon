@@ -3,7 +3,8 @@ package ch.aiko.pokemon.graphics.menu;
 import java.awt.event.KeyEvent;
 
 import ch.aiko.pokemon.graphics.Drawer;
-import ch.aiko.pokemon.mob.Player;
+import ch.aiko.pokemon.graphics.Frame;
+import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.pokemon.Pokemon;
 
 public class PokemonMenu extends Menu {
@@ -24,16 +25,16 @@ public class PokemonMenu extends Menu {
 	}
 
 	public void paint(Drawer d) {
-		d.fillRect(0, 0, d.getFrame().getWidth(), d.getFrame().getHeight(), 0xFF000000);
-		int x = (d.getFrame().getWidth() - Pokemon.WIDTH) / 2 - Pokemon.WIDTH / 2;
-		int y = (d.getFrame().getHeight() - Pokemon.HEIGHT) / 2 - Pokemon.HEIGHT;
+		d.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
+		int x = (Frame.WIDTH - Pokemon.WIDTH) / 2 - Pokemon.WIDTH / 2;
+		int y = (Frame.HEIGHT - Pokemon.HEIGHT) / 2 - Pokemon.HEIGHT;
 
 		for (int i = 0; i < p.getTeamSize(); i++) {
 			d.drawTile(p.getPokemon(i).getSprite(), x + ((i % 2) * p.getPokemon(i).getSprite().getWidth()), y + ((i / 2) * p.getPokemon(i).getSprite().getHeight()));
 		}
 		int w = p.getPokemon(index).getSprite().getWidth();
 		int h = p.getPokemon(index).getSprite().getWidth();
-		d.drawRect(x + (index % 2) * w, y + (index / 2) * h + 22, w, h, 0xFFFF00FF);
+		d.drawRect(x + (index % 2) * w, y + (index / 2) * h, w, h, 0xFFFF00FF);
 	}
 
 	public void update(Drawer d) {

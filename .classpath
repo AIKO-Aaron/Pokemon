@@ -15,7 +15,6 @@
 	<classpathentry kind="lib" path="libs/xml-apis-1.0.b2.jar"/>
 	<classpathentry kind="lib" path="libs/basicplayer3.0.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-api.jar"/>
-	<classpathentry kind="lib" path="libs/jl1.0.jar"/>
 	<classpathentry kind="lib" path="libs/jogg-0.0.7.jar"/>
 	<classpathentry kind="lib" path="libs/jorbis-0.0.15.jar"/>
 	<classpathentry kind="lib" path="libs/jspeex0.9.7.jar"/>

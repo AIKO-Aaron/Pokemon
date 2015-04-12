@@ -16,6 +16,8 @@ public class Sprite {
 		width = maxWidth(x, width, img);
 		height = maxHeight(y, height, img);
 		
+		if(width == 0 || height == 0) return;
+		
 		this.x = x;
 		this.y = y;
 		this.width = width;
