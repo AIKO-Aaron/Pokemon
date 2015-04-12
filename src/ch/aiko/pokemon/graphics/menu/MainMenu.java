@@ -24,9 +24,15 @@ public class MainMenu extends Menu {
 			Pokemon.getMainFrame().openMenu(new FontMenu(p));
 		}
 	};
+	
+	private Runnable i3 = new Runnable() {
+		public void run() {
+			Pokemon.getMainFrame().openMenu(new SoundMenu(p));
+		}
+	};
 
-	private Runnable[] fields = new Runnable[] { i1, i2 };
-	private String[] labels = new String[] { Language.translate("REL_TEX"), Language.translate("FONT") };
+	private Runnable[] fields = new Runnable[] { i1, i2, i3 };
+	private String[] labels = new String[] { "REL_TEX", "FONT", "VOLUME" };
 	private int index = 0;
 
 	private Player p;
@@ -46,7 +52,7 @@ public class MainMenu extends Menu {
 	public void paint(Drawer d) {
 		d.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		for (int i = 0; i < fields.length; i++) {
-			d.drawText(labels[i] + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF);
+			d.drawText(Language.translate(labels[i]) + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF);
 		}
 	}
 

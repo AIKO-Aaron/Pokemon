@@ -15,7 +15,7 @@ Here's a list of them:
 	-xml-apis (1.0.b2)
 	-basicplayer (3.0)
 	-commons-logging-api
-	-jl (1.0)
+	-jlayer (1.0.1)
 	-jogg (0.0.7)
 	-jorbis (0.0.15)
 	-jspeex (0.9.7)

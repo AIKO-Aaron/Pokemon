@@ -68,6 +68,11 @@ DOUBLE_DAMAGE=Double damage
 QUAD_DAMAGE=Quadruple damage
 
 //Misc
+effective=effective
+not=not
+very=very
+super=super
+extremely=extremely
 Damage=Damage
 from=from
 against=against
@@ -92,3 +97,4 @@ FONT=Font
 
 //Text
 DefaultTrainerText=I'm a Trainer. I want to fight with you. NOW!!!
+VOLUME=volume

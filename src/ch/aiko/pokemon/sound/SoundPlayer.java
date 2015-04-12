@@ -42,7 +42,7 @@ public class SoundPlayer {
 	}
 
 	public static String file;
-	private static MusicThread music;
+	public static MusicThread music;
 
 	public static Player loopSound(final float volume) {
 		try {
@@ -74,6 +74,7 @@ public class SoundPlayer {
 
 	public static void stopLoop() {
 		running = false;
+		currentLoop.close();
 	}
 
 	public static void startloop() {
@@ -94,8 +95,8 @@ public class SoundPlayer {
 		}
 	}
 
-	private static class MusicThread extends Thread {
-		private float volume;
+	public static class MusicThread extends Thread {
+		public float volume;
 
 		public MusicThread(float volume) {
 			this.volume = volume;
