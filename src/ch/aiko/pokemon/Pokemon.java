@@ -35,9 +35,8 @@ public class Pokemon {
 	public static SpriteSheet pokemons = new SpriteSheet("/ch/aiko/pokemon/textures/diamond-pearl-frame2.png", 80, 80);
 	public static Pokemons pokes;
 	public static Moves moves;
-	
+
 	public static boolean debug = false;
-	
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
@@ -46,35 +45,35 @@ public class Pokemon {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if(args.length >= 1 && args[0] != null && args[0].equalsIgnoreCase("--debug-mode=true")) debug = true;
+
+		if (args.length >= 1 && args[0] != null && args[0].equalsIgnoreCase("--debug-mode=true")) debug = true;
 
 		Settings.load();
 		Language.setup();
-		
+
 		pokes = new Pokemons();
 		moves = new Moves();
-		
+
 		player = new Player(320, 320, 32, 32, Gender.BOY);
 		level1 = new Level(player, Location.INDOOR, "/ch/aiko/pokemon/level/Level.png", generateCoding(true), 16, 16);
 		level2 = new Level(player, Location.CAVES, "/ch/aiko/pokemon/level/Level2.png", generateCoding(true), 8, 8);
-				
-		TeamPokemon teampokemon1 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 0, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
-		TeamPokemon teampokemon2 = new TeamPokemon(player, Pokemons.get("Sandamer"), 1, 1, 1, 1, 1, 1, 1, 1, 1, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
-		TeamPokemon teampokemon3 = new TeamPokemon(player, Pokemons.get("Taubsi"), 1, 1, 1, 1, 1, 1, 1, 1, 2, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
-		TeamPokemon teampokemon4 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 3, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
-		TeamPokemon teampokemon5 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 4, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
-		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 5, new Move[]{Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL});
+
+		TeamPokemon teampokemon1 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 8, 1, 1, 1, 1, 1, 0, new Move[] { Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL });
+		TeamPokemon teampokemon2 = new TeamPokemon(player, Pokemons.get("Sandamer"), 1, 1, 1, 1, 1, 1, 1, 1, 1, new Move[] { Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL });
+		TeamPokemon teampokemon3 = new TeamPokemon(player, Pokemons.get("Taubsi"), 1, 1, 1, 1, 1, 1, 1, 1, 2, new Move[] { Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL });
+		TeamPokemon teampokemon4 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 3, new Move[] { Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL });
+		TeamPokemon teampokemon5 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 1, 1, 1, 1, 1, 1, 1, 4, new Move[] { Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL });
+		TeamPokemon teampokemon6 = new TeamPokemon(player, Pokemons.get("Pikachu"), 1, 128, 128, 1, 1, 1, 1, 1, 5, new Move[] { Moves.NULL, Moves.NULL, Moves.NULL, Moves.NULL });
 		teampokemon1.xp(1);
 
-		Trainer test = new Trainer(480, 190, 1, true, true, "Trainer000", new TeamPokemon[]{teampokemon6});
+		Trainer test = new Trainer(480, 190, 1, true, true, "Trainer000", new TeamPokemon[] { teampokemon2 });
 		level1.addMob(test);
-		
+
 		Trainer profOak = new Trainer(320, 320, 0);
 		level2.addMob(profOak);
-				
-		//level1.addTile(new Tile(sheet1.getSprite(0), 434, 240, false));
-		
+
+		// level1.addTile(new Tile(sheet1.getSprite(0), 434, 240, false));
+
 		frame = new Frame(level1);
 		frame.loopStart();
 	}
@@ -84,37 +83,41 @@ public class Pokemon {
 		coding.put(0xFF000000, sheet1.getSprite(0, 0).toTile(0, 0, b));
 		coding.put(0xFFFF0000, sheet1.getSprite(1, 0).toTile(0, 0, b));
 		coding.put(0xFFFFFFFF, new Sprite(0xFF00FFFF, 16, 16).toTile(0, 0, false));
-		coding.put(0xFF000099, new PressurePlate(0, 0, Pokemons.NULL.getSprite().copy()){public void onStepOn(Player p, int x, int y, Frame f){tel(p, f);}});
+		coding.put(0xFF000099, new PressurePlate(0, 0, Pokemons.NULL.getSprite().copy()) {
+			public void onStepOn(Player p, int x, int y, Frame f) {
+				tel(p, f);
+			}
+		});
 		return coding;
 	}
 
 	private static void tel(Player p, Frame f) {
-		if(debug) System.out.println(p.getX() + ":" + p.getY());
-		if(f.getLevel() == level1) p.teleport(f, level2, 216, 315);
+		if (debug) System.out.println(p.getX() + ":" + p.getY());
+		if (f.getLevel() == level1) p.teleport(f, level2, 216, 315);
 		else p.teleport(f, level1, 460, 960);
 	}
-	
+
 	public static void save() {
 		System.out.println("Saving current Configuration to: " + Settings.getPath() + "/settings/settings.cfg");
 	}
-	
+
 	public static void reloadTextures() {
 		sheet1 = new SpriteSheet("/textures/Sprites.png", 16, 16);
 		pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", 80, 80);
 	}
-	
+
 	public static Frame getMainFrame() {
 		return frame;
 	}
-	
+
 	public static Time getTime() {
 		String s = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
 		System.out.println(s);
-		
-		if(Integer.parseInt(s.split(":")[0]) < 12) return Time.DAY;
-		else if(Integer.parseInt(s.split(":")[0]) < 18) return Time.AFTERNOON;
-		else if(Integer.parseInt(s.split(":")[0]) < 24) return Time.NIGHT;
-		
+
+		if (Integer.parseInt(s.split(":")[0]) < 12) return Time.DAY;
+		else if (Integer.parseInt(s.split(":")[0]) < 18) return Time.AFTERNOON;
+		else if (Integer.parseInt(s.split(":")[0]) < 24) return Time.NIGHT;
+
 		return Time.DAY;
 	}
 }

@@ -54,8 +54,8 @@ public class Frame extends Window {
 			lastTime = time;
 			fps = count;
 			if (fps < 60) Frame.FPS++;
-			if (fps > 60) Frame.FPS--;
-			if(fps != 60) {
+			//if (fps > 60) Frame.FPS--;
+			if(fps < 60) {
 				timer.cancel();
 				Draw = Update = null;
 				setup();
@@ -98,7 +98,7 @@ public class Frame extends Window {
 						fps++;
 						repaint();
 					}
-				}, 0, 1000 / FPS);
+				}, 0, 1000 / FPS - 2);
 			}
 		};
 
@@ -110,9 +110,10 @@ public class Frame extends Window {
 						
 						//System.out.println(mouseX + ":" + mouseY);
 					}
-				}, 0, 1000 / FPS);
+				}, 0, 1000 / FPS - 2);
 			}
 		};
+		
 
 		if (!Draw.isAlive()) Draw.start();
 		if (!Update.isAlive()) Update.start();

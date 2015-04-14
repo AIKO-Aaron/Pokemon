@@ -22,12 +22,15 @@ package javazoom.jl.player;
 
 import java.io.InputStream;
 
+import ch.aiko.pokemon.Pokemon;
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.decoder.SampleBuffer;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
 
 /**
  * The <code>Player</code> class implements a simple player for playback of an MPEG audio stream.
@@ -71,6 +74,8 @@ public class Player {
 	private boolean complete = false;
 
 	private int lastPosition = 0;
+
+	private PlaybackListener listener;
 
 	/**
 	 * Creates a new <code>Player</code> instance.
@@ -164,6 +169,60 @@ public class Player {
 		return ret;
 	}
 
+	public boolean play(int start, int end) throws Exception {
+		for (int i = 0; i < start; i++) {
+			Header h = bitstream.readFrame();
+			if (h == null) return false;
+			decoder.decodeFrame(h, bitstream);
+		}
+
+		boolean ret = true;
+
+		for (int i = 0; i < end - start && ret; i++) {
+			ret = decodeFrame();
+		}
+
+		if (!ret) {
+			// last frame, ensure all data flushed to the audio device.
+			AudioDevice out = audio;
+			if (out != null) {
+				out.flush();
+				synchronized (this) {
+					complete = (!closed);
+					close();
+				}
+			}
+		}
+		return ret;
+	}
+
+	public boolean play(int start, int end, float gain) throws Exception {
+		boolean ret = true;
+		for (int i = 0; i < start; i++) {
+			ret = skipFrame();
+		}
+
+		for (int i = 0; i < end - start && ret; i++) {
+			//if (Pokemon.debug) System.out.println("playing frame: " + (start + i));
+			ret = decodeFrame(gain);
+		}
+
+		if (listener != null) listener.playbackFinished(new PlaybackEvent(null, 0, frame));
+
+		if (!ret) {
+			// last frame, ensure all data flushed to the audio device.
+			AudioDevice out = audio;
+			if (out != null) {
+				out.flush();
+				synchronized (this) {
+					complete = (!closed);
+					close();
+				}
+			}
+		}
+		return ret;
+	}
+
 	/**
 	 * Cloases this player. Any audio currently playing is stopped immediately.
 	 */
@@ -221,7 +280,7 @@ public class Player {
 
 			// sample buffer set when decoder constructed
 			SampleBuffer output = (SampleBuffer) decoder.decodeFrame(h, bitstream);
-			
+
 			synchronized (this) {
 				out = audio;
 				if (out != null) {
@@ -238,7 +297,7 @@ public class Player {
 		 */
 		return true;
 	}
-	
+
 	protected boolean decodeFrame(float gain) throws JavaLayerException {
 		try {
 			AudioDevice out = audio;
@@ -250,12 +309,12 @@ public class Player {
 
 			// sample buffer set when decoder constructed
 			SampleBuffer output = (SampleBuffer) decoder.decodeFrame(h, bitstream);
-			
+
 			if (audio instanceof JavaSoundAudioDevice) {
 				JavaSoundAudioDevice jsAudio = (JavaSoundAudioDevice) audio;
 				jsAudio.setLineGain(gain);
 			}
-			
+
 			synchronized (this) {
 				out = audio;
 				if (out != null) {
@@ -275,6 +334,17 @@ public class Player {
 
 	public JavaSoundAudioDevice getAudioDevice() {
 		return new JavaSoundAudioDevice();
+	}
+
+	protected boolean skipFrame() throws JavaLayerException {
+		Header h = bitstream.readFrame();
+		if (h == null) return false;
+		bitstream.closeFrame();
+		return true;
+	}
+
+	public void setListener(PlaybackListener l) {
+		this.listener = l;
 	}
 
 }

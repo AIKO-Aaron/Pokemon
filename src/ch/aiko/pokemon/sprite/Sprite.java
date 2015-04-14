@@ -15,16 +15,16 @@ public class Sprite {
 	public Sprite(BufferedImage img, int x, int y, int width, int height) {
 		width = maxWidth(x, width, img);
 		height = maxHeight(y, height, img);
-		
-		if(width == 0 || height == 0) return;
-		
+
+		if (width == 0 || height == 0) return;
+
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
-		if(width * height < 0) return;
-		
+
+		if (width * height < 0) return;
+
 		pixels = new int[width * height];
 		pixels = img.getRGB(x, y, width, height, pixels, 0, width);
 		this.img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -40,7 +40,12 @@ public class Sprite {
 		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
 	}
 
+	public Sprite(BufferedImage img, int width, int height) {
+		this(ImageUtil.resize(img, width, height));
+	}
+
 	public Sprite(int color, int width, int height) {
+		if(width <= 0 || height <= 0) return;
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -96,7 +101,7 @@ public class Sprite {
 	public int getY() {
 		return y;
 	}
-	
+
 	public Tile toTile(int x, int y) {
 		return new Tile(this, x, y, false);
 	}
@@ -251,25 +256,48 @@ public class Sprite {
 	public int getColor(int x, int y) {
 		return pixels[x + y * width];
 	}
-	
+
 	public Sprite removeColor(int color) {
-		for(int i = 0; i< pixels.length; i++) {
-			if(pixels[i] == color) pixels[i] = 0;
+		for (int i = 0; i < pixels.length; i++) {
+			if (pixels[i] == color) {
+				pixels[i] = 0;
+				img.setRGB(i % width, i / width, 0);
+			}
 		}
 		return this;
 	}
-	
+
 	public int maxWidth(int x, int width, BufferedImage img) {
-		if(img.getWidth() <= x + width) return img.getWidth() - x;
+		if (img.getWidth() <= x + width) return img.getWidth() - x;
 		else return width;
 	}
-	
+
 	public int maxHeight(int y, int height, BufferedImage img) {
-		if(img.getHeight() <= y + height) return img.getHeight() - y;
+		if (img.getHeight() <= y + height) return img.getHeight() - y;
 		else return height;
 	}
-	
+
 	public Sprite getScaledInstance(int newWidth, int newHeight) {
 		return new Sprite(ImageUtil.toBufferedImage(img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH)));
+	}
+
+	public static void printSprite(Sprite s) {
+		for (int i = 0; i < s.width * s.height; i++) {
+			System.out.println("(" + i % s.width + "|" + i / s.width + "): " + s.pixels[i]);
+		}
+	}
+
+	public void top(Sprite s, int x, int y) {
+		for (int yy = 0; yy < s.getHeight(); yy++) {
+			for (int xx = 0; xx < s.getWidth(); xx++) {
+				int xCoord = xx + x;
+				int yCoord = yy + y;
+
+				if (xCoord >= 0 && xCoord < width && yCoord >= 0 && yCoord < height && s.getAlpha(xx, yy) != 0) {
+					img.setRGB(xCoord, yCoord, s.getColor(xx, yy));
+					pixels[xCoord + yCoord * width] = s.getColor(xx, yy);
+				}
+			}
+		}
 	}
 }

@@ -61,7 +61,7 @@ public class Drawer {
 		drawTile(sprite, x, y);
 	}
 
-	protected BufferedImage createText(String text, int size, int col, String font) {
+	public static BufferedImage createText(String text, int size, int col, String font) {
 		String font1 = font.contains("fonts/") ? font.split("/")[font.split("/").length - 1].split("\\.")[0].replace("-", " ") : font;
 		
 		if (!exists(font1)) {
@@ -91,7 +91,7 @@ public class Drawer {
 		return null;
 	}
 	
-	protected boolean exists(String font) {
+	protected static boolean exists(String font) {
 		// font = font.replace("-", " ").split("/")[font.replace("-", " ").split("/").length - 1].split("\\.")[0];
 		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		for (Font f : e.getAllFonts()) {
@@ -102,7 +102,7 @@ public class Drawer {
 		return false;
 	}
 
-	protected Point getLength(Font f, String s) {
+	protected static Point getLength(Font f, String s) {
 		AffineTransform tr = new AffineTransform();
 		FontRenderContext frc = new FontRenderContext(tr, true, true);
 		return new Point((int) f.getStringBounds(s, frc).getWidth(), (int) f.getStringBounds(s, frc).getHeight());
@@ -149,7 +149,11 @@ public class Drawer {
 	}
 
 	public void drawTile(Sprite img, int x, int y, int w, int h) {
-		drawTile(new Sprite(img.getImage(w, h)), x, y);
+		drawTile(new Sprite(img.getImage(), w, h), x, y);
+	}
+	
+	public void drawTile(Sprite img, int x, int y, int w, int h, int col) {
+		drawTile(new Sprite(img.getImage(w, h)), x, y, col);
 	}
 
 	protected int getColor(int x, int y) {
@@ -161,13 +165,13 @@ public class Drawer {
 		return f;
 	}
 
-	public File extract(String filePath) {
+	public static File extract(String filePath) {
 		try {
 			File f = File.createTempFile(filePath, null);
 			FileOutputStream resourceOS = new FileOutputStream(f);
 			byte[] byteArray = new byte[1024];
 			int i;
-			InputStream classIS = getClass().getResourceAsStream("/" + filePath);
+			InputStream classIS = Drawer.class.getResourceAsStream("/" + filePath);
 			while ((i = classIS.read(byteArray)) > 0) {
 				resourceOS.write(byteArray, 0, i);
 			}

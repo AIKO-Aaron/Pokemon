@@ -24,7 +24,7 @@ public class MoveAnimation extends Animation {
 	}
 
 	public void drawNext(Drawer d, int x, int y) {
-		if (x + xOff == destx && y + yOff == desty && !doesStay) {
+		if (x + xOff == destx && y + yOff == desty && !doesStay && (timer ? index + 1 >= sheet.getSpriteCount() : true)) {
 			finished = true;
 		}
 

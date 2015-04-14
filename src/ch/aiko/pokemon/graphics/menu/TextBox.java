@@ -61,7 +61,7 @@ public class TextBox extends Menu {
 	public String name() {
 		return "TextBox:" + text;
 	}
-
+	
 	public void onOpen(Drawer d) {
 		open = true;
 		p.setPaused(true);

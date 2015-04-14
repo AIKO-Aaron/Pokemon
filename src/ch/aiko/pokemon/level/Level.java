@@ -166,7 +166,7 @@ public class Level {
 		return f.pixels[x + y * Frame.WIDTH];
 	}
 
-	public void drawTile(Tile t) {
+	public void drawTile(Tile t) {		
 		int[] pi = t.getPixels();
 		for (int i = 0; i < t.getWidth() * t.getHeight(); i++) {
 			int xx = (i % t.getWidth() + t.x) - camera.x;
@@ -174,7 +174,7 @@ public class Level {
 
 			if (xx < 0 || xx >= displaywidth) continue;
 
-			if (xx + yy * displaywidth < f.pixels.length && i < pi.length && i >= 0 && xx + yy * displaywidth >= 0) f.pixels[xx + yy * displaywidth] = pi[i];
+			if (xx + yy * displaywidth < f.pixels.length && i < pi.length && i >= 0 && xx + yy * displaywidth >= 0) f.pixels[xx + yy * displaywidth] = pi[i] == 0 ? getColor(xx, yy) : pi[i];
 		}
 	}
 

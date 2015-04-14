@@ -6,14 +6,18 @@ import java.util.Set;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import javazoom.jl.player.advanced.PlaybackListener;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
+import ch.aiko.pokemon.settings.Settings;
+
 public class SoundPlayer {
 
 	private static boolean running = false;
-	private static Player currentLoop;
+	public static Player currentLoop;
+	public static int times_played = 0;
 
 	public static Player playSound(String s) {
 		try {
@@ -43,10 +47,68 @@ public class SoundPlayer {
 
 	public static String file;
 	public static MusicThread music;
+	public static boolean playing = false;
 
 	public static Player loopSound(final float volume) {
+		if (currentLoop != null || playing) currentLoop.close();
+		if (music != null || playing) music.close();
+		playing = true;
+		times_played = 0;
+		running = false;
 		try {
-			music = new MusicThread(volume);
+
+			// 0, Integer.MAX_VALUE
+			music = new MusicThread(volume, 0, Integer.MAX_VALUE, null);
+			music.start();
+			return currentLoop;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Player loopSound(final float volume, PlaybackListener l) {
+		if (currentLoop != null || playing) currentLoop.close();
+		if (music != null || playing) music.close();
+		playing = true;
+		times_played = 0;
+		running = false;
+		try {
+
+			// 0, Integer.MAX_VALUE
+			music = new MusicThread(volume, 0, Integer.MAX_VALUE, l);
+			music.start();
+			return currentLoop;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Player loopSound(final float volume, int s, int end) {
+		if (currentLoop != null || playing) currentLoop.close();
+		if (music != null || playing) music.close();
+		playing = true;
+		times_played = 0;
+		running = false;
+		try {
+			music = new MusicThread(volume, s, end, null);
+			music.start();
+			return currentLoop;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Player loopSound(final float volume, int s, int end, PlaybackListener l) {
+		if (currentLoop != null || playing) currentLoop.close();
+		if (music != null || playing) music.close();
+		playing = true;
+		times_played = 0;
+		running = false;
+		try {
+			music = new MusicThread(volume, s, end, l);
 			music.start();
 			return currentLoop;
 		} catch (Exception e) {
@@ -56,14 +118,43 @@ public class SoundPlayer {
 	}
 
 	public static Player loopSound(String file, final float volume) {
-		if(music != null) music.close();
+		times_played = 0;
+		if (music != null) music.close();
 		running = false;
-		if(currentLoop != null) currentLoop.close();
+		if (currentLoop != null) currentLoop.close();
 		SoundPlayer.file = file;
 		return loopSound(volume);
 	}
+	
+	public static Player loopSound(String file, final float volume, PlaybackListener l) {
+		times_played = 0;
+		if (music != null) music.close();
+		running = false;
+		if (currentLoop != null) currentLoop.close();
+		SoundPlayer.file = file;
+		return loopSound(volume, l);
+	}
+	
+	public static Player loopSound(String file, final float volume, int st, int en, PlaybackListener l) {
+		times_played = 0;
+		if (music != null) music.close();
+		running = false;
+		if (currentLoop != null) currentLoop.close();
+		SoundPlayer.file = file;
+		return loopSound(volume, st, en, l);
+	}
+
+	public static Player loopSound(String file, final float volume, final int s, final int e) {
+		times_played = 0;
+		if (music != null) music.close();
+		running = false;
+		if (currentLoop != null) currentLoop.close();
+		SoundPlayer.file = file;
+		return loopSound(volume, s, e);
+	}
 
 	public static void changeLoop(String s) {
+		times_played = 0;
 		final BufferedInputStream bis = new BufferedInputStream(SoundPlayer.class.getClassLoader().getResourceAsStream(s));
 		try {
 			currentLoop = new Player(bis);
@@ -73,13 +164,28 @@ public class SoundPlayer {
 	}
 
 	public static void stopLoop() {
+		int timeout = 100;
+		while((music == null || currentLoop == null) && playing) {
+			System.out.println("Nothing Playing");
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			timeout--;
+			if(timeout == 0) return;
+		}
+		
+		times_played = 0;
 		running = false;
 		currentLoop.close();
 	}
 
 	public static void startloop() {
+		times_played = 0;
 		running = true;
-		loopSound("/ch/aiko/pokemon/sounds/1sec.mp3", -100F);
+		if (music == null) loopSound("/ch/aiko/pokemon/sounds/1sec.mp3", -100F);
+		else loopSound(Settings.GAIN);
 	}
 
 	// Debug-Tool
@@ -95,11 +201,21 @@ public class SoundPlayer {
 		}
 	}
 
+	public static void loopSound() {
+
+	}
+
 	public static class MusicThread extends Thread {
 		public float volume;
-
-		public MusicThread(float volume) {
+		private int start_frame;
+		private int end_frame;
+		private PlaybackListener listener;
+		
+		public MusicThread(float volume, int start_frame, int end_frame, PlaybackListener l) {
 			this.volume = volume;
+			this.start_frame = start_frame;
+			this.end_frame = end_frame;
+			this.listener = l;
 		}
 
 		public void run() {
@@ -108,16 +224,19 @@ public class SoundPlayer {
 				try {
 					BufferedInputStream bis = new BufferedInputStream(SoundPlayer.class.getClassLoader().getResourceAsStream(file));
 					currentLoop = new Player(bis);
-					currentLoop.play(volume);
+					currentLoop.setListener(listener);
+					currentLoop.play(start_frame, end_frame, volume);
 					bis.close();
+					times_played++;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		public void close() {
 			interrupt();
+			playing = false;
 		}
 	}
 }

@@ -11,7 +11,7 @@ public class SpriteSheet {
 	private int spriteWidth;
 	private int spriteHeight;
 
-	private int entireWidth, entireHeight;
+	private int entireWidth, entireHeight, xOff, yOff;
 
 	public SpriteSheet(BufferedImage img, int sW, int sH) {
 		this.spriteWidth = sW;
@@ -44,14 +44,22 @@ public class SpriteSheet {
 		int width = img.getWidth() / sW * nW;
 		int height = (int) ((float) img.getHeight() / (float) sH * (float) nH);
 
-		img = ImageUtil.toBufferedImage(img.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH));
-
+		//img = ImageUtil.toBufferedImage(img.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH));
+		img = ImageUtil.resize(img, width, height);
+		
 		this.img = img;
 		pixels = new int[img.getWidth() * img.getHeight()];
 		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
 
 		entireWidth = img.getWidth();
 		entireHeight = img.getHeight();
+	}
+	
+	public SpriteSheet offset(int x, int y) {
+		this.xOff = x;
+		this.yOff = y;
+		
+		return this;
 	}
 
 	public SpriteSheet(Sprite s, int w, int h) {
@@ -65,13 +73,15 @@ public class SpriteSheet {
 	}
 
 	public Sprite getSprite(int x, int y) {
+		x += xOff;
+		y += yOff;
 		return new Sprite(img, x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight);
 	}
 
 	public Sprite getSprite(int i) {
 		int w = img.getWidth() / spriteWidth;
-		int x = (i % w) * spriteWidth;
-		int y = (i / w) * spriteHeight;
+		int x = (i % w) * spriteWidth + xOff;
+		int y = (i / w) * spriteHeight + yOff;
 		return new Sprite(img, x, y, spriteWidth, spriteHeight);
 	}
 
@@ -94,14 +104,25 @@ public class SpriteSheet {
 	public SpriteSheet removeColor(int color) {
 		for (int i = 0; i < pixels.length; i++) {
 			if (pixels[i] == color) {
-				pixels[i] = 0;
-				img.setRGB(i % entireWidth, i / entireWidth, 0);
+				pixels[i] = 0x00000000;
+				img.setRGB(i % entireWidth, i / entireWidth, 0x00000000);
 			}
 		}
 		return this;
 	}
 
+	public SpriteSheet replaceColor(int color, int newC) {
+		for (int i = 0; i < pixels.length; i++) {
+			if (pixels[i] == color) {
+				pixels[i] = newC;
+				img.setRGB(i % entireWidth, i / entireWidth, newC);
+			}
+		}
+		return this;
+	}
+	
 	public int getSpriteCount() {
-		return (getSheetWidth() / getSpriteWidth()) * (getSheetWidth() / getSpriteWidth());
+		// return (getSheetWidth() / getSpriteWidth()) * (getSheetWidth() / getSpriteWidth());
+		return (getSheetWidth() * getSheetHeight()) / (getSpriteWidth() * getSpriteHeight());
 	}
 }

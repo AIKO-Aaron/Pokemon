@@ -114,7 +114,7 @@ public class Trainer extends Mob {
 			}
 		}
 
-		if (p1.x + p1.w >= speed + x && p1.x <= x && p1.y + p1.h >= y && p1.y <= y && !p1.isInFight() && fight == null) {
+		if (p1.x + p1.w >= speed + x && p1.x <= x && p1.y + p1.h >= y && p1.y <= y && !p1.isInFight() && fight == null && !p1.isInFight()) {
 			fight = new Fight(f, p1, this, currentLevel.getLocation(), Pokemon.getTime());
 		}
 		
@@ -278,6 +278,10 @@ public class Trainer extends Mob {
 
 	public void setTeamPokemon(int pos, TeamPokemon teamPokemon) {
 		team.set(pos, teamPokemon);
+	}
+	
+	public TeamPokemon getPokemon(int i) {
+		return team.get(i);
 	}
 
 	public ArrayList<TeamPokemon> convert(TeamPokemon[] tem) {

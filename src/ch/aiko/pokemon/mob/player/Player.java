@@ -50,10 +50,10 @@ public class Player extends Mob {
 
 		switch (g) {
 			case BOY:
-				sheet = new SpriteSheet("/ch/aiko/pokemon/textures/player_boy.png", 32, 32);
+				sheet = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32);
 				break;
 			case GIRL:
-				sheet = new SpriteSheet("/ch/aiko/pokemon/textures/player_girl.png", 32, 32);
+				sheet = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_girl.png", 32, 32);
 				break;
 		}
 	}

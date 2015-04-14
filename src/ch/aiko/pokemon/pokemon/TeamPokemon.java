@@ -1,10 +1,13 @@
 package ch.aiko.pokemon.pokemon;
 
+import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Trainer;
 import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.pokemon.attack.Move;
+import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.pokemon.sprite.Sprite;
+import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class TeamPokemon {
 
@@ -24,10 +27,10 @@ public class TeamPokemon {
 		this.pos = pos;
 		this.pokemon = pok;
 		this.moves = moves;
-		
+
 		t.setTeamPokemon(pos, this);
 	}
-	
+
 	public TeamPokemon(Player p, Pokemon pok, int lvl, int hp, int maxHP, int Att, int Satt, int def, int Sdef, int xpToLvl, int pos, Move[] moves) {
 		this.lvl = lvl;
 		this.hp = hp;
@@ -112,7 +115,7 @@ public class TeamPokemon {
 	public void levelUp() {
 		System.out.println("Level Up");
 		lvl++;
-		if(lvl >= pokemon.getLevelEvolve() && pokemon.getLevelEvolve() != -1) System.out.println("Evolve");
+		if (lvl >= pokemon.getLevelEvolve() && pokemon.getLevelEvolve() != -1) System.out.println("Evolve");
 		xpToLvl += lvl;
 		if (xpToLvl <= 0) levelUp();
 	}
@@ -129,21 +132,76 @@ public class TeamPokemon {
 	public String getName(Language l) {
 		return pokemon.getName(l);
 	}
-	
+
 	public String getLocalizationString() {
 		return pokemon.getLocalizationString();
 	}
-	
+
 	public Sprite getSprite() {
 		return pokemon.getSprite();
 	}
-	
+
+	public Sprite getBackSprite() {
+		return pokemon.getBackSprite();
+	}
+
 	public int getHeight() {
 		return pokemon.getHeight();
 	}
-	
+
 	public int getWidth() {
 		return pokemon.getWidth();
 	}
-	
+
+	private static SpriteSheet hp_player = new SpriteSheet("/ch/aiko/pokemon/textures/hp_player.png", 132, 42);
+	private static SpriteSheet hp_enemy = new SpriteSheet("/ch/aiko/pokemon/textures/hp_enemy.png", 132, 42);
+
+	// Green = 0xFF64A068
+	// Orange = 0xFFCC9C68
+	// Red = 0xFFC85C54
+
+	// 48 * 2
+	// 192 * 8
+
+	public Sprite getPlayerHpBar() {
+		String name = getName();
+
+		Sprite nameSprite = new Sprite(Drawer.createText(name, 40, 0xFFFFFFFF, Settings.font));
+		Sprite hpSprite = new Sprite(Drawer.createText(hp + "", 30, 0xFFFFFFFF, Settings.font));
+		Sprite maxHpSprite = new Sprite(Drawer.createText("/ " + maxHP, 30, 0xFFFFFFFF, Settings.font));
+		Sprite lvlSprite = new Sprite(Drawer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
+		Sprite HP = new Sprite(Drawer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
+		int color = (int) (Math.abs((float) hp / (float) maxHP - 1) * 255) << 16 | (int) (255 * (float) hp / (float) maxHP) << 8 | 0xFF000000;
+		Sprite bar = new Sprite(color, 192 / maxHP * hp, 8);
+
+		Sprite s = hp_player.getSprite(0).getScaledInstance(528, 168);
+
+		s.top(nameSprite, 128, 27);
+		s.top(hpSprite, 300, 112);
+		s.top(maxHpSprite, 380, 112);
+		s.top(lvlSprite, 330, 27);
+		s.top(HP, 250, 85);
+		s.top(bar, 304, 96);
+
+		return s;
+	}
+
+	public Sprite getEnemyHpBar() {
+		String name = getName();
+
+		Sprite nameSprite = new Sprite(Drawer.createText(name, 40, 0xFFFFFFFF, Settings.font));
+		Sprite lvlSprite = new Sprite(Drawer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
+		Sprite s = hp_enemy.getSprite(0).getScaledInstance(528, 168);
+		Sprite HP = new Sprite(Drawer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
+		
+		int color = (int) (Math.abs((float) hp / (float) maxHP - 1) * 255) << 4 | (int) (255 * (float) hp / (float) maxHP) << 8 | 0xFF000000;
+		Sprite bar = new Sprite(color, 192 / maxHP * hp, 8);
+
+		s.top(nameSprite, 30, 52);
+		s.top(lvlSprite, 250, 52);
+		s.top(HP, 175, 109);
+		s.top(bar, 220, 120);
+
+		return s;
+	}
 }
