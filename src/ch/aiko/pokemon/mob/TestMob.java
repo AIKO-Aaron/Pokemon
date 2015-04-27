@@ -1,9 +1,8 @@
 package ch.aiko.pokemon.mob;
 
-import java.awt.Graphics;
 import java.awt.Point;
 
-import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.sprite.Sprite;
 
@@ -20,22 +19,14 @@ public class TestMob extends Mob {
 	}
 
 	public void update(Frame mainFrame) {
-		Point p = pathFind(mainFrame, mainFrame.getLevel().getPlayer().x, mainFrame.getLevel().getPlayer().y, speed);
+		Point p = pathFind(mainFrame, Frame.getLevel().getPlayer().x, Frame.getLevel().getPlayer().y, speed);
 		
 		x += getMaxSpeedX(mainFrame, -p.x, speed);
 		y += getMaxSpeedY(mainFrame, -p.y, speed);
 	}
 
-	public void paint(Graphics g, Frame mainFrame) {
-		mainFrame.getDrawer().fillRect(mainFrame.getLevel().getPlayer().getX(), mainFrame.getLevel().getPlayer().getY()-mainFrame.getLevel().getPlayer().h + 10, 32, 32, 0xFFFF00FF);
-	}
-
-	public void paint(Drawer d, Point camera) {
-
-	}
-
-	public void paintOverPlayer(Graphics g, Frame f) {
-
+	public void paint() {		
+		Renderer.fillRect(Frame.getLevel().getPlayer().getX(), Frame.getLevel().getPlayer().getY()-Frame.getLevel().getPlayer().h + 10, 32, 32, 0xFFFF00FF);
 	}
 
 }

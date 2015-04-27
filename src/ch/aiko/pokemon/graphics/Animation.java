@@ -1,5 +1,6 @@
 package ch.aiko.pokemon.graphics;
 
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class Animation {
@@ -28,13 +29,13 @@ public class Animation {
 		this.repeat = repeat;
 	}
 	
-	public void drawNext(Drawer d, int x, int y) {
+	public void drawNext(int x, int y) {
 		if(finished) {
 			System.err.println("No more Frames to draw");
 			return;
 		}
 		
-		d.drawTile(sheet.getSprite(index), x, y,0xFF00FF00);
+		Renderer.drawImage(x, y, sheet.getSprite(index).getImage());
 						
 		tmpIndex++;
 		

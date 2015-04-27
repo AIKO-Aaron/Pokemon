@@ -9,9 +9,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.fight.Fight;
-import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.mob.player.Player;
@@ -88,24 +88,22 @@ public class Trainer extends Mob {
 		userInit();
 	}
 
-	public void userUpdate(Drawer d) {
+	public void userUpdate() {
 
 	}
 
 	public final void update(Frame f) {
-		currentLevel = f.getLevel();
-		
-		userUpdate(f.getDrawer());
-		
-		Player p1 = f.getLevel().getPlayer();
+		currentLevel = Frame.getLevel();
+				
+		Player p1 = Frame.getLevel().getPlayer();
 
 		for (int i = 0; i < seeWidth && wantToFight; i++) {
 			int xPos = (dir == LEFT || dir == RIGHT) ? speed * i + x : x;
 			int yPos = (dir == UP || dir == DOWN) ? speed * i + y : y;
 
 			if (p1.x + p1.w >= speed + xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
-				f.getDrawer().fillRect(xPos, yPos, 32, 32, 0xFFFFFFFF);
-				f.getLevel().getPlayer().setPaused(true);
+				Renderer.fillRect(xPos, yPos, 32, 32, 0xFFFFFFFF);
+				Frame.getLevel().getPlayer().setPaused(true);
 
 				Point p = pathFind(f, xPos, yPos, speed);
 
@@ -118,7 +116,7 @@ public class Trainer extends Mob {
 			fight = new Fight(f, p1, this, currentLevel.getLocation(), Pokemon.getTime());
 		}
 		
-		if(fight != null && !fight.opened() && f.getOpenedMenu() != fight) f.openMenu(fight);
+		if(fight != null && !fight.opened() && Frame.getMenu() != fight) Frame.openMenu(fight);
 
 		if (!doesMove) {
 			switch (dir) {
@@ -135,7 +133,7 @@ public class Trainer extends Mob {
 
 		if (!doesMove) return;
 
-		Point p = pathFind(f, f.getLevel().getPlayer().x, f.getLevel().getPlayer().y, speed);
+		Point p = pathFind(f, Frame.getLevel().getPlayer().x, Frame.getLevel().getPlayer().y, speed);
 		if (oneDir) {
 			if (p.x != 0 && !checkCollisionX(f, p.x, speed)) {
 				int xmov = p.x;
@@ -238,30 +236,11 @@ public class Trainer extends Mob {
 		}
 	}
 
-	public final void paint(Graphics g, Frame f) {
-		userDraw(f.getDrawer());
-		//Player p1 = f.getLevel().getPlayer();
-		
-		/**for (int i = 0; i < seeWidth && wantToFight; i++) {
-			int xPos = (dir == LEFT || dir == RIGHT) ? speed * i + x : x;
-			int yPos = (dir == UP || dir == DOWN) ? speed * i + y : y;
-			
-			f.getDrawer().fillRect(x + xPos-f.getLevel().getCamera().x, y + yPos-f.getLevel().getCamera().y, 32, 32, 0xFFFFFFFF);
-			
-			if (p1.x + p1.w >= speed + xPos && p1.x <= xPos && p1.y + p1.h >= yPos && p1.y <= yPos && !p1.isInFight()) {
-				f.getLevel().getPlayer().setPaused(true);
-				
-				Point p = pathFind(f, xPos, yPos, speed);
-				
-				x += p.x * speed;
-				y += p.y * speed;
-			}
-		}*/
-
-		if (current != null) f.getLevel().drawTile(current, x, y);
+	public final void paint() {
+		if (current != null) Renderer.drawSprite(current, x, y);
 	}
 
-	public void userDraw(Drawer d) {
+	public void userDraw() {
 	}
 
 	public void userInit() {
@@ -293,5 +272,9 @@ public class Trainer extends Mob {
 
 	public String getText() {
 		return fightKey;
+	}
+
+	public void addPokemon(TeamPokemon teampokemon) {
+		team.add(teampokemon);
 	}
 }

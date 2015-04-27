@@ -1,6 +1,5 @@
 package ch.aiko.pokemon.entity;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -22,9 +21,7 @@ public abstract class Entity extends Tile {
 
 	public abstract void update(Frame mainFrame);
 
-	public abstract void paint(Graphics g, Frame f);
-
-	public abstract void paintOverPlayer(Graphics g, Frame f);
+	public abstract void paint();
 
 	public int getX() {
 		
@@ -137,12 +134,8 @@ public abstract class Entity extends Tile {
 				Entity.this.update(mainFrame);
 			}
 
-			public void paint(Graphics g, Frame f) {
-				Entity.this.paint(g, f);
-			}
-
-			public void paintOverPlayer(Graphics g, Frame f) {
-				Entity.this.paintOverPlayer(g, f);
+			public void paint() {
+				Entity.this.paint();
 			}
 		};
 	}

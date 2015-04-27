@@ -2,8 +2,10 @@ package ch.aiko.pokemon.graphics.menu;
 
 import java.awt.event.KeyEvent;
 
+import ch.aiko.engine.KeyBoard;
+import ch.aiko.engine.Menu;
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.Pokemon;
-import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Trainer;
@@ -21,13 +23,13 @@ public class MainMenu extends Menu {
 
 	private Runnable i2 = new Runnable() {
 		public void run() {
-			Pokemon.getMainFrame().openMenu(new FontMenu(p));
+			Frame.openMenu(new FontMenu(p));
 		}
 	};
 	
 	private Runnable i3 = new Runnable() {
 		public void run() {
-			Pokemon.getMainFrame().openMenu(new SoundMenu(p));
+			Frame.openMenu(new SoundMenu(p));
 		}
 	};
 
@@ -41,27 +43,27 @@ public class MainMenu extends Menu {
 		this.p = p;
 	}
 
-	public void onOpen(Drawer d) {
+	public void onOpen() {
 		p.setPaused(true);
 	}
 
-	public void onClose(Drawer d) {
+	public void onClose() {
 		p.setPaused(false);
 	}
 
-	public void paint(Drawer d) {
-		d.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
+	public void draw() {
+		Renderer.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		for (int i = 0; i < fields.length; i++) {
-			d.drawText(Language.translate(labels[i]) + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF);
+			Renderer.drawText(Language.translate(labels[i]) + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF);
 		}
 	}
 
-	public void update(Drawer d) {
-		if (d.getFrame().getTimesPressed(Settings.getInteger("keyMenu")) > 0) d.getFrame().closeMenu();
-		if (d.getFrame().getTimesPressed(Settings.getInteger("keyUp")) > 0) index = index > 0 ? index - 1 : 0;
-		if (d.getFrame().getTimesPressed(Settings.getInteger("keyDown")) > 0) index = index < fields.length - 1 ? index + 1 : fields.length - 1;
+	public void update(double d) {
+		if (KeyBoard.getTimesPressed(Settings.getInteger("keyMenu")) > 0) Frame.closeMenu();
+		if (KeyBoard.getTimesPressed(Settings.getInteger("keyUp")) > 0) index = index > 0 ? index - 1 : 0;
+		if (KeyBoard.getTimesPressed(Settings.getInteger("keyDown")) > 0) index = index < fields.length - 1 ? index + 1 : fields.length - 1;
 
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_SPACE) > 0) fields[index].run();
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_SPACE) > 0) fields[index].run();
 	}
 
 	public String name() {

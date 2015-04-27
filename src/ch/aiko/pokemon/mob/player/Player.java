@@ -1,12 +1,13 @@
 package ch.aiko.pokemon.mob.player;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.engine.KeyBoard;
+import ch.aiko.engine.Menu;
+import ch.aiko.engine.Renderer;
+import ch.aiko.engine.Window;
 import ch.aiko.pokemon.graphics.Frame;
-import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.graphics.menu.PlayerMenu;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.mob.Mob;
@@ -62,7 +63,7 @@ public class Player extends Mob {
 		if (isPaused) return;
 		if (isOnTile(f)) ;
 
-		this.lastPlace = f.getLevel().getCamera();
+		this.lastPlace = Frame.getLevel().getCamera();
 
 		int xmovement = 0;
 		int ymovement = 0;
@@ -77,7 +78,7 @@ public class Player extends Mob {
 		if (ymovement > 0) direction = 0;
 		if (ymovement < 0) direction = 1;
 
-		if (f.getTimesPressed(KeyEvent.VK_U) > 0) System.out.println(x + ":" + y);
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_U) > 0) System.out.println(x + ":" + y);
 
 		walking = ymovement == 0 && xmovement == 0;
 
@@ -92,34 +93,40 @@ public class Player extends Mob {
 		int xs = speed;
 		int ys = speed;
 
-		if (checkCollisionX(f, xmovement, xs) && collide) xs = getMaxSpeedX(f, xmovement, speed);
-		if (checkCollisionY(f, ymovement, ys) && collide) ys = getMaxSpeedY(f, ymovement, speed);
+		if (checkCollisionX(f, xmovement, xs) && collide) xs = getMaxSpeedX(f, xmovement, (int) (speed * Frame.delta));
+		else xs *= Frame.delta;
+		if (checkCollisionY(f, ymovement, ys) && collide) ys = getMaxSpeedY(f, ymovement, (int) (speed * Frame.delta));
+		else ys *= Frame.delta;
 
 		x += xmovement * xs;
 		y += ymovement * ys;
 
-		f.getLevel().setCamera(x - Frame.WIDTH / 2, y - Frame.HEIGHT / 2);
+		Frame.getLevel().setCamera(x - Frame.WIDTH / 2, y - Frame.HEIGHT / 2);
 
-		if (f.getTimesPressed(KeyEvent.VK_X) > 0) {
-			f.openMenu(new PlayerMenu(this));
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_X) > 0) {
+			Frame.openMenu(new PlayerMenu(this));
 		}
 
 		if (!opened && Settings.isFirstLaunch) {
-			f.openMenu(new Menu() {
-				public void paint(Drawer d) {
-					d.drawText("Press X to open Menu", getXOnScreen(d) - 100, getYOnScreen(d) - 50, 25, 0xFFFF00FF);
-				}
-
-				public void update(Drawer d) {
-					if (d.getFrame().getTimesPressed(KeyEvent.VK_X) > 0) d.getFrame().closeMenu();
-				}
-
-				public void onClose(Drawer d) {
-					System.out.println("Trying to close menu");
+			Frame.openMenu(new Menu() {
+				public void draw() {
+					Renderer.drawText("Press X to open Menu", x - 100, y - 50, 25, 0xFFFF00FF);
 				}
 
 				public String name() {
 					return "FirstLaunch";
+				}
+
+				public void onOpen() {
+
+				}
+
+				public void onClose() {
+
+				}
+
+				public void update(double delta) {
+					if (KeyBoard.getTimesPressed(KeyEvent.VK_X) > 0) Window.closeMenu();
 				}
 			});
 			opened = true;
@@ -137,7 +144,7 @@ public class Player extends Mob {
 		return walking;
 	}
 
-	public void paint(Graphics g, Frame f) {
+	public void paint() {
 		int offset = 0;
 		if (!isWalking()) {
 			offset++;
@@ -145,17 +152,13 @@ public class Player extends Mob {
 			if (anim >= 20) offset++;
 		}
 
-		f.getDrawer().drawTile(sheet.getSprite(direction * 4 + offset).removeColor(0xFF88B8B0), x - f.getLevel().getCamera().x, y - f.getLevel().getCamera().y);
+		Renderer.drawSprite(sheet.getSprite(direction * 4 + offset).removeColor(0xFF88B8B0), x, y, 0);
 	}
 
 	public void teleport(Frame f, Level l, int x, int y) {
 		f.setLevel(l);
 		this.x = x;
 		this.y = y;
-	}
-
-	public void paintOverPlayer(Graphics g, Frame f) {
-
 	}
 
 	public void setPokemon(int pos, TeamPokemon teamPokemon) {
@@ -186,18 +189,6 @@ public class Player extends Mob {
 
 	public void setPaused(boolean b) {
 		this.isPaused = b;
-	}
-
-	public void paint(Drawer d) {
-
-	}
-
-	public int getXOnScreen(Drawer d) {
-		return x - d.getFrame().getLevel().getCamera().x;
-	}
-
-	public int getYOnScreen(Drawer d) {
-		return y - d.getFrame().getLevel().getCamera().y;
 	}
 
 	public int getX() {

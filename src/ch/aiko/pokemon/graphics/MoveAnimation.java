@@ -1,5 +1,6 @@
 package ch.aiko.pokemon.graphics;
 
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
 public class MoveAnimation extends Animation {
@@ -23,7 +24,7 @@ public class MoveAnimation extends Animation {
 		this.setColor(color);
 	}
 
-	public void drawNext(Drawer d, int x, int y) {
+	public void drawNext(int x, int y) {
 		if (x + xOff == destx && y + yOff == desty && !doesStay && (timer ? index + 1 >= sheet.getSpriteCount() : true)) {
 			finished = true;
 		}
@@ -40,10 +41,10 @@ public class MoveAnimation extends Animation {
 			yF = true;
 		}
 
-		x += this.xOff;
-		y += this.yOff;
+		x += this.xOff * Frame.delta;
+		y += this.yOff * Frame.delta;
 
-		d.drawTile(sheet.getSprite(index), x, y);
+		Renderer.drawImage(x, y, sheet.getSprite(index).getImage());
 
 		if (time > 0) {
 			time--;

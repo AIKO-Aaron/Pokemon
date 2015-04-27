@@ -16,19 +16,15 @@ public class PressurePlate extends Entity {
 	}
 
 	public void update(Frame f) {
-		int px = f.getLevel().getPlayer().x;
-		int py = f.getLevel().getPlayer().y;
-		int pw = f.getLevel().getPlayer().w;
-		int ph = f.getLevel().getPlayer().h;
+		int px = Frame.getLevel().getPlayer().x;
+		int py = Frame.getLevel().getPlayer().y;
+		int pw = Frame.getLevel().getPlayer().w;
+		int ph = Frame.getLevel().getPlayer().h;
 		
-		if(px <= x + w && px + pw > x && py <= y + h && py + ph > y) onStepOn(f.getLevel().getPlayer(), px, py, f);
+		if(px <= x + w && px + pw > x && py <= y + h && py + ph > y) onStepOn(Frame.getLevel().getPlayer(), px, py, f);
 	}
 
-	public void paint(Graphics g, Frame f) {
-		
-	}
-
-	public void paintOverPlayer(Graphics g, Frame f) {
+	public void paint() {
 		
 	}
 	
@@ -38,14 +34,10 @@ public class PressurePlate extends Entity {
 				super.update(mainFrame);
 			}
 
-			public void paint(Graphics g, Frame f) {
-				super.paint(g, f);
+			public void paint() {
+				super.paint();
 			}
 
-			public void paintOverPlayer(Graphics g, Frame f) {
-				super.paintOverPlayer(g, f);
-			}
-			
 			public void onStepOn(Player p, int x, int y, Frame f) {
 				PressurePlate.this.onStepOn(p, x, y, f);
 			}

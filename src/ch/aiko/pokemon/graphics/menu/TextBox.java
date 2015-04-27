@@ -5,7 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 
-import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.engine.KeyBoard;
+import ch.aiko.engine.Menu;
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.player.Player;
@@ -14,7 +16,6 @@ import ch.aiko.util.PokemonList;
 
 public class TextBox extends Menu {
 
-	private Frame f;
 	private Player p;
 	private String text;
 	private boolean open = false;
@@ -23,10 +24,9 @@ public class TextBox extends Menu {
 	private FontRenderContext frc = new FontRenderContext(affinetransform, true, true);
 	private PokemonList<Integer> starts = new PokemonList<Integer>();
 
-	public TextBox(Frame frame, Player p, String textKey) {
+	public TextBox(Player p, String textKey) {
 		System.out.println(textKey);
 		text = Language.translate(textKey);
-		this.f = frame;
 
 		length = Frame.WIDTH - 20;
 
@@ -62,30 +62,30 @@ public class TextBox extends Menu {
 		return "TextBox:" + text;
 	}
 	
-	public void onOpen(Drawer d) {
+	public void onOpen() {
 		open = true;
 		p.setPaused(true);
 	}
 
-	public void onClose(Drawer d) {
+	public void onClose() {
 		open = false;
 		p.setPaused(false);
 	}
 
-	public void paint(Drawer d) {
-		d.fillRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFFFFFFFF);
-		d.drawRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFF000000);
-		d.drawText(text.substring(starts.get(index - 1), starts.get(index + 0)), 0, Frame.HEIGHT - 100, 25, 0xFF000000);
-		if (index < maxIndex) d.drawText(text.substring(starts.get(index + 0), starts.get(index + 1)), 0, Frame.HEIGHT - 66, 25, 0xFF000000);
+	public void draw() {
+		Renderer.fillRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFFFFFFFF);
+		Renderer.drawRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFF000000);
+		Renderer.drawText(text.substring(starts.get(index - 1), starts.get(index + 0)), 0, Frame.HEIGHT - 100, 25, 0xFF000000);
+		if (index < maxIndex) Renderer.drawText(text.substring(starts.get(index + 0), starts.get(index + 1)), 0, Frame.HEIGHT - 66, 25, 0xFF000000);
 	}
 
-	public void update(Drawer d) {
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_SPACE) > 0 || d.getFrame().getTimesPressed(KeyEvent.VK_ESCAPE) > 0) {
+	public void update(double d) {
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_SPACE) > 0 || KeyBoard.getTimesPressed(KeyEvent.VK_ESCAPE) > 0) {
 			index++;
 			
 			if(index >= maxIndex) {
 				index = maxIndex;
-				f.closeMenu();
+				Frame.closeMenu();
 			}
 		}
 	}

@@ -3,7 +3,9 @@ package ch.aiko.pokemon.graphics.menu;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.engine.KeyBoard;
+import ch.aiko.engine.Menu;
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.player.Player;
@@ -54,48 +56,48 @@ public class PlayerMenu extends Menu {
 		return "SideMenu";
 	}
 
-	public void onOpen(final Drawer d) {
+	public void onOpen() {
 		// Pause the actions of the Player
 		p.setPaused(true);
 
 		// Init Actions of the Menu Fields
 		PlayerMenuFields.BACK.setAction(new Runnable() {
 			public void run() {
-				d.getFrame().closeMenu();
+				Frame.closeMenu();
 			}
 		});
 		PlayerMenuFields.POKEMON.setAction(new Runnable() {
 			public void run() {
-				d.getFrame().openMenu(new PokemonMenu(p));
+				Frame.openMenu(new PokemonMenu(p));
 			}
 		});
 		PlayerMenuFields.LANGUAGE.setAction(new Runnable() {
 			public void run() {
-				d.getFrame().openMenu(new LanguageMenu(p));
+				Frame.openMenu(new LanguageMenu(p));
 			}
 		});
 		PlayerMenuFields.MENU.setAction(new Runnable() {
 			public void run() {
-				d.getFrame().openMenu(new MainMenu(p));
+				Frame.openMenu(new MainMenu(p));
 			}
 		});
 	}
 
-	public void onClose(Drawer d) {
+	public void onClose() {
 		// Unpause the Players actions
 		p.setPaused(false);
 	}
 
-	public void update(Drawer d) {
+	public void update(double delta) {
 		// Key input
-		if (d.getFrame().getTimesPressed(Settings.getInteger("keyMenu")) > 0) d.getFrame().closeMenu();
-		if (d.getFrame().getTimesPressed(Settings.getInteger("keyUp")) > 0) index = index > 0 ? index - 1 : 0;
-		if (d.getFrame().getTimesPressed(Settings.getInteger("keyDown")) > 0) index = index < fields.size() - 1 ? index + 1 : fields.size() - 1;
+		if (KeyBoard.getTimesPressed(Settings.getInteger("keyMenu")) > 0) Frame.closeMenu();
+		if (KeyBoard.getTimesPressed(Settings.getInteger("keyUp")) > 0) index = index > 0 ? index - 1 : 0;
+		if (KeyBoard.getTimesPressed(Settings.getInteger("keyDown")) > 0) index = index < fields.size() - 1 ? index + 1 : fields.size() - 1;
 
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_SPACE) > 0) run(index);
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_SPACE) > 0) run(index);
 	}
 
-	public void paint(Drawer d) {
+	public void draw() {
 		PlayerMenuFields.class.getName();
 		int width = Frame.WIDTH / 3;
 		int x = Frame.WIDTH - width - 1;
@@ -104,21 +106,21 @@ public class PlayerMenu extends Menu {
 		int length = fields.size();
 
 		// Background of the Menu
-		d.fillRect(x, y, width, height, 0xFFFFFFFF);
+		Renderer.fillRect(x, y, width, height, 0xFFFFFFFF);
 
 		// Black Rectangle around Background
-		d.drawRect(x, y, width, height, 0xFF000000);
+		Renderer.drawRect(x, y, width, height, 0xFF000000);
 
 		// Menu Fields (look above)
 		for (int i = 0; i < length; i++) {
-			d.drawRect(x, (height / length) * i + y, width, 1, 0xFF000000);
-			d.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF);
+			Renderer.drawRect(x, (height / length) * i + y, width, 1, 0xFF000000);
+			Renderer.drawText(fields.get(i).getName(), x + 50, (height / length) * i + (height / length / 2) - 12, 25, 0xFF0000FF);
 		}
 
 		// Rectangle around selected Menu Field
-		d.drawRect(x - 1, Math.max(-1, (height / length) * index + 1 + y), width + 1, height / length - 2, 0xFFFF00FF);
-		d.drawRect(x - 0, Math.max(-1, (height / length) * index + 0 + y), width + 0, height / length - 0, 0xFFFF00FF);
-		d.drawRect(x + 1, Math.max(-1, (height / length) * index - 1 + y), width - 1, height / length + 2, 0xFFFF00FF);
+		Renderer.drawRect(x - 1, Math.max(-1, (height / length) * index + 1 + y), width + 1, height / length - 2, 0xFFFF00FF);
+		Renderer.drawRect(x - 0, Math.max(-1, (height / length) * index + 0 + y), width + 0, height / length - 0, 0xFFFF00FF);
+		Renderer.drawRect(x + 1, Math.max(-1, (height / length) * index - 1 + y), width - 1, height / length + 2, 0xFFFF00FF);
 	}
 
 	public void run(int index) {

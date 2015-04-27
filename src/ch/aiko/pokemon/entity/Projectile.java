@@ -1,7 +1,5 @@
 package ch.aiko.pokemon.entity;
 
-import java.awt.Graphics;
-
 import ch.aiko.pokemon.entity.particle.Particle;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.sprite.Sprite;
@@ -21,22 +19,18 @@ public class Projectile extends Entity {
 
 	public void update(Frame f) {
 		if(checkCollisionX(f, xMot, speed) || checkCollisionY(f, yMot, speed)) {
-			new Particle(x, y, (int) (60 * 0.5f), 60, f.getLevel());
-			f.getLevel().removeEntity(this);
+			new Particle(x, y, (int) (60 * 0.5f), 60, Frame.getLevel());
+			Frame.getLevel().removeEntity(this);
 		}
 		
 		x += xMot * speed;
 		y += yMot * speed;
 		
 		deathTime--;
-		if(deathTime <= 0) f.getLevel().removeEntity(this);
+		if(deathTime <= 0) Frame.getLevel().removeEntity(this);
 	}
 
-	public void paint(Graphics g, Frame f) {
-		
-	}
-
-	public void paintOverPlayer(Graphics g, Frame f) {
+	public void paint() {
 		
 	}
 

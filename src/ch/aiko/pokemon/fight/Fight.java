@@ -7,11 +7,12 @@ import java.awt.event.KeyEvent;
 
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
+import ch.aiko.engine.KeyBoard;
+import ch.aiko.engine.Menu;
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.Pokemon;
-import ch.aiko.pokemon.graphics.Drawer;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.graphics.MoveAnimation;
-import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.graphics.menu.TextBox;
 import ch.aiko.pokemon.mob.Trainer;
 import ch.aiko.pokemon.mob.player.Player;
@@ -49,8 +50,8 @@ public class Fight extends Menu {
 		this.loc = loc;
 		this.time = time;
 
-		text = new TextBox(f, p, t.getText());
-		Pokemon.frame.openMenu(text);
+		text = new TextBox(p, t.getText());
+		Frame.openMenu(text);
 
 		// Init sprites used
 		ground = new Sprite(ImageUtil.loadImageInClassPath(loc.getGroundPath(time)));
@@ -66,67 +67,6 @@ public class Fight extends Menu {
 		player = loopSound("ch/aiko/pokemon/sounds/FightOpening_1.mp3", Settings.GAIN);
 
 		System.out.println("Started Fight between: " + p + " and " + t);
-	}
-
-	public static void close() {
-
-	}
-
-	public void paint(Drawer d) {
-		if (text.isOpened()) return;
-
-		if (ground_anim == null) {
-			ground_anim = new FightStartAnimation(loc.getGroundPath(time), 256, 128);
-		}
-
-		if (player_anim == null) {
-			player_anim = new MoveAnimation(new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_" + p.getGender().name().toLowerCase() + ".png", 80, 80, player_height, player_height).removeColor(0xFF88B8B0), 30, 0, Frame.HEIGHT - player_height, false, 0x00000000);
-			player_anim.setSpeed(50 * (Pokemon.frame.getWidth() / Frame.WIDTH));
-			player_anim.setStartingTime(true);
-		}
-
-		d.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
-		draw(d.getFrame());
-	}
-
-	/**
-	 * 
-	 * public FightStartAnimation(String s) { super(new SpriteSheet(s, 256, 128, Frame.WIDTH, Frame.HEIGHT), 60, 0, 0, false, 0x00000000); setSpeed(25 * (Pokemon.frame.getWidth() / Frame.WIDTH)); }
-	 * 
-	 */
-
-	public void update(Drawer d) {
-		update(d.getFrame());
-
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_U) > 0) t.getPokemon(pokT).setHp(t.getPokemon(pokT).getHp() - 1);
-		if (d.getFrame().getTimesPressed(KeyEvent.VK_K) > 0) t.getPokemon(pokT).setHp(t.getPokemon(pokT).getHp() + 1);
-	}
-
-	public void update(Frame f) {}
-
-	public void draw(Frame f) {
-		if (ground_anim == null) return;
-
-		updateEnemyHp();
-		updatePlayerHp();
-
-		f.getDrawer().drawTile(background, 0, 0, Frame.WIDTH, Frame.HEIGHT);
-
-		if (!ground_anim.isFinished()) {
-			ground_anim.drawNext(f.getDrawer(), -Frame.WIDTH, 0);
-		} else {
-			f.getDrawer().drawTile(ground, 0, 0, Frame.WIDTH, Frame.HEIGHT);
-		}
-
-		if (!player_anim.isFinished()) {
-			player_anim.drawNext(f.getDrawer(), Frame.WIDTH, Frame.HEIGHT - player_height);
-		} else {
-			f.getDrawer().drawTile(backP, 0, Frame.HEIGHT - player_height, player_height, player_height);
-			f.getDrawer().drawTile(hpP, Frame.WIDTH - 528, Frame.HEIGHT - 200);
-
-			f.getDrawer().drawTile(frontE, Frame.WIDTH - player_height - 110, 50, player_height, player_height);
-			f.getDrawer().drawTile(hpE, -20, 0);
-		}
 	}
 
 	private void updateEnemyHp() {
@@ -153,24 +93,6 @@ public class Fight extends Menu {
 		hpP.top(bar, 304, 96);
 	}
 
-	public void onOpen(Drawer d) {
-		p.setPaused(true);
-
-		if (player != null) player.close();
-
-		stopLoop();
-		loopSound("ch/aiko/pokemon/sounds/TrainerFight.mp3", Settings.GAIN, 0, 535, new PlaybackListener() {
-			public void playbackFinished(PlaybackEvent evt) {
-				stopLoop();
-				loopSound("ch/aiko/pokemon/sounds/TrainerFight.mp3", Settings.GAIN, 517, 3675);
-			}
-		});
-	}
-
-	public void onClose(Drawer d) {
-		p.setPaused(false);
-	}
-
 	public Trainer getTrainer() {
 		return t;
 	}
@@ -185,6 +107,80 @@ public class Fight extends Menu {
 
 	public boolean opened() {
 		return text.isOpened();
+	}
+
+	public void onOpen() {
+		p.setPaused(true);
+
+		if (player != null) player.close();
+
+		stopLoop();
+		loopSound("ch/aiko/pokemon/sounds/TrainerFight.mp3", Settings.GAIN, 0, 535, new PlaybackListener() {
+			public void playbackFinished(PlaybackEvent evt) {
+				stopLoop();
+				loopSound("ch/aiko/pokemon/sounds/TrainerFight.mp3", Settings.GAIN, 517, 3675);
+			}
+		});
+	}
+
+	public void onClose() {
+		p.setPaused(false);
+
+	}
+
+	public void update(double delta) {
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_U) > 0) t.getPokemon(pokT).setHp(t.getPokemon(pokT).getHp() - 1);
+		if (KeyBoard.getTimesPressed(KeyEvent.VK_K) > 0) t.getPokemon(pokT).setHp(t.getPokemon(pokT).getHp() + 1);
+	}
+
+	public void draw() {
+		Frame.getLevel().getCamera().x = 0;
+		Frame.getLevel().getCamera().y = 0;
+
+		if (text.isOpened()) return;
+
+		if (ground_anim == null) {
+			ground_anim = new FightStartAnimation(loc.getGroundPath(time), 256, 128);
+		}
+
+		if (player_anim == null) {
+			player_anim = new MoveAnimation(new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_" + p.getGender().name().toLowerCase() + ".png", 80, 80, player_height, player_height).removeColor(0xFF88B8B0), 30, 0, Frame.HEIGHT - player_height, false, 0x00000000);
+			player_anim.setSpeed(50 * (Pokemon.frame.getWidth() / Frame.WIDTH));
+			player_anim.setStartingTime(true);
+		}
+
+		if (ground_anim == null) return;
+
+		updateEnemyHp();
+		updatePlayerHp();
+		
+		new Thread() {
+			public void run() {
+				
+				 //Renderer.drawImage(0, 0, background.getImage(Frame.WIDTH, Frame.HEIGHT));
+				if (!ground_anim.isFinished()) {
+					ground_anim.drawNext(-Frame.WIDTH, 0);
+				} else {
+					Renderer.drawImage(0, 0, ground.getImage(Frame.WIDTH, Frame.HEIGHT));
+				}
+				if (!player_anim.isFinished()) {
+					player_anim.drawNext(Frame.WIDTH, Frame.HEIGHT - player_height);
+				} else {
+					Renderer.drawImage(0, Frame.HEIGHT - player_height, backP.getImage(player_height, player_height), 5);
+					Renderer.drawImage(Frame.WIDTH - 528, Frame.HEIGHT - 200, hpP.getImage(), 5);
+
+					Renderer.drawImage(Frame.WIDTH - player_height - 110, 50, frontE.getImage(player_height, player_height));
+					Renderer.drawImage(-20, 0, hpE.getImage());
+				}
+			}
+		}.start();
+
+		
+		 
+
+		
+		
+
 	}
 
 }

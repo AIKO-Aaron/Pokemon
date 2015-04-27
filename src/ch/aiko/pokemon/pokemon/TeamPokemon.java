@@ -1,6 +1,6 @@
 package ch.aiko.pokemon.pokemon;
 
-import ch.aiko.pokemon.graphics.Drawer;
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Trainer;
 import ch.aiko.pokemon.mob.player.Player;
@@ -166,11 +166,11 @@ public class TeamPokemon {
 	public Sprite getPlayerHpBar() {
 		String name = getName();
 
-		Sprite nameSprite = new Sprite(Drawer.createText(name, 40, 0xFFFFFFFF, Settings.font));
-		Sprite hpSprite = new Sprite(Drawer.createText(hp + "", 30, 0xFFFFFFFF, Settings.font));
-		Sprite maxHpSprite = new Sprite(Drawer.createText("/ " + maxHP, 30, 0xFFFFFFFF, Settings.font));
-		Sprite lvlSprite = new Sprite(Drawer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
-		Sprite HP = new Sprite(Drawer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
+		Sprite nameSprite = new Sprite(Renderer.createText(name, 40, 0xFFFFFFFF, Settings.font));
+		Sprite hpSprite = new Sprite(Renderer.createText(hp + "", 30, 0xFFFFFFFF, Settings.font));
+		Sprite maxHpSprite = new Sprite(Renderer.createText("/ " + maxHP, 30, 0xFFFFFFFF, Settings.font));
+		Sprite lvlSprite = new Sprite(Renderer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
+		Sprite HP = new Sprite(Renderer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
 		int color = (int) (Math.abs((float) hp / (float) maxHP - 1) * 255) << 16 | (int) (255 * (float) hp / (float) maxHP) << 8 | 0xFF000000;
 		Sprite bar = new Sprite(color, 192 / maxHP * hp, 8);
 
@@ -189,10 +189,10 @@ public class TeamPokemon {
 	public Sprite getEnemyHpBar() {
 		String name = getName();
 
-		Sprite nameSprite = new Sprite(Drawer.createText(name, 40, 0xFFFFFFFF, Settings.font));
-		Sprite lvlSprite = new Sprite(Drawer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
+		Sprite nameSprite = new Sprite(Renderer.createText(name, 40, 0xFFFFFFFF, Settings.font));
+		Sprite lvlSprite = new Sprite(Renderer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
 		Sprite s = hp_enemy.getSprite(0).getScaledInstance(528, 168);
-		Sprite HP = new Sprite(Drawer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
+		Sprite HP = new Sprite(Renderer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
 		
 		int color = (int) (Math.abs((float) hp / (float) maxHP - 1) * 255) << 4 | (int) (255 * (float) hp / (float) maxHP) << 8 | 0xFF000000;
 		Sprite bar = new Sprite(color, 192 / maxHP * hp, 8);

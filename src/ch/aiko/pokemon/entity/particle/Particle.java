@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.level.Level;
@@ -54,17 +55,17 @@ public class Particle extends Entity {
 		
 		life--;
 		
-		if(life <= 0) mainFrame.getLevel().removeEntity(this);
+		if(life <= 0) Frame.getLevel().removeEntity(this);
 		this.x = (int) xx;
 		this.y = (int) yy;
 	}
 
-	public void paint(Graphics g, Frame f) {
+	public void paint() {
 		
 	}
 
 	public void paintOverPlayer(Graphics g, Frame f) {
-		f.getLevel().drawTile(sprite, (int) xx, (int) yy);
+		Renderer.drawImage((int) xx, (int) yy, sprite.getImage());
 	}
 
 }

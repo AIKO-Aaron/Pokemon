@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import javax.swing.UIManager;
 
+import ch.aiko.engine.Window;
 import ch.aiko.pokemon.entity.PressurePlate;
 import ch.aiko.pokemon.fight.Location;
 import ch.aiko.pokemon.fight.Time;
@@ -70,12 +71,13 @@ public class Pokemon {
 		level1.addMob(test);
 
 		Trainer profOak = new Trainer(320, 320, 0);
+		profOak.addPokemon(teampokemon6);
 		level2.addMob(profOak);
 
 		// level1.addTile(new Tile(sheet1.getSprite(0), 434, 240, false));
 
 		frame = new Frame(level1);
-		frame.loopStart();
+		Window.create("Pokemon", Frame.WIDTH, Frame.HEIGHT, frame);
 	}
 
 	private static HashMap<Integer, Tile> generateCoding(boolean b) {
@@ -93,7 +95,7 @@ public class Pokemon {
 
 	private static void tel(Player p, Frame f) {
 		if (debug) System.out.println(p.getX() + ":" + p.getY());
-		if (f.getLevel() == level1) p.teleport(f, level2, 216, 315);
+		if (Frame.getLevel() == level1) p.teleport(f, level2, 216, 315);
 		else p.teleport(f, level1, 460, 960);
 	}
 
