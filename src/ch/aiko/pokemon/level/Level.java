@@ -118,7 +118,7 @@ public class Level {
 	}
 
 	public void paint(Graphics g, Frame f) {
-		if(p.isInFight()) return;
+		if(p.isInFight() && Player.fight != null && Player.fight.text != null && !Player.fight.text.isOpened()) return;
 
 		if (tiles == null || mobs == null) return;
 
@@ -132,6 +132,7 @@ public class Level {
 			Entity tile = mobs.get(i);
 			if (tile == null) continue;
 			if(tile.getsRendered()) Renderer.drawSprite(tile.sprite, tile.x, tile.y);
+			tile.paint();
 		}
 
 		p.paint();

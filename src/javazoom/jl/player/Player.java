@@ -22,7 +22,6 @@ package javazoom.jl.player;
 
 import java.io.InputStream;
 
-import ch.aiko.pokemon.Pokemon;
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Decoder;

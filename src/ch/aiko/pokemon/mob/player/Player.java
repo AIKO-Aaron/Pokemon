@@ -7,6 +7,7 @@ import ch.aiko.engine.KeyBoard;
 import ch.aiko.engine.Menu;
 import ch.aiko.engine.Renderer;
 import ch.aiko.engine.Window;
+import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.graphics.menu.PlayerMenu;
 import ch.aiko.pokemon.level.Level;
@@ -35,6 +36,7 @@ public class Player extends Mob {
 
 	// Auto-path finding creates error if false
 	private static final boolean collide = true;
+	public static Fight fight;
 
 	public Player(int x, int y, Gender g) {
 		super(null, x, y);
@@ -109,7 +111,7 @@ public class Player extends Mob {
 
 		if (!opened && Settings.isFirstLaunch) {
 			Frame.openMenu(new Menu() {
-				public void draw() {
+				public void draw(double d) {
 					Renderer.drawText("Press X to open Menu", x - 100, y - 50, 25, 0xFFFF00FF);
 				}
 
@@ -207,6 +209,10 @@ public class Player extends Mob {
 
 	public void setFighting(boolean value) {
 		fighting = value;
+	}
+	
+	public void setFight(Fight fight) {
+		Player.fight = fight;
 	}
 
 	public Gender getGender() {

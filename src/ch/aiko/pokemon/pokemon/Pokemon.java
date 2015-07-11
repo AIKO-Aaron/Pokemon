@@ -53,7 +53,7 @@ public class Pokemon {
 		if(i < 252) {
 			int gen = id < 151 ? 1 : 2;
 			SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/gen" + gen + ".png", 90, 80).offset(182, -16);
-			Sprite s = sheet.getSprite((id-1) * 3).removeColor(0xFFE3DFE0);
+			Sprite s = sheet.getSprite((id-1) * 3);
 			
 			//Sprite.printSprite(s);
 			

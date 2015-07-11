@@ -3,6 +3,8 @@ package ch.aiko.engine;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.KeyEvent;
@@ -19,7 +21,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
-public abstract class Window extends JFrame implements ActionListener, MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, WindowStateListener, WindowListener, HierarchyBoundsListener {
+public abstract class Window extends JFrame implements ActionListener, MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, WindowStateListener, WindowListener, HierarchyBoundsListener, ComponentListener {
 
 	private static final long serialVersionUID = 3071280581916760929L;
 
@@ -29,7 +31,7 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 	public static int UPS = 60;
 	public static String title;
 
-	public static int SCALE_X, SCALE_Y;
+	public static float SCALE_X, SCALE_Y;
 	public static Pixel pixels;
 
 	private long lastTime;
@@ -37,8 +39,11 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 
 	protected static Menu menu;
 	private static boolean menuOpen = false;
-	
-	public static double delta;
+	public static boolean autoclear = true;
+
+	public static double delta, ddelta;
+
+	public static BufferedImage Background = null;
 
 	public static Menu getMenu() {
 		return menu;
@@ -117,8 +122,9 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 		addMouseWheelListener(this);
 		addWindowListener(this);
 		addHierarchyBoundsListener(this);
+		addComponentListener(this);
 
-		ancestorResized(null);
+		componentResized(null);
 
 		pixels = new Pixel(WIDTH * HEIGHT);
 
@@ -126,9 +132,10 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 			public void run() {
 				while (isVisible()) {
 					long time = System.nanoTime();
-					m_draw();
-					double sleepTime = ((1000000000D / FPS) - (System.nanoTime() - time));
-
+					m_draw(ddelta);
+					long end = System.nanoTime();
+					ddelta = (end - time) / 10000000;
+					double sleepTime = ((1000000000D / FPS) - (end - time));
 					pause(sleepTime);
 				}
 			}
@@ -165,14 +172,16 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 		int[] pi = pixels.pixelColors.clone();
 		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		img.setRGB(0, 0, WIDTH, HEIGHT, pi, 0, WIDTH);
-		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
-		Renderer.black();
-		Renderer.clear();
+		// g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+		g.drawImage(img.getScaledInstance(getWidth(), getHeight(), BufferedImage.SCALE_DEFAULT), 0, 0, getWidth(), getHeight(), null);
+		if (Background != null) g.drawImage(Background, 0, 0, (int) (WIDTH * SCALE_X), (int) (HEIGHT * SCALE_Y), null);
+		if (autoclear) Renderer.black();
+		if (autoclear) Renderer.clear();
 	}
 
-	private final void m_draw() {
+	private final void m_draw(double delta) {
 		if (menu == null || !menu.doesPauseGame()) draw();
-		if (menu != null) menu.draw();
+		if (menu != null) menu.draw(delta);
 		repaint();
 		fps++;
 	}
@@ -261,8 +270,26 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 	}
 
 	public void ancestorResized(HierarchyEvent e) {
-		SCALE_X = getWidth() / WIDTH;
-		SCALE_Y = getHeight() / HEIGHT;
+		SCALE_X = (float) getWidth() / (float) WIDTH;
+		SCALE_Y = (float) getHeight() / (float) HEIGHT;
+		repaint();
 	}
 
+	public void componentResized(ComponentEvent e) {
+		SCALE_X = (float) getWidth() / (float) WIDTH;
+		SCALE_Y = (float) getHeight() / (float) HEIGHT;
+		repaint();
+	}
+
+	public void componentMoved(ComponentEvent e) {
+
+	}
+
+	public void componentShown(ComponentEvent e) {
+
+	}
+
+	public void componentHidden(ComponentEvent e) {
+
+	}
 }

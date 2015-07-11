@@ -1,7 +1,5 @@
 package ch.aiko.pokemon.entity;
 
-import java.awt.Graphics;
-
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.sprite.Sprite;

@@ -72,7 +72,7 @@ public class TextBox extends Menu {
 		p.setPaused(false);
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		Renderer.fillRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFFFFFFFF);
 		Renderer.drawRect(0, Frame.HEIGHT - 75, Frame.WIDTH, 75, 0xFF000000);
 		Renderer.drawText(text.substring(starts.get(index - 1), starts.get(index + 0)), 0, Frame.HEIGHT - 100, 25, 0xFF000000);

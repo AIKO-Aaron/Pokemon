@@ -10,6 +10,7 @@ import javazoom.jl.player.advanced.PlaybackListener;
 import ch.aiko.engine.KeyBoard;
 import ch.aiko.engine.Menu;
 import ch.aiko.engine.Renderer;
+import ch.aiko.engine.Window;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.graphics.MoveAnimation;
@@ -26,7 +27,7 @@ public class Fight extends Menu {
 	private Player p;
 	private Trainer t;
 
-	private TextBox text;
+	public TextBox text;
 	MoveAnimation ground_anim, player_anim, enemy_anim;
 
 	private javazoom.jl.player.Player player;
@@ -44,12 +45,14 @@ public class Fight extends Menu {
 	private int hpPosP, hpPosE, speed = 5;
 
 	public Fight(Frame f, Player p, Trainer t, Location loc, Time time) {
+		p.setFight(this);
 		p.setFighting(true);
 		this.p = p;
 		this.t = t;
 		this.loc = loc;
 		this.time = time;
 
+		
 		text = new TextBox(p, t.getText());
 		Frame.openMenu(text);
 
@@ -66,7 +69,7 @@ public class Fight extends Menu {
 
 		player = loopSound("ch/aiko/pokemon/sounds/FightOpening_1.mp3", Settings.GAIN);
 
-		System.out.println("Started Fight between: " + p + " and " + t);
+		System.out.println("Started Fight between: " + p + " and " + t);		
 	}
 
 	private void updateEnemyHp() {
@@ -133,53 +136,54 @@ public class Fight extends Menu {
 		if (KeyBoard.getTimesPressed(KeyEvent.VK_K) > 0) t.getPokemon(pokT).setHp(t.getPokemon(pokT).getHp() + 1);
 	}
 
-	public void draw() {
+	public void draw(double delta) {
+		
+		if(Window.Background == null) Window.Background = ImageUtil.loadImageInClassPath(loc.getBackGroundPath(time));
+		
+		//Frame.autoclear = false;
+		
 		Frame.getLevel().getCamera().x = 0;
 		Frame.getLevel().getCamera().y = 0;
-
+		
 		if (text.isOpened()) return;
-
+		
 		if (ground_anim == null) {
 			ground_anim = new FightStartAnimation(loc.getGroundPath(time), 256, 128);
 		}
-
+		
 		if (player_anim == null) {
 			player_anim = new MoveAnimation(new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_" + p.getGender().name().toLowerCase() + ".png", 80, 80, player_height, player_height).removeColor(0xFF88B8B0), 30, 0, Frame.HEIGHT - player_height, false, 0x00000000);
-			player_anim.setSpeed(50 * (Pokemon.frame.getWidth() / Frame.WIDTH));
+			player_anim.setSpeed(10 * (Pokemon.frame.getWidth() / Frame.WIDTH));
 			player_anim.setStartingTime(true);
 		}
-
+		
 		if (ground_anim == null) return;
-
-		updateEnemyHp();
-		updatePlayerHp();
 		
-		new Thread() {
-			public void run() {
-				
-				 //Renderer.drawImage(0, 0, background.getImage(Frame.WIDTH, Frame.HEIGHT));
-				if (!ground_anim.isFinished()) {
-					ground_anim.drawNext(-Frame.WIDTH, 0);
-				} else {
-					Renderer.drawImage(0, 0, ground.getImage(Frame.WIDTH, Frame.HEIGHT));
-				}
-				if (!player_anim.isFinished()) {
-					player_anim.drawNext(Frame.WIDTH, Frame.HEIGHT - player_height);
-				} else {
-					Renderer.drawImage(0, Frame.HEIGHT - player_height, backP.getImage(player_height, player_height), 5);
-					Renderer.drawImage(Frame.WIDTH - 528, Frame.HEIGHT - 200, hpP.getImage(), 5);
-
-					Renderer.drawImage(Frame.WIDTH - player_height - 110, 50, frontE.getImage(player_height, player_height));
-					Renderer.drawImage(-20, 0, hpE.getImage());
-				}
-			}
-		}.start();
-
+		//updateEnemyHp();
+		//updatePlayerHp();
+		// Renderer.drawImage(0, 0, background.getImage(Frame.WIDTH, Frame.HEIGHT));
+		if (!ground_anim.isFinished()) {
+			ground_anim.drawNext(-Frame.WIDTH, 0, delta);
+		} else {
+			Renderer.drawImage(0, 0, ground.getImage(Frame.WIDTH, Frame.HEIGHT), -1);
+		}
+		if (!player_anim.isFinished()) {
+			player_anim.drawNext(Frame.WIDTH, Frame.HEIGHT - player_height, delta);
+		} else {
+			Renderer.drawImage(0, Frame.HEIGHT - player_height, backP.getImage(player_height, player_height), 5);
+			Renderer.drawImage(Frame.WIDTH - 528, Frame.HEIGHT - 200, hpP.getImage(), 5);
+			
+			Renderer.drawImage(Frame.WIDTH - player_height - 110, 50, frontE.getImage(player_height, player_height));
+			Renderer.drawImage(-20, 0, hpE.getImage());
+		}
 		
-		 
-
+		//Renderer.black();
+		//Renderer.clear();
 		
-		
+		//new Thread() {
+		//	public void run() {
+		//	}
+		//}.start();
 
 	}
 

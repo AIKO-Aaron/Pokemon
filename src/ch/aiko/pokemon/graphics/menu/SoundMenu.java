@@ -47,7 +47,7 @@ public class SoundMenu extends Menu {
 		if (KeyBoard.getTimesPressed(KeyEvent.VK_UP) > 0) index = index <= 100 - 1 ? index + 1 : 100;
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		Renderer.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		Renderer.drawText(Language.translate("VOLUME") + ": " + index, 10, 50, 75, 0xFFFFFFFF);
 		SoundPlayer.music.volume = index - 50;

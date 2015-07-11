@@ -159,7 +159,7 @@ public class Path {
 
 	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
 		if (xmov * speed == 0) return 0;
-		while (f.getLevel().checkCollisionX(x + speed * xmov, y, w, h) && speed > 0) {
+		while (Frame.getLevel().checkCollisionX(x + speed * xmov, y, w, h) && speed > 0) {
 			speed--;
 		}
 		return speed;
@@ -167,7 +167,7 @@ public class Path {
 
 	public static int getMaxSpeedY(Frame f, int x, int y, int w, int h, int ymov, int maxSpeed) {
 		if (ymov * maxSpeed == 0) return 0;
-		while (f.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
+		while (Frame.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
 			maxSpeed--;
 		}
 		return maxSpeed;

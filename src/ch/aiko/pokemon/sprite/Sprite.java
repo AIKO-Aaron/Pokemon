@@ -45,7 +45,7 @@ public class Sprite {
 	}
 
 	public Sprite(int color, int width, int height) {
-		if(width <= 0 || height <= 0) return;
+		if (width <= 0 || height <= 0) return;
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -299,5 +299,15 @@ public class Sprite {
 				}
 			}
 		}
+	}
+
+	public Sprite replaceColor(int color, int j) {
+		for (int i = 0; i < pixels.length; i++) {
+			if (pixels[i] == color) {
+				pixels[i] = j;
+				img.setRGB(i % width, i / width, j);
+			}
+		}
+		return this;
 	}
 }

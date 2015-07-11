@@ -53,7 +53,7 @@ public class FontMenu extends Menu {
 		p.setPaused(false);
 	};
 
-	public void draw() {
+	public void draw(double d) {
 		Renderer.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		if ((20 + (fonts.length - y)) * 25 > fonts.length) Renderer.drawText("Default Fonts", 0, 0, 25, 0xFFFFFFFF);
 

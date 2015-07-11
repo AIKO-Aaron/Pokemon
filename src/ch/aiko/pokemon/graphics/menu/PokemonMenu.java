@@ -26,7 +26,7 @@ public class PokemonMenu extends Menu {
 		p.setPaused(false);
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		Renderer.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		int x = (Frame.WIDTH - Pokemon.WIDTH) / 2 - Pokemon.WIDTH / 2;
 		int y = (Frame.HEIGHT - Pokemon.HEIGHT) / 2 - Pokemon.HEIGHT;

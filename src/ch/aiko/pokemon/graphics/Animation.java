@@ -29,7 +29,7 @@ public class Animation {
 		this.repeat = repeat;
 	}
 	
-	public void drawNext(int x, int y) {
+	public void drawNext(int x, int y, float delta) {
 		if(finished) {
 			System.err.println("No more Frames to draw");
 			return;

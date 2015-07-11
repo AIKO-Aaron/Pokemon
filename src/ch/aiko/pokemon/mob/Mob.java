@@ -41,43 +41,43 @@ public abstract class Mob extends Entity {
 	}
 
 	public boolean checkCollisionX(Frame f, int xmov, float speed) {
-		return f.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
+		return Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
 	}
 
 	public boolean checkCollisionY(Frame f, int ymov, float speed) {
-		return f.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
+		return Frame.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
 	}
 
 	public float getMaxSpeedX(Frame f, int xmov, float speed) {
-		while (f.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h) && speed > 0) {
+		while (Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h) && speed > 0) {
 			speed--;
 		}
 		return speed;
 	}
 
 	public float getMaxSpeedY(Frame f, int ymov, float maxSpeed) {
-		while (f.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
+		while (Frame.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
 			maxSpeed--;
 		}
 		return maxSpeed;
 	}
 
 	public int getMaxSpeedX(Frame f, int xmov, int speed) {
-		while (f.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h) && speed > 0) {
+		while (Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h) && speed > 0) {
 			speed--;
 		}
 		return speed;
 	}
 
 	public int getMaxSpeedY(Frame f, int ymov, int maxSpeed) {
-		while (f.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
+		while (Frame.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
 			maxSpeed--;
 		}
 		return maxSpeed;
 	}
 
 	public boolean isOnTile(Frame f) {
-		return f.getLevel().isOnTile(this);
+		return Frame.getLevel().isOnTile(this);
 	}
 
 	public boolean isOnTile(Frame f, Tile t) {
@@ -116,14 +116,14 @@ public abstract class Mob extends Entity {
 	}
 
 	public static int getMaxSpeedX(Frame f, int x, int y, int w, int h, int xmov, int speed) {
-		while (f.getLevel().checkCollisionX(x + speed * xmov, y, w, h) && speed > 0) {
+		while (Frame.getLevel().checkCollisionX(x + speed * xmov, y, w, h) && speed > 0) {
 			speed--;
 		}
 		return speed;
 	}
 
 	public static int getMaxSpeedY(Frame f, int x, int y, int w, int h, int ymov, int maxSpeed) {
-		while (f.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
+		while (Frame.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
 			maxSpeed--;
 		}
 		return maxSpeed;

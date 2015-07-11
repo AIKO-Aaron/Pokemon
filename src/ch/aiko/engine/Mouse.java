@@ -5,7 +5,7 @@ import java.awt.Robot;
 
 public class Mouse {
 
-	private static boolean[] buttons = new boolean[3];
+	private static boolean[] buttons = new boolean[5];
 
 	public static int MouseX, MouseY, MouseWheel;
 

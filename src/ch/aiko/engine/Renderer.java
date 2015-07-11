@@ -215,7 +215,7 @@ public class Renderer {
 	public static void black() {
 		for (int i = 0; i < pixels.pixelColors.length; i++) {
 			if (pixels.pixelSet[i]) continue;
-			pixels.pixelColors[i] = 0xFF000000;
+			pixels.pixelColors[i] = Window.Background != null ? 0x00000000 : 0xFF000000;
 			pixels.pixelLayers[i] = Integer.MIN_VALUE;
 		}
 	}

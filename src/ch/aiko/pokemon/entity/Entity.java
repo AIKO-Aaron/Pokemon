@@ -57,35 +57,35 @@ public abstract class Entity extends Tile {
 	}
 
 	public boolean checkCollisionX(Frame f, int xmov, float speed) {
-		return f.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
+		return Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
 	}
 
 	public boolean checkCollisionY(Frame f, int ymov, float speed) {
-		return f.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
+		return Frame.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
 	}
 
 	public boolean checkCollisionX(Frame f, int xmov, float speed, int w, int h) {
-		return f.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
+		return Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
 	}
 
 	public boolean checkCollisionY(Frame f, int ymov, float speed, int w, int h) {
-		return f.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
+		return Frame.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
 	}
 
 	public boolean checkCollisionX(Frame f, int xmov, float speed, int w, int h, int xoff, int yoff) {
-		return f.getLevel().checkCollisionX((int) (x + speed * xmov + xoff), y + yoff, w, h);
+		return Frame.getLevel().checkCollisionX((int) (x + speed * xmov + xoff), y + yoff, w, h);
 	}
 
 	public boolean checkCollisionY(Frame f, int ymov, float speed, int w, int h, int xoff, int yoff) {
-		return f.getLevel().checkCollisionY(x + xoff, (int) (y + speed * ymov + yoff), w, h);
+		return Frame.getLevel().checkCollisionY(x + xoff, (int) (y + speed * ymov + yoff), w, h);
 	}
 	
 	public boolean checkCollisionX(Frame f, int xmov, float speed, int w, int h, int y) {
-		return f.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
+		return Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
 	}
 
 	public boolean checkCollisionY(Frame f, int ymov, float speed, int w, int h, int x) {
-		return f.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
+		return Frame.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
 	}
 
 	public static enum Side {

@@ -5,7 +5,7 @@ public abstract class Menu {
 	public abstract void onOpen();
 	public abstract void onClose();
 	public abstract void update(double delta);
-	public abstract void draw();
+	public abstract void draw(double delta);
 	public abstract String name();
 	
 	public boolean doesPauseGame() {

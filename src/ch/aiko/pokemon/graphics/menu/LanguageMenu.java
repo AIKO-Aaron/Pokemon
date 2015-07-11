@@ -34,7 +34,7 @@ public class LanguageMenu extends Menu {
 		p.setPaused(false);
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		Renderer.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, Background_Color);
 
 		ArrayList<Language> langs = Language.getLanguages();

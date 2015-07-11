@@ -24,7 +24,7 @@ public class MoveAnimation extends Animation {
 		this.setColor(color);
 	}
 
-	public void drawNext(int x, int y) {
+	public void drawNext(int x, int y, double delta) {
 		if (x + xOff == destx && y + yOff == desty && !doesStay && (timer ? index + 1 >= sheet.getSpriteCount() : true)) {
 			finished = true;
 		}
@@ -41,8 +41,8 @@ public class MoveAnimation extends Animation {
 			yF = true;
 		}
 
-		x += this.xOff * Frame.delta;
-		y += this.yOff * Frame.delta;
+		x += this.xOff * delta;
+		y += this.yOff * delta;
 
 		Renderer.drawImage(x, y, sheet.getSprite(index).getImage());
 

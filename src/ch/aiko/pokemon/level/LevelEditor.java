@@ -34,7 +34,7 @@ public class LevelEditor extends Menu {
 		
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		
 	}
 }

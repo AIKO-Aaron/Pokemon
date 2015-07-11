@@ -51,7 +51,7 @@ public class MainMenu extends Menu {
 		p.setPaused(false);
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		Renderer.fillRect(0, 0, Frame.WIDTH, Frame.HEIGHT, 0xFF000000);
 		for (int i = 0; i < fields.length; i++) {
 			Renderer.drawText(Language.translate(labels[i]) + (i == index ? "  <---" : ""), 10, i * 25, 25, 0xFFFFFFFF);

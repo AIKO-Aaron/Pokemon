@@ -97,7 +97,7 @@ public class PlayerMenu extends Menu {
 		if (KeyBoard.getTimesPressed(KeyEvent.VK_SPACE) > 0) run(index);
 	}
 
-	public void draw() {
+	public void draw(double d) {
 		PlayerMenuFields.class.getName();
 		int width = Frame.WIDTH / 3;
 		int x = Frame.WIDTH - width - 1;
