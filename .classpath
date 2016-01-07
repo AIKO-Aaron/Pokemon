@@ -8,6 +8,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AikoUtil"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GameEngine"/>
 	<classpathentry kind="lib" path="libs/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/gson-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/guava-11.0.2.jar"/>

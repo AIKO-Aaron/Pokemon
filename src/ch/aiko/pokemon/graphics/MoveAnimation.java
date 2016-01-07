@@ -1,5 +1,8 @@
 package ch.aiko.pokemon.graphics;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import ch.aiko.engine.Renderer;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 
@@ -7,6 +10,7 @@ public class MoveAnimation extends Animation {
 
 	private int destx, desty, xOff, yOff, color, speed = 1, time = 0;
 	protected boolean doesStay, xF, yF, timer;
+	private ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 
 	public MoveAnimation(SpriteSheet pictures, int time, int destx, int desty, boolean b) {
 		super(pictures, time, false);
@@ -14,6 +18,7 @@ public class MoveAnimation extends Animation {
 		this.destx = destx;
 		this.desty = desty;
 		this.setColor(0xFF000000);
+		for(int i = 0; i < pictures.getSpriteCount();i++)images.add(sheet.getSprite(i).getImage());
 	}
 
 	public MoveAnimation(SpriteSheet pictures, int time, int destx, int desty, boolean b, int color) {
@@ -22,6 +27,7 @@ public class MoveAnimation extends Animation {
 		this.destx = destx;
 		this.desty = desty;
 		this.setColor(color);
+		for(int i = 0; i < pictures.getSpriteCount();i++)images.add(sheet.getSprite(i).getImage());
 	}
 
 	public void drawNext(int x, int y, double delta) {
@@ -44,7 +50,7 @@ public class MoveAnimation extends Animation {
 		x += this.xOff * delta;
 		y += this.yOff * delta;
 
-		Renderer.drawImage(x, y, sheet.getSprite(index).getImage());
+		Renderer.drawImage(x, y, images.get(index));
 
 		if (time > 0) {
 			time--;

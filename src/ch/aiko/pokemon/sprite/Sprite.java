@@ -2,6 +2,7 @@ package ch.aiko.pokemon.sprite;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import ch.aiko.util.ImageUtil;
 
@@ -12,36 +13,12 @@ public class Sprite {
 	private int width, height;
 	private int x = 0, y = 0;
 
-	public Sprite(BufferedImage img, int x, int y, int width, int height) {
-		width = maxWidth(x, width, img);
-		height = maxHeight(y, height, img);
-
-		if (width == 0 || height == 0) return;
-
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-
-		if (width * height < 0) return;
-
-		pixels = new int[width * height];
-		pixels = img.getRGB(x, y, width, height, pixels, 0, width);
-		this.img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		this.img.setRGB(0, 0, width, height, pixels, 0, width);
-	}
-
 	public Sprite(BufferedImage img) {
 		this.img = img;
 		if (img == null) return;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
-		pixels = new int[img.getWidth() * img.getHeight()];
-		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
-	}
-
-	public Sprite(BufferedImage img, int width, int height) {
-		this(ImageUtil.resize(img, width, height));
+		pixels = load();
 	}
 
 	public Sprite(int color, int width, int height) {
@@ -55,27 +32,27 @@ public class Sprite {
 		this.img = img;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
-		pixels = new int[img.getWidth() * img.getHeight()];
-		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
+		this.pixels = load();
 	}
 
 	public Sprite(int[] pixels, int width, int height) {
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				if (x + y * width >= pixels.length) continue;
-				img.setRGB(x, y, pixels[x + y * width]);
-			}
-		}
+		img.setRGB(0, 0, width, height, pixels, 0, width);
 		this.img = img;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
-		this.pixels = pixels;
+		this.pixels = load();
 	}
 
+	private int[] load() {
+		BufferedImage img2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		img2.getGraphics().drawImage(img, 0, 0, null);
+		img = img2;
+		return ((DataBufferInt) (img.getRaster().getDataBuffer())).getData();
+	}
+	
 	private void loadPixels() {
-		pixels = new int[img.getWidth() * img.getHeight()];
-		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
+		this.pixels = ((DataBufferInt) (img.getRaster().getDataBuffer())).getData();
 	}
 
 	public BufferedImage getImage() {
@@ -83,7 +60,7 @@ public class Sprite {
 	}
 
 	public int[] getPixels() {
-		return pixels;
+		return pixels.clone();
 	}
 
 	public int getWidth() {
@@ -261,7 +238,6 @@ public class Sprite {
 		for (int i = 0; i < pixels.length; i++) {
 			if (pixels[i] == color) {
 				pixels[i] = 0;
-				img.setRGB(i % width, i / width, 0);
 			}
 		}
 		return this;
@@ -294,7 +270,7 @@ public class Sprite {
 				int yCoord = yy + y;
 
 				if (xCoord >= 0 && xCoord < width && yCoord >= 0 && yCoord < height && s.getAlpha(xx, yy) != 0) {
-					img.setRGB(xCoord, yCoord, s.getColor(xx, yy));
+					//img.setRGB(xCoord, yCoord, s.getColor(xx, yy));
 					pixels[xCoord + yCoord * width] = s.getColor(xx, yy);
 				}
 			}
@@ -305,7 +281,6 @@ public class Sprite {
 		for (int i = 0; i < pixels.length; i++) {
 			if (pixels[i] == color) {
 				pixels[i] = j;
-				img.setRGB(i % width, i / width, j);
 			}
 		}
 		return this;

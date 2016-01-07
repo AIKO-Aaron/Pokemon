@@ -1,10 +1,8 @@
 Pokemon in Java © AIKO
 
 This application is entirly programmed in Java.
-We used many libraries. Some just for logging, which the end user
-doesn't even need to mp3 encoder libraries.
 
-Here's a list of them:
+Here's a list of libraries used in this project:
 	-dom4j (1.6.1)
 	-gson (1.4)
 	-guava (11.0.2)
@@ -26,7 +24,7 @@ Here's a list of them:
 	-vlcj (3.6.0)
 	-AikoUtil (Util Library for all my programs)
 	
-Compiled with Java 6
+Compiled with Java 8
 
 
 

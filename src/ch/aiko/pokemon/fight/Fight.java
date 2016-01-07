@@ -5,8 +5,6 @@ import static ch.aiko.pokemon.sound.SoundPlayer.stopLoop;
 
 import java.awt.event.KeyEvent;
 
-import javazoom.jl.player.advanced.PlaybackEvent;
-import javazoom.jl.player.advanced.PlaybackListener;
 import ch.aiko.engine.KeyBoard;
 import ch.aiko.engine.Menu;
 import ch.aiko.engine.Renderer;
@@ -15,12 +13,15 @@ import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.graphics.Frame;
 import ch.aiko.pokemon.graphics.MoveAnimation;
 import ch.aiko.pokemon.graphics.menu.TextBox;
+import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.mob.Trainer;
 import ch.aiko.pokemon.mob.player.Player;
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.pokemon.sprite.Sprite;
 import ch.aiko.pokemon.sprite.SpriteSheet;
 import ch.aiko.util.ImageUtil;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
 
 public class Fight extends Menu {
 
@@ -35,7 +36,7 @@ public class Fight extends Menu {
 	private int player_height = 320;
 
 	private Sprite ground;
-	private Sprite background;
+	//private Sprite background;
 
 	private Location loc = Location.GRASS;
 	private Time time = Time.DAY;
@@ -52,13 +53,12 @@ public class Fight extends Menu {
 		this.loc = loc;
 		this.time = time;
 
-		
 		text = new TextBox(p, t.getText());
 		Frame.openMenu(text);
 
 		// Init sprites used
 		ground = new Sprite(ImageUtil.loadImageInClassPath(loc.getGroundPath(time)));
-		background = new Sprite(ImageUtil.loadImageInClassPath(loc.getBackGroundPath(time)));
+		//background = new Sprite(ImageUtil.loadImageInClassPath(loc.getBackGroundPath(time)));
 		backP = p.team[pokP].getBackSprite();
 		hpP = p.team[pokP].getPlayerHpBar();
 		hpPosP = 192 * p.team[pokP].getHp() / p.team[pokP].getMaxHp();
@@ -69,7 +69,7 @@ public class Fight extends Menu {
 
 		player = loopSound("ch/aiko/pokemon/sounds/FightOpening_1.mp3", Settings.GAIN);
 
-		System.out.println("Started Fight between: " + p + " and " + t);		
+		System.out.println("Started Fight between: " + p + " and " + t);
 	}
 
 	private void updateEnemyHp() {
@@ -82,6 +82,13 @@ public class Fight extends Menu {
 		Sprite bar = new Sprite(color, 192, 8);
 		bar.top(new Sprite(0xFF000000, 192 - hpPosE, 8), hpPosE, 0);
 		hpE.top(bar, 220, 120);
+
+		int startX = -20;
+		int startY = 0;
+
+		Renderer.drawImage(startX, startY, hpE.getImage());
+		Renderer.drawText(t.getPokemon(pokT).getName(), startX + 30, startY + 30, 40, 0xFFFFFFFF);
+		Renderer.drawText("Level: " + t.getPokemon(pokT).getLvl(), startX + 250, startY + 30, 40, 0xFFFFFFFF);
 	}
 
 	private void updatePlayerHp() {
@@ -94,6 +101,14 @@ public class Fight extends Menu {
 		Sprite bar = new Sprite(color, 192, 8);
 		bar.top(new Sprite(0xFF000000, 192 - hpPosP, 8), hpPosP, 0);
 		hpP.top(bar, 304, 96);
+
+		int startX = 432;
+		int startY = 340;
+
+		Renderer.drawImage(startX, startY, hpP.getImage(), 5);
+		Renderer.drawText(p.team[pokP].getName(Language.current), startX + 128, startY, 50, 0xFFFFFFFF);
+		Renderer.drawText(Language.translate("HP") + " " + p.team[pokP].getHp() + "/" + p.team[pokP].getMaxHp(), startX + 180, startY + 69, 30, 0xFFFFFFFF);
+		Renderer.drawText("Level: " + p.team[pokP].getLvl(), startX + 330, startY + 12, 42, 0xFFFFFFFF);
 	}
 
 	public Trainer getTrainer() {
@@ -137,30 +152,26 @@ public class Fight extends Menu {
 	}
 
 	public void draw(double delta) {
-		
-		if(Window.Background == null) Window.Background = ImageUtil.loadImageInClassPath(loc.getBackGroundPath(time));
-		
-		//Frame.autoclear = false;
-		
+		// if(toString()!=null)return;
+		if (Window.Background == null) Window.Background = ImageUtil.loadImageInClassPath(loc.getBackGroundPath(time));
+
 		Frame.getLevel().getCamera().x = 0;
 		Frame.getLevel().getCamera().y = 0;
-		
+
 		if (text.isOpened()) return;
-		
+
 		if (ground_anim == null) {
 			ground_anim = new FightStartAnimation(loc.getGroundPath(time), 256, 128);
 		}
-		
+
 		if (player_anim == null) {
 			player_anim = new MoveAnimation(new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_" + p.getGender().name().toLowerCase() + ".png", 80, 80, player_height, player_height).removeColor(0xFF88B8B0), 30, 0, Frame.HEIGHT - player_height, false, 0x00000000);
 			player_anim.setSpeed(10 * (Pokemon.frame.getWidth() / Frame.WIDTH));
 			player_anim.setStartingTime(true);
 		}
-		
+
 		if (ground_anim == null) return;
-		
-		//updateEnemyHp();
-		//updatePlayerHp();
+
 		// Renderer.drawImage(0, 0, background.getImage(Frame.WIDTH, Frame.HEIGHT));
 		if (!ground_anim.isFinished()) {
 			ground_anim.drawNext(-Frame.WIDTH, 0, delta);
@@ -171,20 +182,16 @@ public class Fight extends Menu {
 			player_anim.drawNext(Frame.WIDTH, Frame.HEIGHT - player_height, delta);
 		} else {
 			Renderer.drawImage(0, Frame.HEIGHT - player_height, backP.getImage(player_height, player_height), 5);
-			Renderer.drawImage(Frame.WIDTH - 528, Frame.HEIGHT - 200, hpP.getImage(), 5);
-			
-			Renderer.drawImage(Frame.WIDTH - player_height - 110, 50, frontE.getImage(player_height, player_height));
-			Renderer.drawImage(-20, 0, hpE.getImage());
-		}
-		
-		//Renderer.black();
-		//Renderer.clear();
-		
-		//new Thread() {
-		//	public void run() {
-		//	}
-		//}.start();
 
+			Renderer.drawImage(Frame.WIDTH - player_height - 110, 50, frontE.getImage(player_height, player_height));
+		}
+		updateEnemyHp();
+		updatePlayerHp();
+	}
+
+	public boolean hasFinished() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -1,8 +1,13 @@
 package ch.aiko.pokemon.settings;
 
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Map.Entry;
 
+import ch.aiko.engine.Renderer;
 import ch.aiko.util.FileUtil;
 import ch.aiko.util.PropertyUtil;
 
@@ -16,6 +21,7 @@ public class Settings extends PropertyUtil {
 
 	public static boolean isUserFont = true;
 	public static String font;
+	public static Font userFont;
 	public static boolean isFirstLaunch = false;
 	
 	public static Settings instance;
@@ -37,7 +43,7 @@ public class Settings extends PropertyUtil {
 		}
 		
 		for(Entry<String, String> entry : PropertyUtil.LoadFileInClassPath("/ch/aiko/pokemon/settings/fields").getEntrySet().entrySet()) {
-			System.out.println("Checking for key: " + entry.getKey());
+			System.out.println("Checking for key: " + entry.getKey() + " default value: " + entry.getValue());
 			if(!instance.exists(entry.getKey())) instance.setValue(entry.getKey(), entry.getValue());
 		}		
 		
@@ -45,9 +51,23 @@ public class Settings extends PropertyUtil {
 		if(font.startsWith("user/")) {
 			isUserFont = true;
 			font = font.substring(5);
+			String font1 = font.contains("fonts/") ? font.split("/")[font.split("/").length - 1].split("\\.")[0].replace("-", " ") : font;
+			if (!existsFont(font1)) {
+				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+				try {
+					userFont = Font.createFont(Font.TRUETYPE_FONT, Settings.class.getResourceAsStream("/" + font));
+					ge.registerFont(userFont);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			font = font1;
+		} else {
+			userFont = new Font(font, Font.PLAIN, 1);
 		}
 		
 		GAIN = getFloat("gain");
+		System.out.println(GAIN);
 	}
 	
 	public static String getPath() {
@@ -84,11 +104,51 @@ public class Settings extends PropertyUtil {
 		instance.setValue(key, value);
 		
 		if(key.equalsIgnoreCase("font")) {
+			font = get("font");
 			if(font.startsWith("user/")) {
 				isUserFont = true;
 				font = font.substring(5);
+				String font1 = font.contains("fonts/") ? font.split("/")[font.split("/").length - 1].split("\\.")[0].replace("-", " ") : font;
+				if (!existsFont(font1)) {
+					GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+					try {
+						userFont = Font.createFont(Font.TRUETYPE_FONT, Settings.class.getResourceAsStream("/" + font));
+						ge.registerFont(userFont);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				font = font1;
+			} else {
+				userFont = new Font(font, Font.PLAIN, 1);
 			}
-			font = value;
+		}
+	}
+	
+	protected static boolean existsFont(String font) {
+		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		for (Font f : e.getAllFonts()) {
+			if (f.getFontName().equalsIgnoreCase(font)) return true;
+		}
+
+		return false;
+	}
+	
+	public static File extract(String filePath) {
+		try {
+			File f = File.createTempFile(filePath, null);
+			FileOutputStream resourceOS = new FileOutputStream(f);
+			byte[] byteArray = new byte[1024];
+			int i;
+			InputStream classIS = Renderer.class.getResourceAsStream("/" + filePath);
+			while ((i = classIS.read(byteArray)) > 0) {
+				resourceOS.write(byteArray, 0, i);
+			}
+			classIS.close();
+			resourceOS.close();
+			return f;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }

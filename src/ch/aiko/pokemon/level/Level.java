@@ -225,4 +225,10 @@ public class Level {
 	public Location getLocation() {
 		return loc;
 	}
+
+	public void reload(HashMap<Integer, Tile> coding) {
+		mobs.clear();
+		tiles.clear();
+		generate(coding);
+	}
 }

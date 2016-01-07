@@ -1,5 +1,7 @@
 package ch.aiko.engine;
 
+import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,11 +19,16 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
-public abstract class Window extends JFrame implements ActionListener, MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, WindowStateListener, WindowListener, HierarchyBoundsListener, ComponentListener {
+public abstract class Window extends Canvas implements ActionListener, MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, WindowStateListener, WindowListener, HierarchyBoundsListener, ComponentListener {
+
+	private JFrame jframe;
 
 	private static final long serialVersionUID = 3071280581916760929L;
 
@@ -42,6 +49,7 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 	public static boolean autoclear = true;
 
 	public static double delta, ddelta;
+	public static Graphics drawGraphics;
 
 	public static BufferedImage Background = null;
 
@@ -111,22 +119,32 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 
 	public void init(int w, int h, String s) {
 		setSize(w, h);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle(s);
-		setVisible(true);
+		setPreferredSize(new Dimension(w, h));
+		jframe = new JFrame();
+		jframe.add(this);
+		jframe.pack();
+		jframe.setLocationRelativeTo(null);
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.setTitle(s);
+		jframe.setVisible(true);
 
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
-		addWindowListener(this);
 		addHierarchyBoundsListener(this);
 		addComponentListener(this);
+		jframe.addKeyListener(this);
+		jframe.addMouseListener(this);
+		jframe.addMouseMotionListener(this);
+		jframe.addMouseWheelListener(this);
+		jframe.addHierarchyBoundsListener(this);
+		jframe.addComponentListener(this);
+		jframe.addWindowListener(this);
 
 		componentResized(null);
 
-		pixels = new Pixel(WIDTH * HEIGHT);
+		pixels = new Pixel(WIDTH, HEIGHT);
 
 		new Thread() {
 			public void run() {
@@ -167,22 +185,37 @@ public abstract class Window extends JFrame implements ActionListener, MouseList
 		}
 	}
 
-	public void paint(Graphics g) {
+	public void render() {
 		if (pixels == null) return;
-		int[] pi = pixels.pixelColors.clone();
-		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		img.setRGB(0, 0, WIDTH, HEIGHT, pi, 0, WIDTH);
-		// g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
-		g.drawImage(img.getScaledInstance(getWidth(), getHeight(), BufferedImage.SCALE_DEFAULT), 0, 0, getWidth(), getHeight(), null);
-		if (Background != null) g.drawImage(Background, 0, 0, (int) (WIDTH * SCALE_X), (int) (HEIGHT * SCALE_Y), null);
+		BufferStrategy bs = getBufferStrategy();
+		if (bs == null) {
+			if (isDisplayable()) createBufferStrategy(3);
+			return;
+		}
+		drawGraphics = bs.getDrawGraphics();
+		drawGraphics.drawImage(Background, 0, 0, (int) (WIDTH * SCALE_X), (int) (HEIGHT * SCALE_Y), null);
+		drawGraphics.drawImage(resize(pixels.img), 0, 0, (int) (WIDTH * SCALE_X), (int) (HEIGHT * SCALE_Y), null);
+		drawGraphics.dispose();
+		bs.show();
 		if (autoclear) Renderer.black();
-		if (autoclear) Renderer.clear();
+	}
+
+	private BufferedImage resize(BufferedImage before) {
+		int w = before.getWidth();
+		int h = before.getHeight();
+		BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		//at.scale(factorX, factorY);
+		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		after = scaleOp.filter(before, after);
+		return after;
 	}
 
 	private final void m_draw(double delta) {
 		if (menu == null || !menu.doesPauseGame()) draw();
 		if (menu != null) menu.draw(delta);
-		repaint();
+		// repaint();
+		render();
 		fps++;
 	}
 

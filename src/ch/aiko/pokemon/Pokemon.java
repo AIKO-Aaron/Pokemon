@@ -104,8 +104,10 @@ public class Pokemon {
 	}
 
 	public static void reloadTextures() {
-		sheet1 = new SpriteSheet("/textures/Sprites.png", 16, 16);
-		pokemons = new SpriteSheet("/textures/diamond-pearl-frame2.png", 80, 80);
+		sheet1 = new SpriteSheet("/ch/aiko/pokemon/textures/Sprites.png", 16, 16);
+		pokemons = new SpriteSheet("/ch/aiko/pokemon/textures/diamond-pearl-frame2.png", 80, 80);
+		level1.reload(generateCoding(true));
+		level2.reload(generateCoding(true));
 	}
 
 	public static Frame getMainFrame() {

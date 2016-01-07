@@ -40,41 +40,29 @@ public abstract class Mob extends Entity {
 		this.h = h;
 	}
 
-	public boolean checkCollisionX(Frame f, int xmov, float speed) {
+	public boolean checkCollisionX(Frame f, float xmov, double speed) {
 		return Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h);
 	}
 
-	public boolean checkCollisionY(Frame f, int ymov, float speed) {
-		return Frame.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h);
+	public boolean checkCollisionY(Frame f, float ymov, double ys) {
+		return Frame.getLevel().checkCollisionY(x, (int) (y + ys * ymov), w, h);
 	}
 
-	public float getMaxSpeedX(Frame f, int xmov, float speed) {
+	public float getMaxSpeedX(Frame f, float xmov, float speed) {
 		while (Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h) && speed > 0) {
 			speed--;
 		}
 		return speed;
 	}
 
-	public float getMaxSpeedY(Frame f, int ymov, float maxSpeed) {
-		while (Frame.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
-			maxSpeed--;
-		}
-		return maxSpeed;
-	}
-
-	public int getMaxSpeedX(Frame f, int xmov, int speed) {
-		while (Frame.getLevel().checkCollisionX((int) (x + speed * xmov), y, w, h) && speed > 0) {
+	public float getMaxSpeedY(Frame f, float ymov, float speed) {
+		while (Frame.getLevel().checkCollisionY(x, (int) (y + speed * ymov), w, h) && speed > 0) {
 			speed--;
 		}
 		return speed;
 	}
 
-	public int getMaxSpeedY(Frame f, int ymov, int maxSpeed) {
-		while (Frame.getLevel().checkCollisionY(x, (int) (y + maxSpeed * ymov), w, h) && maxSpeed > 0) {
-			maxSpeed--;
-		}
-		return maxSpeed;
-	}
+
 
 	public boolean isOnTile(Frame f) {
 		return Frame.getLevel().isOnTile(this);

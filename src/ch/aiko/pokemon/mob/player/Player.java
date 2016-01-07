@@ -20,7 +20,7 @@ public class Player extends Mob {
 
 	public TeamPokemon[] team = new TeamPokemon[6];
 
-	public int speed = 4, anim, direction;
+	public int speed = 7, anim, direction;
 	private boolean isPaused, fighting;
 	private boolean walking = false;
 	private boolean opened = false;
@@ -67,8 +67,8 @@ public class Player extends Mob {
 
 		this.lastPlace = Frame.getLevel().getCamera();
 
-		int xmovement = 0;
-		int ymovement = 0;
+		float xmovement = 0;
+		float ymovement = 0;
 
 		if (f.isKeyPressed(Settings.getInstance().getIntegerValue("keyUp"))) ymovement--;
 		if (f.isKeyPressed(Settings.getInstance().getIntegerValue("keyDown"))) ymovement++;
@@ -79,29 +79,21 @@ public class Player extends Mob {
 		if (xmovement > 0) direction = 3;
 		if (ymovement > 0) direction = 0;
 		if (ymovement < 0) direction = 1;
+		
+		int xmodifier = xmovement < 0 ? -1 : 1;
+		int ymodifier = ymovement < 0 ? -1 : 1;
 
 		if (KeyBoard.getTimesPressed(KeyEvent.VK_U) > 0) System.out.println(x + ":" + y);
 
-		walking = ymovement == 0 && xmovement == 0;
+		walking = ymovement != 0 || xmovement != 0;
 
-		if (checkCollisionX(f, xmovement, speed) || checkCollisionY(f, ymovement, speed)) {
-			// for (Side s : getSides(f, xmovement, ymovement, speed)) {
-			// Point p = getSideCoords(s);
-			// new Particle(p.x, p.y, 30, 10, f.getLevel());
-			// }
-
-		}
-
-		int xs = speed;
-		int ys = speed;
-
-		if (checkCollisionX(f, xmovement, xs) && collide) xs = getMaxSpeedX(f, xmovement, (int) (speed * Frame.delta));
-		else xs *= Frame.delta;
-		if (checkCollisionY(f, ymovement, ys) && collide) ys = getMaxSpeedY(f, ymovement, (int) (speed * Frame.delta));
-		else ys *= Frame.delta;
-
-		x += xmovement * xs;
-		y += ymovement * ys;
+		if (checkCollisionX(f, xmovement, speed) && collide) xmovement = getMaxSpeedX(f, xmovement, speed) * xmodifier;
+		else xmovement *= speed;
+		if (checkCollisionY(f, ymovement, speed) && collide) ymovement = getMaxSpeedY(f, ymovement, speed) * ymodifier;
+		else ymovement *= speed;
+		
+		x += xmovement;
+		y += ymovement;
 
 		Frame.getLevel().setCamera(x - Frame.WIDTH / 2, y - Frame.HEIGHT / 2);
 
@@ -112,7 +104,7 @@ public class Player extends Mob {
 		if (!opened && Settings.isFirstLaunch) {
 			Frame.openMenu(new Menu() {
 				public void draw(double d) {
-					Renderer.drawText("Press X to open Menu", x - 100, y - 50, 25, 0xFFFF00FF);
+					Renderer.drawTextOffset("Press X to open Menu", x - 100, y - 50, 25, 0xFFFF00FF);
 				}
 
 				public String name() {
@@ -134,11 +126,11 @@ public class Player extends Mob {
 			opened = true;
 		}
 
-		if (!isWalking() && !fighting) {
+		if (isWalking() && !fighting) {
 			anim++;
 			anim %= 30;
 		} else {
-			anim = 0;
+			anim = 10;
 		}
 	}
 
@@ -148,13 +140,14 @@ public class Player extends Mob {
 
 	public void paint() {
 		int offset = 0;
-		if (!isWalking()) {
+		if (isWalking()) {
 			offset++;
 			if (anim >= 10) offset++;
 			if (anim >= 20) offset++;
 		}
 
-		Renderer.drawSprite(sheet.getSprite(direction * 4 + offset).removeColor(0xFF88B8B0), x, y, 0);
+		Renderer.drawSprite(sheet.getSprite(direction * 4 + offset).removeColor(0xFF88B8B0), x, y);
+		Renderer.drawRectOffset(x, y, w, h, 0xFFFF00FF);
 	}
 
 	public void teleport(Frame f, Level l, int x, int y) {

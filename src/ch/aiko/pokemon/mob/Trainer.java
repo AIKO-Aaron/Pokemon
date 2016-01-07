@@ -92,6 +92,11 @@ public class Trainer extends Mob {
 
 	}
 
+	public final boolean isInside(int x, int y) {
+		if(x >= this.x && x <= this.x + w && y >= this.y && y <= this.y + h) return true;
+		return false;
+	}
+	
 	public final void update(Frame f) {
 		currentLevel = Frame.getLevel();
 				
@@ -131,6 +136,13 @@ public class Trainer extends Mob {
 			}
 		}
 
+		if(wantToFight && (fight == null || fight.hasFinished())) {
+			if(isInside(p1.x, p1.y)) startFight(f, p1);
+			if(isInside(p1.x + p1.w, p1.y)) startFight(f, p1);
+			if(isInside(p1.x + p1.w, p1.y + p1.h)) startFight(f, p1);
+			if(isInside(p1.x, p1.y + p1.h)) startFight(f, p1);
+		}
+		
 		if (!doesMove) return;
 
 		Point p = pathFind(f, Frame.getLevel().getPlayer().x, Frame.getLevel().getPlayer().y, speed);
@@ -236,8 +248,13 @@ public class Trainer extends Mob {
 		}
 	}
 
+	private void startFight(Frame f, Player p1) {
+		fight = new Fight(f, p1, this, currentLevel.getLocation(), Pokemon.getTime());
+	}
+
 	public final void paint() {
 		if (current != null) Renderer.drawSprite(current, x, y);
+		Renderer.drawRectOffset(x, y, w, h, 0xFFFF00FF);
 	}
 
 	public void userDraw() {

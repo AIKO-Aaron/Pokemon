@@ -164,42 +164,25 @@ public class TeamPokemon {
 	// 192 * 8
 
 	public Sprite getPlayerHpBar() {
-		String name = getName();
-
-		Sprite nameSprite = new Sprite(Renderer.createText(name, 40, 0xFFFFFFFF, Settings.font));
-		Sprite hpSprite = new Sprite(Renderer.createText(hp + "", 30, 0xFFFFFFFF, Settings.font));
-		Sprite maxHpSprite = new Sprite(Renderer.createText("/ " + maxHP, 30, 0xFFFFFFFF, Settings.font));
-		Sprite lvlSprite = new Sprite(Renderer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
-		Sprite HP = new Sprite(Renderer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
 		int color = (int) (Math.abs((float) hp / (float) maxHP - 1) * 255) << 16 | (int) (255 * (float) hp / (float) maxHP) << 8 | 0xFF000000;
 		Sprite bar = new Sprite(color, 192 / maxHP * hp, 8);
-
 		Sprite s = hp_player.getSprite(0).getScaledInstance(528, 168);
-
-		s.top(nameSprite, 128, 27);
-		s.top(hpSprite, 300, 112);
-		s.top(maxHpSprite, 380, 112);
-		s.top(lvlSprite, 330, 27);
-		s.top(HP, 250, 85);
 		s.top(bar, 304, 96);
-
 		return s;
 	}
 
 	public Sprite getEnemyHpBar() {
-		String name = getName();
-
-		Sprite nameSprite = new Sprite(Renderer.createText(name, 40, 0xFFFFFFFF, Settings.font));
-		Sprite lvlSprite = new Sprite(Renderer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
+		//Sprite nameSprite = new Sprite(Renderer.createText(name, 40, 0xFFFFFFFF, Settings.font));
+		//Sprite lvlSprite = new Sprite(Renderer.createText("Level: " + lvl, 40, 0xFFFFFFFF, Settings.font));
 		Sprite s = hp_enemy.getSprite(0).getScaledInstance(528, 168);
-		Sprite HP = new Sprite(Renderer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
+		//Sprite HP = new Sprite(Renderer.createText(Language.translate("HP"), 25, 0xFFFFFFFF, Settings.font));
 		
 		int color = (int) (Math.abs((float) hp / (float) maxHP - 1) * 255) << 4 | (int) (255 * (float) hp / (float) maxHP) << 8 | 0xFF000000;
 		Sprite bar = new Sprite(color, 192 / maxHP * hp, 8);
 
-		s.top(nameSprite, 30, 52);
-		s.top(lvlSprite, 250, 52);
-		s.top(HP, 175, 109);
+		//s.top(nameSprite, 30, 52);
+		//s.top(lvlSprite, 250, 52);
+		//s.top(HP, 175, 109);
 		s.top(bar, 220, 120);
 
 		return s;
