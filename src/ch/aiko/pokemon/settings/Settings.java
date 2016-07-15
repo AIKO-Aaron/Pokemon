@@ -7,7 +7,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Map.Entry;
 
-import ch.aiko.engine.Renderer;
+import ch.aiko.engine.graphics.Renderer;
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.util.FileUtil;
 import ch.aiko.util.PropertyUtil;
 
@@ -43,7 +44,7 @@ public class Settings extends PropertyUtil {
 		}
 		
 		for(Entry<String, String> entry : PropertyUtil.LoadFileInClassPath("/ch/aiko/pokemon/settings/fields").getEntrySet().entrySet()) {
-			System.out.println("Checking for key: " + entry.getKey() + " default value: " + entry.getValue());
+			Pokemon.out.println("Checking for key: " + entry.getKey() + " default value: " + entry.getValue());
 			if(!instance.exists(entry.getKey())) instance.setValue(entry.getKey(), entry.getValue());
 		}		
 		
@@ -67,7 +68,6 @@ public class Settings extends PropertyUtil {
 		}
 		
 		GAIN = getFloat("gain");
-		System.out.println(GAIN);
 	}
 	
 	public static String getPath() {

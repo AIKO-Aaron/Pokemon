@@ -9,12 +9,26 @@ import ch.aiko.util.ImageUtil;
 public class Sprite {
 
 	private int[] pixels;
+	private SpriteSheet ss = null;
+	private String path;
 	private BufferedImage img;
 	private int width, height;
-	private int x = 0, y = 0;
+	private int x = 0, y = 0, xx, yy;
+	
+	public static final String SPRITE_SHEET = "P";
+	public static final String SINGLE_SPRITE = "S";
 
-	public Sprite(BufferedImage img) {
+	private Sprite(BufferedImage img) {
 		this.img = img;
+		if (img == null) return;
+		this.width = img.getWidth();
+		this.height = img.getHeight();
+		pixels = load();
+	}
+	
+	public Sprite(String imgpath) {
+		this.path = imgpath;
+		this.img = ImageUtil.loadImageInClassPath(imgpath);
 		if (img == null) return;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
@@ -284,5 +298,30 @@ public class Sprite {
 			}
 		}
 		return this;
+	}
+	
+	public SpriteSheet getSuper() {
+		return ss;
+	}
+	
+	public Sprite setSuper(SpriteSheet s, int x, int y) {
+		ss = s;
+		xx = x;
+		yy = y;
+		return this;
+	}
+
+	public String serialize() {
+		String s = "";
+		if(getSuper() != null) {
+			s += SPRITE_SHEET + "|";
+			s += getWidth() + "," + getHeight() + "|";
+			s += xx + "," + yy + "|";
+			s += getSuper().path;
+		} else {
+			s += SINGLE_SPRITE + "|";
+			s += path;
+		}
+		return s;
 	}
 }

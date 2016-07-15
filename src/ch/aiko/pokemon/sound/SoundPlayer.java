@@ -2,16 +2,11 @@ package ch.aiko.pokemon.sound;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.util.Set;
 
+import ch.aiko.pokemon.settings.Settings;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.advanced.PlaybackListener;
-
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-
-import ch.aiko.pokemon.settings.Settings;
 
 public class SoundPlayer {
 
@@ -188,7 +183,7 @@ public class SoundPlayer {
 		else loopSound(Settings.GAIN);
 	}
 
-	// Debug-Tool
+	/** Debug-Tool
 	public static void find() {
 		Set<String> files = new Reflections("ch.aiko.pokemon.sounds", new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() {
 			public boolean apply(String arg0) {
@@ -199,7 +194,7 @@ public class SoundPlayer {
 		for (String s : files) {
 			System.out.println("Found Sound File: " + s);
 		}
-	}
+	}*/
 
 	public static void loopSound() {
 

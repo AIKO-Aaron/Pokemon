@@ -1,4 +1,4 @@
-en_us=English (US)
+en_uk=English (UK)
 
 //Type
 
@@ -67,12 +67,6 @@ NORMAL_DAMAGE=Normal damage
 DOUBLE_DAMAGE=Double damage
 QUAD_DAMAGE=Quadruple damage
 
-
-//Stats
-DEFENSE=Defense
-ATTACK=Attack
-SPECIAL=Special
-
 //Misc
 effective=effective
 not=not
@@ -100,6 +94,11 @@ SELECTED=(!)
 LANGUAGE=language
 REL_TEX=Reload Textures
 FONT=Font
+
+//Stats
+DEFENSE=Defense
+ATTACK=Attack
+SPECIAL=Special
 
 //Text
 DefaultTrainerText=I'm a Trainer. I want to fight with you. NOW!!!

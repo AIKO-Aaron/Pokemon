@@ -1,6 +1,7 @@
-Pokemon in Java © AIKO
+Pokémon in Java © AIKO
+Original Pokémon by GameFreak / Nintendo
 
-This application is entirly programmed in Java.
+This application is entirely programmed in Java.
 
 Here's a list of libraries used in this project:
 	-dom4j (1.6.1)
@@ -22,7 +23,7 @@ Here's a list of libraries used in this project:
 	-tritonus_share
 	-vorbisspi (1.0.2)
 	-vlcj (3.6.0)
-	-AikoUtil (Util Library for all my programs)
+	-GameEngine by Aiko (Util Library for all my programs)
 	
 Compiled with Java 8
 

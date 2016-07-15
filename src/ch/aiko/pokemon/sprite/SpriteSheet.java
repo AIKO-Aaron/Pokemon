@@ -10,22 +10,14 @@ public class SpriteSheet {
 	private BufferedImage img;
 	private int spriteWidth;
 	private int spriteHeight;
+	public String path;
 
 	private int entireWidth, entireHeight, xOff, yOff;
 
-	public SpriteSheet(BufferedImage img, int sW, int sH) {
-		this.spriteWidth = sW;
-		this.spriteHeight = sH;
-		this.img = img;
-		pixels = new int[img.getWidth() * img.getHeight()];
-		pixels = img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
-
-		entireWidth = img.getWidth();
-		entireHeight = img.getHeight();
-	}
-
 	public SpriteSheet(String imgpath, int sW, int sH) {
 		BufferedImage img = ImageUtil.loadImageInClassPath(imgpath);
+		
+		this.path = imgpath;
 		this.spriteWidth = sW;
 		this.spriteHeight = sH;
 		this.img = img;
@@ -38,10 +30,11 @@ public class SpriteSheet {
 
 	public SpriteSheet(String imgpath, int sW, int sH, int nW, int nH) {
 		BufferedImage img = ImageUtil.loadImageInClassPath(imgpath);
+		this.path = imgpath;
 		this.spriteWidth = nW;
 		this.spriteHeight = nH;
 
-		int width = img.getWidth() / sW * nW;
+		int width = (int)((float)img.getWidth() / (float)sW * (float)nW);
 		int height = (int) ((float) img.getHeight() / (float) sH * (float) nH);
 
 		img = ImageUtil.resize(img, width, height);
@@ -73,16 +66,20 @@ public class SpriteSheet {
 
 	public Sprite getSprite(int x, int y) {
 		if (img == null) return null;
+		int xx = x;
+		int yy = y;
 		x = x * spriteWidth + xOff;
 		y = y * spriteHeight + yOff;
-		return new Sprite(img.getRGB(x, y, spriteWidth, spriteHeight, null, 0, spriteWidth), spriteWidth, spriteHeight).getScaledInstance(spriteWidth, spriteHeight);
+		return new Sprite(img.getRGB(x, y, spriteWidth, spriteHeight, null, 0, spriteWidth), spriteWidth, spriteHeight).getScaledInstance(spriteWidth, spriteHeight).setSuper(this, xx, yy);
 	}
 
 	public Sprite getSprite(int i) {
 		int w = img.getWidth() / spriteWidth;
 		int x = (i % w) * spriteWidth + xOff;
 		int y = (i / w) * spriteHeight + yOff;
-		return new Sprite(img.getRGB(x, y, spriteWidth, spriteHeight, null, 0, spriteWidth), spriteWidth, spriteHeight).getScaledInstance(spriteWidth, spriteHeight);
+		int xx = (i / w);
+		int yy = (i % w);
+		return new Sprite(img.getRGB(x, y, spriteWidth, spriteHeight, null, 0, spriteWidth), spriteWidth, spriteHeight).getScaledInstance(spriteWidth, spriteHeight).setSuper(this, xx, yy);
 	}
 
 	public int getSpriteWidth() {
