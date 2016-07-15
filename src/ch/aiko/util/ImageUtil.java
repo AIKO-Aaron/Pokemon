@@ -31,7 +31,7 @@ public class ImageUtil {
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(f);
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			System.err.println("File not found" + f.getAbsolutePath());
 		}
