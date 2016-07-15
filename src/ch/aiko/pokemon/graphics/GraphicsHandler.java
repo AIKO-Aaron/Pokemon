@@ -7,9 +7,9 @@ import ch.aiko.pokemon.level.Level;
 
 public class GraphicsHandler {
 
-	private Window window;
-	private Screen screen;
-	private Level level;
+	public Window window;
+	public Screen screen;
+	public Level level;
 
 	public GraphicsHandler(Level level) {
 		screen = new Screen(960, 540);

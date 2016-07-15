@@ -1,10 +1,13 @@
 package ch.aiko.pokemon;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.UIManager;
 
-import ch.aiko.engine.graphics.Renderer;
+import ch.aiko.engine.graphics.LayerBuilder;
+import ch.aiko.pokemon.entity.Entity;
+import ch.aiko.pokemon.entity.Player;
 import ch.aiko.pokemon.graphics.GraphicsHandler;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
@@ -27,13 +30,25 @@ public class Pokemon {
 		Settings.load();
 		Language.setup();
 
-		Level level = new Level();
-		level.addRenderable((Renderer r) -> {
-			for (int i = 0; i < r.getWidth() * r.getHeight(); i++)
-				r.getPixels()[i] = rand.nextInt(0xFFFFFF) + 0xFF000000;
-		});
+		Player p = new Player();
+		Entity e = new Entity(50, 50);
+		
+		Level level = new Level(p);
+		
+		level.loadLevel("/ch/aiko/pokemon/level/Level.png", generateCoding(false));
+		level.addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).toLayer());
+		level.addLayer(new LayerBuilder().setRenderable(e).setUpdatable(e).toLayer());
 
 		handler = new GraphicsHandler(level);
+	}
+	
+	private static HashMap<Integer, Integer> generateCoding(boolean b) {
+		HashMap<Integer, Integer> coding = new HashMap<Integer, Integer>();
+		coding.put(0xFF000000, 0);
+		coding.put(0xFFFF0000, 1);
+		coding.put(0xFFFFFFFF, 2);
+		coding.put(0xFF000099, 3);
+		return coding;
 	}
 
 	public static void main(String[] args) {
