@@ -15,6 +15,7 @@ public class GraphicsHandler {
 		screen = new Screen(960, 540);
 
 		// Screen setup
+		screen.setResetOffset(false);
 		screen.ps = Pokemon.out;
 		this.level = level;
 		screen.addLayer(level);

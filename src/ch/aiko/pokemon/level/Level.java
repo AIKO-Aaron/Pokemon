@@ -10,16 +10,13 @@ import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.engine.sprite.Tile;
 import ch.aiko.pokemon.Pokemon;
-import ch.aiko.pokemon.entity.Player;
 import ch.aiko.util.ImageUtil;
 
 public class Level extends LayerContainer {
 
 	private SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/Sprites.png", 16, 16);
-	private Player p;
 	
-	public Level(Player player) {
-		p = player;
+	public Level() {
 		resetOffset = false;
 	}
 	
@@ -51,7 +48,6 @@ public class Level extends LayerContainer {
 	}
 	
 	public void layerRender(Renderer r) {
-		r.setOffset(-p.getX(), -p.getY());
 	}
 	
 	public void layerUpdate(Screen s) {

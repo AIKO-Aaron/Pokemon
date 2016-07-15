@@ -33,7 +33,7 @@ public class Pokemon {
 		Player p = new Player();
 		Entity e = new Entity(50, 50);
 		
-		Level level = new Level(p);
+		Level level = new Level();
 		
 		level.loadLevel("/ch/aiko/pokemon/level/Level.png", generateCoding(false));
 		level.addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).toLayer());
