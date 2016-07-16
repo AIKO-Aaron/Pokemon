@@ -147,7 +147,7 @@ public class Log extends PrintStream {
 	 *            The Level of the Message
 	 */
 	public void print(String s, Level l) {
-		String time = (System.currentTimeMillis() / 1000 / 60 / 60 % 24) + (TimeZone.getDefault().inDaylightTime(new Date()) ? 0 : 1) + ":" + System.currentTimeMillis() / 1000 / 60 % 60 + ":" + System.currentTimeMillis() / 1000 % 60;
+		String time = (String.format("%02d", System.currentTimeMillis() / 1000 / 60 / 60 % 24 + (TimeZone.getDefault().inDaylightTime(new Date()) ? 0 : 1))) + ":" + String.format("%02d", System.currentTimeMillis() / 1000 / 60 % 60) + ":" + String.format("%02d", System.currentTimeMillis() / 1000 % 60);
 
 		s = "[" + time + "]" + (className != null ? "[" + className + "]" : "") + l.getLevelName() + " " + s;
 

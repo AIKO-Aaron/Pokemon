@@ -27,15 +27,15 @@ public class LevelPalette extends ASDataType {
 	}
 
 	public void addCoding(short c, Tile s) {
-		addCoding(c, SpriteSerialization.getSpriteID(s.sprite) + "\\$" + 0);
+		addCoding(c, SpriteSerialization.getSpriteID(s.sprite) + "\\$" + s.layer);
 	}
 
 	public void addCoding(short c, Sprite s) {
 		addCoding(c, SpriteSerialization.getSpriteID(s) + "\\$0");
 	}
 	
-	public void addCoding(short c, Sprite s, boolean solid) {
-		addCoding(c, SpriteSerialization.getSpriteID(s) + "\\$" + (solid ? "1" : "0"));
+	public void addCoding(short c, Sprite s, int layer) {
+		addCoding(c, SpriteSerialization.getSpriteID(s) + "\\$" + layer);
 	}
 
 	public void addCoding(short c, String s) {
@@ -83,7 +83,7 @@ public class LevelPalette extends ASDataType {
 		int id = Integer.parseInt(code.split(Pattern.quote("\\$"))[0]);
 		int layer = Integer.parseInt(code.split(Pattern.quote("\\$"))[1]);
 		
-		return new Tile(SpriteSerialization.getSprite(id), x, y, layer == 1);
+		return new Tile(SpriteSerialization.getSprite(id), x, y, layer);
 		//return new Tile(id, layer, x, y, Level.TILE_SIZE, Level.TILE_SIZE);
 		// return new Tile(stringCodes.get(shortCodes.indexOf((Object) s)), x, y, Level.TILE_SIZE, Level.TILE_SIZE);
 	}

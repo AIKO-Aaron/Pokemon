@@ -10,6 +10,7 @@ import ch.aiko.as.ASDataType;
 import ch.aiko.as.ASField;
 import ch.aiko.as.ASObject;
 import ch.aiko.as.SerializationReader;
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.LayerBuilder;
 import ch.aiko.engine.graphics.LayerContainer;
 import ch.aiko.engine.graphics.Renderer;
@@ -29,10 +30,12 @@ public class Level extends LayerContainer {
 	public ASDataType type;
 	public int fieldSize = 64;
 	public short[] tileData;
+	public Layer[] tiles;
 	public LevelPalette lp;
 
 	public Level() {
 		SpriteSerialization.TILE_SIZE = TILE_SIZE;
+		tiles = new Layer[fieldSize * fieldSize];
 		resetOffset = false;
 		type = new ASDataType() {
 			public void load(ASObject c) {
@@ -63,7 +66,7 @@ public class Level extends LayerContainer {
 
 	public void decode() {
 		for (int indexed = 0; indexed < tileData.length; indexed++) {
-			addLayer(new LayerBuilder().setRenderable(lp.getCoding(tileData[indexed], (indexed % fieldSize) * TILE_SIZE, (indexed / fieldSize) * TILE_SIZE)).toLayer());
+			tiles[indexed] = addLayer(new LayerBuilder().setRenderable(lp.getCoding(tileData[indexed], (indexed % fieldSize) * TILE_SIZE, (indexed / fieldSize) * TILE_SIZE)).toLayer());
 		}
 	}
 
@@ -77,7 +80,7 @@ public class Level extends LayerContainer {
 					System.out.println("Searching for: " + img.getRGB(xpos, ypos));
 					Integer index = palette.get(0xFF000000 | img.getRGB(xpos, ypos));
 					if (index == null) index = 0;
-					addRenderable(new Tile(sheet.getSprite(index), xpos * sheet.getSpriteWidth(), ypos * sheet.getSpriteHeight(), false));
+					addRenderable(new Tile(sheet.getSprite(index), xpos * sheet.getSpriteWidth(), ypos * sheet.getSpriteHeight(), 0));
 				}
 			}
 		} else if (pathToLevel.endsWith(".bin")) {
@@ -108,6 +111,21 @@ public class Level extends LayerContainer {
 
 	public void layerUpdate(Screen s) {
 		if (s.getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) Pokemon.pokemon.handler.window.quit();
+	}
+
+	public Tile getTile(int x, int y) {
+		if (x + y * fieldSize > tiles.length) return null;
+		return (Tile) tiles[x + y * fieldSize].getRenderable();
+	}
+
+	public boolean isSolid(int x, int y, int layer) {
+		int edge = TILE_SIZE * fieldSize;
+		if (x < 0 || x > edge || y < 0 || y > edge) return true; // Out of bounds
+
+		int xcol = x / TILE_SIZE;
+		int ycol = y / TILE_SIZE;
+
+		return getTile(xcol, ycol).layer > layer;
 	}
 
 }
