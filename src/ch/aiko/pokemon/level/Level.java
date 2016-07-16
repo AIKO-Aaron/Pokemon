@@ -157,6 +157,12 @@ public class Level extends LayerContainer {
 		while (openMenus.isEmpty())
 			closeTopMenu();
 	}
+	
+	public void closeMenu(Menu m) {
+		openMenus.remove(m);
+		m.onClose();
+		removeLayer(m);
+	}
 
 	public void addEntity(Entity p) {
 		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(1).toLayer());
