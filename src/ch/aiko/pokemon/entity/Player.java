@@ -8,6 +8,7 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.graphics.menu.MainMenu;
 import ch.aiko.pokemon.level.Level;
 
 public class Player extends Entity {
@@ -20,6 +21,8 @@ public class Player extends Entity {
 	private Sprite[] walkingAnims = new Sprite[4 * 4];
 	private int anim = 0, curAnim = 0;
 	private boolean walking = false;
+	
+	public static final int PLAYER_RENDERED_LAYER = 10;
 
 	public Player() {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32);
@@ -46,6 +49,11 @@ public class Player extends Entity {
 	public void update(Screen screen) {
 		int xx = 0, yy = 0;
 
+		Layer layer = screen.getLayer((Renderable) this).getParent();
+		Level level = (Level) layer;
+
+		if(screen.getInput().popKeyPressed(KeyEvent.VK_X)) level.openMenu(new MainMenu(screen));
+		
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_LEFT)) xx--;
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_UP)) yy--;
@@ -56,12 +64,6 @@ public class Player extends Entity {
 			anim = 0;
 			curAnim = 0;
 		} else {
-
-			// TODO collision detection :'(
-			// 2. Multi position collisions
-			Layer layer = screen.getLayer((Renderable) this).getParent();
-			Level level = (Level) layer;
-
 			int xspeed = xx * speed;
 			int yspeed = yy * speed;
 
@@ -73,7 +75,7 @@ public class Player extends Entity {
 
 			}
 
-			dir = xx > 0 ? 3 : xx < 0 ? 2 : yy < 0 ? 1 : yy > 0 ? 0 : 2;
+			dir = xspeed > 0 ? 3 : xspeed < 0 ? 2 : yspeed < 0 ? 1 : yspeed > 0 ? 0 : 2;
 
 			boolean isSolid = xspeed == 0 && yspeed == 0;
 			if (!isSolid) {
