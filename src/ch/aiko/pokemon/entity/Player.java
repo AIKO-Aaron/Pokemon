@@ -34,6 +34,15 @@ public class Player extends Entity {
 		renderer.drawSprite(sprite, renderer.getWidth() / 2 + xPos, renderer.getHeight() / 2 + yPos);
 	}
 
+	public boolean collides(Level level, int xoff, int yoff) {
+		for (int i = 0; i < sprite.getWidth(); i++) {
+			for (int j = 0; j < sprite.getHeight(); j++) {
+				if (level.isSolid(xPos + xoff + i, yPos + yoff + j, playerLayer)) return true;
+			}
+		}
+		return false;
+	}
+
 	public void update(Screen screen) {
 		int xx = 0, yy = 0;
 
@@ -47,38 +56,40 @@ public class Player extends Entity {
 			anim = 0;
 			curAnim = 0;
 		} else {
-			dir = xx > 0 ? 3 : xx < 0 ? 2 : yy < 0 ? 1 : yy > 0 ? 0 : -1;
-			walking = true;
 
 			// TODO collision detection :'(
 			// 2. Multi position collisions
 			Layer layer = screen.getLayer((Renderable) this).getParent();
 			Level level = (Level) layer;
 
-			int x = xPos + xx * speed;
-			int y = yPos + yy * speed;
+			int xspeed = xx * speed;
+			int yspeed = yy * speed;
 
-			boolean isSolid = false;
-			for(int i = 0; i<  sprite.getWidth(); i++) {
-				for(int j = 0; j < sprite.getHeight(); j++) {					
-					isSolid |= level.isSolid(x + screen.getRenderer().getWidth() / 2 + i, y + screen.getRenderer().getHeight() / 2 + j, playerLayer);
-				}
+			if (collides(level, screen.getRenderer().getWidth() / 2 + xspeed, screen.getRenderer().getHeight() / 2 + yspeed)) {
+				while (collides(level, screen.getRenderer().getWidth() / 2 + xspeed, screen.getRenderer().getHeight() / 2) && xspeed != 0)
+					xspeed -= xx;
+				while (collides(level, screen.getRenderer().getWidth() / 2, screen.getRenderer().getHeight() / 2 + yspeed) && yspeed != 0)
+					yspeed -= yy;
+
 			}
-			
-			
-			if (isSolid) {
-				xx = yy = 0;
-			} else {
-				xPos = x;
-				yPos = y;
+
+			dir = xx > 0 ? 3 : xx < 0 ? 2 : yy < 0 ? 1 : yy > 0 ? 0 : 2;
+
+			boolean isSolid = xspeed == 0 && yspeed == 0;
+			if (!isSolid) {
+				xPos += xspeed;
+				yPos += yspeed;
 			}
+			walking = !isSolid;
 
 			// Just animate when player's walking
-			anim++;
-			if (anim > 15) {
-				anim = 0;
-				curAnim++;
-				curAnim %= 4;
+			if (walking) {
+				anim++;
+				if (anim > 15) {
+					anim = 0;
+					curAnim++;
+					curAnim %= 4;
+				}
 			}
 		}
 	}
