@@ -41,7 +41,7 @@ public class LevelPalette extends ASDataType {
 	public void addCoding(short c, String s) {
 		shortCodes.add(new Short(c));
 		stringCodes.add(s);
-		reload();
+		//reload();
 		if (level != null) {
 			level.removeObject(name);
 			level.addObject(this);

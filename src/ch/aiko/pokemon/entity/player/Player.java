@@ -25,7 +25,7 @@ public class Player extends Entity {
 	public static final int PLAYER_RENDERED_LAYER = 10;
 
 	public Player() {
-		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32);
+		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
 		for (int i = 0; i < 4 * 4; i++) {
 			walkingAnims[i] = sprites.getSprite(i);
 		}

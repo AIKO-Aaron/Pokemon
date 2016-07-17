@@ -2,6 +2,7 @@ package ch.aiko.pokemon.level;
 
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -33,20 +34,26 @@ public class Level extends LayerContainer {
 
 	public ASDataType type;
 	public int fieldSize = 64;
-	public short[] tileData;
-	public Layer[] tiles;
+	public ArrayList<short[]> tileData = new ArrayList<short[]>();
+	public ArrayList<Layer[]> tiles = new ArrayList<Layer[]>();
+	public int layerCount = 0;
+	// public Layer[] tiles;
 	public LevelPalette lp;
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
 
 	public Level() {
 		SpriteSerialization.TILE_SIZE = TILE_SIZE;
-		tiles = new Layer[fieldSize * fieldSize];
+		tiles = new ArrayList<Layer[]>();
 		resetOffset = false;
 		type = new ASDataType() {
 			public void load(ASObject c) {
-				ASArray array = c.getArray("Tiles");
-				if (array != null) tileData = array.getShortData();
+				ASField layers = c.getField("Layers");
+				if (layers != null) layerCount = SerializationReader.readInt(layers.data, 0);
+				for (int i = 0; i < layerCount; i++) {
+					ASArray array = c.getArray("Tiles" + i);
+					if (array != null) tileData.add(array.getShortData());
+				}
 				ASObject palette = c.getObject("Palette");
 				if (palette != null) lp = new LevelPalette(palette, this);
 				ASField size = c.getField("Size");
@@ -56,10 +63,13 @@ public class Level extends LayerContainer {
 			}
 
 			public void getData(ASObject thisObject) {
-				if (tileData == null) tileData = new short[fieldSize * fieldSize];
+				if (tileData == null) tileData = new ArrayList<short[]>();
 				if (lp == null) lp = new LevelPalette("Palette", this);
-				ASArray tiles = ASArray.Short("Tiles", tileData);
-				thisObject.addArray(tiles);
+				thisObject.addField(ASField.Integer("Layers", tileData.size()));
+				for (int i = 0; i < tileData.size(); i++) {
+					ASArray tiles = ASArray.Short("Tiles" + i, tileData.get(i));
+					thisObject.addArray(tiles);
+				}
 				thisObject.addObject(lp.toObject());
 				thisObject.addField(ASField.Integer("Size", fieldSize));
 			}
@@ -71,12 +81,17 @@ public class Level extends LayerContainer {
 	}
 
 	public void decode() {
-		for (int indexed = 0; indexed < tileData.length; indexed++) {
-			Tile tile = lp.getCoding(tileData[indexed], (indexed % fieldSize) * TILE_SIZE, (indexed / fieldSize) * TILE_SIZE);
-			tiles[indexed] = addLayer(new LayerBuilder().setName("Tile" + indexed).setRenderable(tile).toLayer());
+		for (int layer = 0; layer < tileData.size(); layer++) {
+			short[] data = tileData.get(layer);
+			Layer[] current = new Layer[fieldSize * fieldSize];
+			for (int indexed = 0; indexed < data.length; indexed++) {
+				Tile tile = lp.getCoding(data[indexed], (indexed % fieldSize) * TILE_SIZE, (indexed / fieldSize) * TILE_SIZE);
+				current[indexed] = addLayer(new LayerBuilder().setLayer(layer).setName("Tile" + indexed).setRenderable(tile).toLayer());
+			}
+			tiles.add(current);
 		}
 	}
-	
+
 	public void loadLevel(String pathToLevel, HashMap<Integer, Integer> palette) {
 		if (pathToLevel.endsWith(".png")) {
 			if (palette == null) return;
@@ -123,9 +138,13 @@ public class Level extends LayerContainer {
 		}
 	}
 
-	public Tile getTile(int x, int y) {
-		if (x + y * fieldSize > tiles.length) return null;
-		return (Tile) tiles[x + y * fieldSize].getRenderable();
+	public ArrayList<Tile> getTile(int x, int y) {
+		if (x + y * fieldSize > fieldSize * fieldSize) return null;
+		ArrayList<Tile> ret = new ArrayList<Tile>();
+		for(int i = 0; i < tiles.size(); i++) {
+			ret.add((Tile) tiles.get(i)[x + y * fieldSize].getRenderable());
+		}
+		return ret;
 	}
 
 	public boolean isSolid(int x, int y, int layer) {
@@ -134,8 +153,10 @@ public class Level extends LayerContainer {
 
 		int xcol = x / TILE_SIZE;
 		int ycol = y / TILE_SIZE;
-
-		return getTile(xcol, ycol).layer > layer;
+		for(Tile t : getTile(xcol, ycol)) {
+			if(t.layer > layer) return true;
+		}
+		return false;
 	}
 
 	public String getName() {
@@ -157,7 +178,7 @@ public class Level extends LayerContainer {
 		while (openMenus.isEmpty())
 			closeTopMenu();
 	}
-	
+
 	public void closeMenu(Menu m) {
 		openMenus.remove(m);
 		m.onClose();

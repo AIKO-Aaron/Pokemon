@@ -6,9 +6,6 @@ import ch.aiko.pokemon.graphics.menu.Menu;
 
 public class FightMenu extends Menu {
 
-	private static int index = 0;
-	private String[] texts = new String[] { "Fight", "Bag", "Pokemon", "Run" };
-
 	public FightMenu(Screen parent) {
 		super(parent);
 	}
