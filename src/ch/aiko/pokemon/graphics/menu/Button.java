@@ -15,10 +15,10 @@ public class Button implements Renderable, Updatable {
 
 	private static final int THICKNESS = 3;
 
-	public int x, y, w, h;
-	public String text;
-	public boolean selected = false;
-	public Runnable r = () -> {};
+	protected int x, y, w, h;
+	protected String text;
+	protected boolean selected = false;
+	protected ButtonAction r = (Button b) -> {};
 
 	public Button() {
 		x = y = w = h = 0;
@@ -33,7 +33,7 @@ public class Button implements Renderable, Updatable {
 		this.text = text;
 	}
 
-	public Button(int x, int y, int w, int h, String text, Runnable r) {
+	public Button(int x, int y, int w, int h, String text, ButtonAction r) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
@@ -72,7 +72,7 @@ public class Button implements Renderable, Updatable {
 		return this;
 	}
 
-	public Button setRunnable(Runnable r) {
+	public Button setAction(ButtonAction r) {
 		this.r = r;
 		return this;
 	}
@@ -81,8 +81,36 @@ public class Button implements Renderable, Updatable {
 		return mx >= x && mx <= x + w && my >= y && my <= y + h;
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getWidth() {
+		return w;
+	}
+
+	public int getHeight() {
+		return h;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public ButtonAction getAction() {
+		return r;
+	}
+
 	public void update(Screen screen) {
-		r.run();
+		
 	}
 
 	public void render(Renderer renderer) {
@@ -105,7 +133,9 @@ public class Button implements Renderable, Updatable {
 		return metrics.getHeight();
 	}
 
-	public void buttonPressed() {}
+	public void buttonPressed() {
+		r.buttonPressed(this);
+	}
 
 	public Layer toLayer(int layer) {
 		return new LayerBuilder().setRenderable(this).setUpdatable(this).setLayer(layer).toLayer();

@@ -1,6 +1,8 @@
 package ch.aiko.pokemon.graphics.menu;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import ch.aiko.engine.graphics.Layer;
@@ -17,7 +19,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	protected Screen parent;
 	protected Player holder;
 	protected Level level;
-	protected int index;
+	protected int index, mouseSel;
 
 	protected ArrayList<Layer> buttons = new ArrayList<Layer>();
 
@@ -52,7 +54,27 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	}
 
 	public void addButton(Button b, int layer, int index) {
-		buttons.add(index, addLayer(b.toLayer(layer)));
+		if (buttons.size() <= index) {
+			buttons.add(index, addLayer(b.toLayer(layer)));
+		} else buttons.set(index, addLayer(b.toLayer(layer)));
+	}
+
+	public void removeButton(Button b) {
+		for (int i = 0; i < buttons.size(); i++) {
+			if (buttons.get(i).getRenderable() == b) {
+				if(index > i) index--;
+				removeLayer(buttons.get(i));
+				buttons.remove(i);
+				i--;
+			}
+		}
+	}
+
+	public void removeAllButtons() {
+		for (Layer b : buttons)
+			removeLayer(b);
+		buttons.clear();
+		index = 0;
 	}
 
 	private int x, y;
@@ -72,14 +94,19 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		if (s.popKeyPressed(KeyEvent.VK_X)) closeMe();
 
 		if (buttons.size() > 0) {
+			Point pos = s.getMousePosition();
+			int mx = pos == null ? s.getMouseXInFrame() : pos.x;
+			int my = pos == null ? s.getMouseYInFrame() : pos.y;
+
+			if (s.popMouseKey(MouseEvent.BUTTON1)) if (((Button) buttons.get(index).getRenderable()).isInside(mx, my)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
+
+			if (s.popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
+
 			if (s.popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
 			if (s.popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
 
-			int mx = parent.getMouseXInFrame();
-			int my = parent.getMouseYInFrame();
-
 			for (int i = 0; i < buttons.size(); i++)
-				if (((Button) buttons.get(i).getRenderable()).isInside(mx, my)) index = i;
+				if (i != mouseSel && ((Button) buttons.get(i).getRenderable()).isInside(mx, my)) mouseSel = index = i;
 
 			for (int i = 0; i < buttons.size(); i++)
 				((Button) buttons.get(i).getRenderable()).setSelected(i == index);

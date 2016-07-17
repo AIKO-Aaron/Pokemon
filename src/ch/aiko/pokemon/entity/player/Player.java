@@ -9,6 +9,7 @@ import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.entity.Entity;
+import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
 
 public class Player extends Entity {
@@ -53,6 +54,7 @@ public class Player extends Entity {
 		Level level = (Level) layer;
 
 		if(screen.getInput().popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
+		if(screen.getInput().popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
 		
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_LEFT)) xx--;
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
@@ -95,6 +97,10 @@ public class Player extends Entity {
 				}
 			} else curAnim = anim = 0;
 		}
+	}
+
+	private void startBattle(Screen screen) {
+		screen.addLayer(new Fight(screen));
 	}
 
 	public boolean isMoving() {
