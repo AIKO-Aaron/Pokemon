@@ -81,25 +81,32 @@ public class Level extends LayerContainer {
 	}
 
 	public void decode() {
+		int addedTiles = 0;
 		for (int layer = 0; layer < tileData.size(); layer++) {
 			short[] data = tileData.get(layer);
 			Layer[] current = new Layer[fieldSize * fieldSize];
 			for (int indexed = 0; indexed < data.length; indexed++) {
+				boolean b = false;
+				for (int i = 0; i < layer; i++) {
+					if (tileData.get(i)[indexed] == tileData.get(layer)[indexed]) b = true;
+				}
+				if (b) continue;
+				addedTiles++;
 				Tile tile = lp.getCoding(data[indexed], (indexed % fieldSize) * TILE_SIZE, (indexed / fieldSize) * TILE_SIZE);
 				current[indexed] = addLayer(new LayerBuilder().setLayer(layer).setName("Tile" + indexed).setRenderable(tile).toLayer());
 			}
 			tiles.add(current);
 		}
+		Pokemon.out.println("Loaded " + layerCount + " layers for the level, with a total of " + (fieldSize * fieldSize * layerCount) + " tiles, but only " + addedTiles + " tiles were added");
 	}
 
 	public void loadLevel(String pathToLevel, HashMap<Integer, Integer> palette) {
+		Pokemon.out.println("Loading Level");
 		if (pathToLevel.endsWith(".png")) {
 			if (palette == null) return;
 			BufferedImage img = ImageUtil.loadImageInClassPath(pathToLevel);
 			for (int xpos = 0; xpos < img.getWidth(); xpos++) {
 				for (int ypos = 0; ypos < img.getHeight(); ypos++) {
-					System.out.println(palette);
-					System.out.println("Searching for: " + img.getRGB(xpos, ypos));
 					Integer index = palette.get(0xFF000000 | img.getRGB(xpos, ypos));
 					if (index == null) index = 0;
 					addRenderable(new Tile(sheet.getSprite(index), xpos * sheet.getSpriteWidth(), ypos * sheet.getSpriteHeight(), 0));
@@ -141,8 +148,8 @@ public class Level extends LayerContainer {
 	public ArrayList<Tile> getTile(int x, int y) {
 		if (x + y * fieldSize > fieldSize * fieldSize) return null;
 		ArrayList<Tile> ret = new ArrayList<Tile>();
-		for(int i = 0; i < tiles.size(); i++) {
-			ret.add((Tile) tiles.get(i)[x + y * fieldSize].getRenderable());
+		for (int i = 0; i < tiles.size(); i++) {
+			if (tiles.get(i)[x + y * fieldSize] != null) ret.add((Tile) tiles.get(i)[x + y * fieldSize].getRenderable());
 		}
 		return ret;
 	}
@@ -153,8 +160,8 @@ public class Level extends LayerContainer {
 
 		int xcol = x / TILE_SIZE;
 		int ycol = y / TILE_SIZE;
-		for(Tile t : getTile(xcol, ycol)) {
-			if(t.layer > layer) return true;
+		for (Tile t : getTile(xcol, ycol)) {
+			if (t.layer > layer) return true;
 		}
 		return false;
 	}
