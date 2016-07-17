@@ -26,7 +26,7 @@ public class Fight extends LayerContainer {
 	public void onOpen() {
 		openMenu(new FightMenu(s));
 		openMenu(new Animation(s, new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_boy.png", 80, 80, 200, 200).removeColor(0xFF88B8B0), false, 7).setPosition(0, 0));
-		SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why not? Because I'm testing and it's annoying...
+		// SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why not? Because I'm testing and it's annoying...
 	}
 
 	public int getLevel() {
