@@ -20,7 +20,6 @@
 
 package javazoom.jl.decoder;
 
-@SuppressWarnings("all")
 /**
  * Instances of <code>BitstreamException</code> are thrown 
  * when operations on a <code>Bitstream</code> fail. 
@@ -41,6 +40,10 @@ package javazoom.jl.decoder;
 public class BitstreamException extends JavaLayerException
 	implements BitstreamErrors
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5195786983687628551L;
 	private int errorcode = UNKNOWN_ERROR;
 	
 	public BitstreamException(String msg, Throwable t)

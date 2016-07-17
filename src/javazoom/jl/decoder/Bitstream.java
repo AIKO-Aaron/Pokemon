@@ -50,7 +50,6 @@ import java.io.PushbackInputStream;
  * various decoders. This should be moved into this class and associated
  * inner classes.
  */
-@SuppressWarnings("all")
 public final class Bitstream implements BitstreamErrors
 {
 	/**
@@ -219,8 +218,6 @@ public final class Bitstream implements BitstreamErrors
 		if ( (id3header[0]=='I') && (id3header[1]=='D') && (id3header[2]=='3'))
 		{
 			in.read(id3header,0,3);
-			int majorVersion = id3header[0];
-			int revision = id3header[1];
 			in.read(id3header,0,4);
 			size = (int) (id3header[0] << 21) + (id3header[1] << 14) + (id3header[2] << 7) + (id3header[3]);
 		}
@@ -515,7 +512,6 @@ public final class Bitstream implements BitstreamErrors
 	
 	for (int k=0;k<bytesize;k=k+4)
 	{
-		int convert = 0;
 		byte b0 = 0;
 		byte b1 = 0;
 		byte b2 = 0;

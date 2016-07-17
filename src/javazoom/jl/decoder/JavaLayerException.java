@@ -32,9 +32,13 @@ import java.io.PrintStream;
  * 
  * @author MDM
  */
-@SuppressWarnings("all")
 public class JavaLayerException extends Exception
 {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7212135786131434159L;
 	
 	private Throwable		exception;
 	

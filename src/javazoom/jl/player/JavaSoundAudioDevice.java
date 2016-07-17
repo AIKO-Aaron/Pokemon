@@ -67,6 +67,15 @@ public class JavaSoundAudioDevice extends AudioDeviceBase {
 		return info;
 	}
 
+	public void setLineGain(float gain) {
+		if (source != null) {
+			FloatControl volControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
+			float newGain = Math.min(Math.max(gain, volControl.getMinimum()), volControl.getMaximum());
+
+			volControl.setValue(newGain);
+		}
+	}
+
 	public void open(AudioFormat fmt) throws JavaLayerException {
 		if (!isOpen()) {
 			setAudioFormat(fmt);
@@ -166,14 +175,5 @@ public class JavaSoundAudioDevice extends AudioDeviceBase {
 			throw new JavaLayerException("Device test failed: " + ex);
 		}
 
-	}
-
-	public void setLineGain(float gain) {
-		if (source != null) {
-			FloatControl volControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
-			float newGain = Math.min(Math.max(gain, volControl.getMinimum()), volControl.getMaximum());
-
-			volControl.setValue(newGain);
-		}
 	}
 }

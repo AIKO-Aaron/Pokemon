@@ -12,14 +12,19 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Updatable;
 import ch.aiko.pokemon.entity.player.Player;
+import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
 
 public abstract class Menu extends LayerContainer implements Renderable, Updatable {
 
+	protected int xOffset, yOffset;
 	protected Screen parent;
 	protected Player holder;
 	protected Level level;
+	protected Fight fight;
 	protected int index, mouseSel;
+	protected boolean x_for_close = true;
+	protected boolean manage_buttons = true;
 
 	protected ArrayList<Layer> buttons = new ArrayList<Layer>();
 
@@ -27,6 +32,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		resetOffset = false;
 		this.parent = parent;
 		this.level = (Level) parent.getTopLayer("Level");
+		this.fight = (Fight) parent.getTopLayer("Fight");
 		this.holder = (Player) (level).getTopLayer("Player").getRenderable();
 	}
 
@@ -54,15 +60,20 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	}
 
 	public void addButton(Button b, int layer, int index) {
-		if (buttons.size() <= index) {
-			buttons.add(index, addLayer(b.toLayer(layer)));
-		} else buttons.set(index, addLayer(b.toLayer(layer)));
+		while (buttons.size() <= index) {
+			buttons.add(null);
+		}
+		buttons.set(index, addLayer(b.toLayer(layer)));
+	}
+
+	public Button getButton(int index) {
+		return (Button) buttons.get(index).getRenderable();
 	}
 
 	public void removeButton(Button b) {
 		for (int i = 0; i < buttons.size(); i++) {
 			if (buttons.get(i).getRenderable() == b) {
-				if(index > i) index--;
+				if (index > i) index--;
 				removeLayer(buttons.get(i));
 				buttons.remove(i);
 				i--;
@@ -82,7 +93,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	public final void layerRender(Renderer r) {
 		x = r.getXOffset();
 		y = r.getYOffset();
-		r.setOffset(0, 0);
+		r.setOffset(xOffset, yOffset);
 		renderMenu(r);
 	}
 
@@ -91,9 +102,9 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	}
 
 	public final void layerUpdate(Screen s) {
-		if (s.popKeyPressed(KeyEvent.VK_X)) closeMe();
+		if (x_for_close && s.popKeyPressed(KeyEvent.VK_X)) closeMe();
 
-		if (buttons.size() > 0) {
+		if (manage_buttons && buttons.size() > 0) {
 			Point pos = s.getMousePosition();
 			int mx = pos == null ? s.getMouseXInFrame() : pos.x;
 			int my = pos == null ? s.getMouseYInFrame() : pos.y;
@@ -116,7 +127,8 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	}
 
 	public void closeMe() {
-		level.closeMenu(this);
+		if (level != null) level.closeMenu(this);
+		if (fight != null) fight.closeMenu(this);
 	}
 
 	public abstract void onOpen();

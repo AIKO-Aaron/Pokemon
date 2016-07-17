@@ -1,13 +1,13 @@
 package ch.aiko.pokemon;
 
-import javax.swing.UIManager;
-
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.GraphicsHandler;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.util.Log;
+
+import javax.swing.UIManager;
 
 public class Pokemon {
 
@@ -26,7 +26,7 @@ public class Pokemon {
 
 		level.loadLevel("/ch/aiko/pokemon/level/level1.bin", null);
 		level.addPlayer(p);
-		
+				
 		handler = new GraphicsHandler(level);
 	}
 

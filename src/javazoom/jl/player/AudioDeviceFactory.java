@@ -43,7 +43,6 @@ import javazoom.jl.decoder.JavaLayerException;
  * @since	0.0.8
  * @author	Mat McGowan
  */
-@SuppressWarnings("all")
 public abstract class AudioDeviceFactory
 {
 	/**
@@ -70,7 +69,7 @@ public abstract class AudioDeviceFactory
 	{
 		AudioDevice dev = null;
 		
-		Class cls = null;
+		Class<?> cls = null;
 		if (loader==null)
 		{
 			cls = Class.forName(name);

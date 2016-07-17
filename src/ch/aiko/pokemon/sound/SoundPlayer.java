@@ -4,20 +4,22 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 
 import ch.aiko.pokemon.settings.Settings;
+
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackListener;
 
 public class SoundPlayer {
 
 	private static boolean running = false;
-	public static Player currentLoop;
+	public static AdvancedPlayer currentLoop;
 	public static int times_played = 0;
 
-	public static Player playSound(String s) {
+	public static AdvancedPlayer playSound(String s) {
 		try {
-			final BufferedInputStream bis = new BufferedInputStream(SoundPlayer.class.getClassLoader().getResourceAsStream(s));
-			final Player player = new Player(bis);
+			if (!s.startsWith("/")) s = "/" + s;
+			final BufferedInputStream bis = new BufferedInputStream(SoundPlayer.class.getResourceAsStream(s));
+			final AdvancedPlayer player = new AdvancedPlayer(bis);
 			new Thread(s) {
 				public void run() {
 					try {
@@ -44,7 +46,7 @@ public class SoundPlayer {
 	public static MusicThread music;
 	public static boolean playing = false;
 
-	public static Player loopSound(final float volume) {
+	public static AdvancedPlayer loopSound(final float volume) {
 		if (currentLoop != null || playing) currentLoop.close();
 		if (music != null || playing) music.close();
 		playing = true;
@@ -61,8 +63,8 @@ public class SoundPlayer {
 		}
 		return null;
 	}
-	
-	public static Player loopSound(final float volume, PlaybackListener l) {
+
+	public static AdvancedPlayer loopSound(final float volume, PlaybackListener l) {
 		if (currentLoop != null || playing) currentLoop.close();
 		if (music != null || playing) music.close();
 		playing = true;
@@ -80,7 +82,7 @@ public class SoundPlayer {
 		return null;
 	}
 
-	public static Player loopSound(final float volume, int s, int end) {
+	public static AdvancedPlayer loopSound(final float volume, int s, int end) {
 		if (currentLoop != null || playing) currentLoop.close();
 		if (music != null || playing) music.close();
 		playing = true;
@@ -95,8 +97,8 @@ public class SoundPlayer {
 		}
 		return null;
 	}
-	
-	public static Player loopSound(final float volume, int s, int end, PlaybackListener l) {
+
+	public static AdvancedPlayer loopSound(final float volume, int s, int end, PlaybackListener l) {
 		if (currentLoop != null || playing) currentLoop.close();
 		if (music != null || playing) music.close();
 		playing = true;
@@ -112,7 +114,7 @@ public class SoundPlayer {
 		return null;
 	}
 
-	public static Player loopSound(String file, final float volume) {
+	public static AdvancedPlayer loopSound(String file, final float volume) {
 		times_played = 0;
 		if (music != null) music.close();
 		running = false;
@@ -120,8 +122,8 @@ public class SoundPlayer {
 		SoundPlayer.file = file;
 		return loopSound(volume);
 	}
-	
-	public static Player loopSound(String file, final float volume, PlaybackListener l) {
+
+	public static AdvancedPlayer loopSound(String file, final float volume, PlaybackListener l) {
 		times_played = 0;
 		if (music != null) music.close();
 		running = false;
@@ -129,8 +131,8 @@ public class SoundPlayer {
 		SoundPlayer.file = file;
 		return loopSound(volume, l);
 	}
-	
-	public static Player loopSound(String file, final float volume, int st, int en, PlaybackListener l) {
+
+	public static AdvancedPlayer loopSound(String file, final float volume, int st, int en, PlaybackListener l) {
 		times_played = 0;
 		if (music != null) music.close();
 		running = false;
@@ -139,7 +141,7 @@ public class SoundPlayer {
 		return loopSound(volume, st, en, l);
 	}
 
-	public static Player loopSound(String file, final float volume, final int s, final int e) {
+	public static AdvancedPlayer loopSound(String file, final float volume, final int s, final int e) {
 		times_played = 0;
 		if (music != null) music.close();
 		running = false;
@@ -152,7 +154,7 @@ public class SoundPlayer {
 		times_played = 0;
 		final BufferedInputStream bis = new BufferedInputStream(SoundPlayer.class.getClassLoader().getResourceAsStream(s));
 		try {
-			currentLoop = new Player(bis);
+			currentLoop = new AdvancedPlayer(bis);
 		} catch (JavaLayerException e) {
 			e.printStackTrace();
 		}
@@ -160,7 +162,7 @@ public class SoundPlayer {
 
 	public static void stopLoop() {
 		int timeout = 100;
-		while((music == null || currentLoop == null) && playing) {
+		while ((music == null || currentLoop == null) && playing) {
 			System.out.println("Nothing Playing");
 			try {
 				Thread.sleep(10);
@@ -168,9 +170,9 @@ public class SoundPlayer {
 				e.printStackTrace();
 			}
 			timeout--;
-			if(timeout == 0) return;
+			if (timeout == 0) return;
 		}
-		
+
 		times_played = 0;
 		running = false;
 		currentLoop.close();
@@ -183,18 +185,11 @@ public class SoundPlayer {
 		else loopSound(Settings.GAIN);
 	}
 
-	/** Debug-Tool
-	public static void find() {
-		Set<String> files = new Reflections("ch.aiko.pokemon.sounds", new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() {
-			public boolean apply(String arg0) {
-				return arg0.endsWith(".mp3");
-			}
-		});
-
-		for (String s : files) {
-			System.out.println("Found Sound File: " + s);
-		}
-	}*/
+	/**
+	 * Debug-Tool public static void find() { Set<String> files = new Reflections("ch.aiko.pokemon.sounds", new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() { public boolean apply(String arg0) { return arg0.endsWith(".mp3"); } });
+	 * 
+	 * for (String s : files) { System.out.println("Found Sound File: " + s); } }
+	 */
 
 	public static void loopSound() {
 
@@ -205,7 +200,7 @@ public class SoundPlayer {
 		private int start_frame;
 		private int end_frame;
 		private PlaybackListener listener;
-		
+
 		public MusicThread(float volume, int start_frame, int end_frame, PlaybackListener l) {
 			this.volume = volume;
 			this.start_frame = start_frame;
@@ -218,8 +213,8 @@ public class SoundPlayer {
 			while (running && !isInterrupted()) {
 				try {
 					BufferedInputStream bis = new BufferedInputStream(SoundPlayer.class.getClassLoader().getResourceAsStream(file));
-					currentLoop = new Player(bis);
-					currentLoop.setListener(listener);
+					currentLoop = new AdvancedPlayer(bis);
+					currentLoop.setPlayBackListener(listener);
 					currentLoop.play(start_frame, end_frame, volume);
 					bis.close();
 					times_played++;

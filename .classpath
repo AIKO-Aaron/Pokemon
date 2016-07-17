@@ -7,6 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/Java SE 8 [1.8.0_31] (MacOS X VM)"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GameEngine"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AikoCore"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

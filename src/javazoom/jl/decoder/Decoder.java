@@ -20,7 +20,6 @@
  
 package javazoom.jl.decoder;
 
-@SuppressWarnings("all")
 /**
  * The <code>Decoder</code> class encapsulates the details of
  * decoding an MPEG audio frame. 
@@ -272,7 +271,7 @@ public class Decoder implements DecoderErrors
 		float scalefactor = 32700.0f;
 		
 		int mode = header.mode();
-		int layer = header.layer();
+		header.layer();
 		int channels = mode==Header.SINGLE_CHANNEL ? 1 : 2;
 
 					

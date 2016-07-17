@@ -37,7 +37,6 @@ import java.io.IOException;
  * This class does a fast downsampling from 32, 44.1 or 48 kHz to 8 kHz, if ULAW is defined.
  * Frequencies above 4 kHz are removed by ignoring higher subbands.
  */
-@SuppressWarnings("all")
 final class SynthesisFilter
 {
   private float[] 			 v1;
@@ -573,7 +572,7 @@ final class SynthesisFilter
   /**
    * Compute new values via a fast cosine transform.
    */
-  private void compute_new_v_old()
+  public void compute_new_v_old()
   {
 	// p is fully initialized from x1
 	 //float[] p = _p;
@@ -971,7 +970,7 @@ final class SynthesisFilter
   {
 	final float[] vp = actual_v;
 	
-	int idx = 0;
+	//int idx = 0;
 	//int inc = v_inc;
 	final float[] tmpOut = _tmpOut;
 	 int dvp =0;
@@ -1618,7 +1617,7 @@ private void compute_pcm_samples(Obuffer buffer)
 	{
 		try
 		{
-			Class elemType = Float.TYPE;
+			Class<?> elemType = Float.TYPE;
 			Object o = JavaLayerUtils.deserializeArrayResource("sfd.ser", elemType, 512);
 			return (float[])o;
 		}

@@ -20,7 +20,6 @@
 
 package javazoom.jl.decoder;
 
-@SuppressWarnings("all")
 /**
  * The <code>DecoderException</code> represents the class of
  * errors that can occur when decoding MPEG audio. 
@@ -30,6 +29,10 @@ package javazoom.jl.decoder;
 public class DecoderException extends JavaLayerException
 	implements DecoderErrors
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 739129173366217466L;
 	private int		errorcode = UNKNOWN_ERROR;
 	
 	public DecoderException(String msg, Throwable t)

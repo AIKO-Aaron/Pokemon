@@ -56,7 +56,6 @@ public class Language extends PropertyUtil {
 				while (entries.hasMoreElements()) {
 					JarEntry entry = entries.nextElement();
 					if (entry.isDirectory()) continue;
-					Pokemon.out.println("Found file:" + entry.getName());
 					if (entry.getName().endsWith(".lang")) langFiles.add(entry.getName());
 				}
 
