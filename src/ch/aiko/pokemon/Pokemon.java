@@ -2,7 +2,7 @@ package ch.aiko.pokemon;
 
 import javax.swing.UIManager;
 
-import ch.aiko.pokemon.entity.Player;
+import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.GraphicsHandler;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;

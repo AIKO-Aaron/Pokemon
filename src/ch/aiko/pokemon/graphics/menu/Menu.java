@@ -1,20 +1,28 @@
 package ch.aiko.pokemon.graphics.menu;
 
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
 import ch.aiko.engine.graphics.Layer;
+import ch.aiko.engine.graphics.LayerContainer;
 import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Updatable;
-import ch.aiko.pokemon.entity.Player;
+import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.level.Level;
 
-public abstract class Menu extends Layer implements Renderable, Updatable {
+public abstract class Menu extends LayerContainer implements Renderable, Updatable {
 
 	protected Screen parent;
 	protected Player holder;
 	protected Level level;
+	protected int index;
+
+	protected ArrayList<Layer> buttons = new ArrayList<Layer>();
 
 	public Menu(Screen parent) {
+		resetOffset = false;
 		this.parent = parent;
 		this.level = (Level) parent.getTopLayer("Level");
 		this.holder = (Player) (level).getTopLayer("Player").getRenderable();
@@ -26,7 +34,7 @@ public abstract class Menu extends Layer implements Renderable, Updatable {
 	public int getLevel() {
 		return Player.PLAYER_RENDERED_LAYER + 1;
 	}
-	
+
 	public boolean stopsRendering() {
 		return false;
 	}
@@ -43,18 +51,43 @@ public abstract class Menu extends Layer implements Renderable, Updatable {
 		return this;
 	}
 
-	public final void render(Renderer r) {
-		int x = r.getXOffset();
-		int y = r.getYOffset();
+	public void addButton(Button b, int layer, int index) {
+		buttons.add(index, addLayer(b.toLayer(layer)));
+	}
+
+	private int x, y;
+
+	public final void layerRender(Renderer r) {
+		x = r.getXOffset();
+		y = r.getYOffset();
 		r.setOffset(0, 0);
 		renderMenu(r);
+	}
+
+	public final void postRender(Renderer r) {
 		r.setOffset(x, y);
 	}
 
-	public final void update(Screen s) {
+	public final void layerUpdate(Screen s) {
+		if (s.popKeyPressed(KeyEvent.VK_X)) closeMe();
+
+		if (buttons.size() > 0) {
+			if (s.popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
+			if (s.popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
+
+			int mx = parent.getMouseXInFrame();
+			int my = parent.getMouseYInFrame();
+
+			for (int i = 0; i < buttons.size(); i++)
+				if (((Button) buttons.get(i).getRenderable()).isInside(mx, my)) index = i;
+
+			for (int i = 0; i < buttons.size(); i++)
+				((Button) buttons.get(i).getRenderable()).setSelected(i == index);
+		}
+
 		updateMenu(s);
 	}
-	
+
 	public void closeMe() {
 		level.closeMenu(this);
 	}

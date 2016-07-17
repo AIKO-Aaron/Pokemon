@@ -21,7 +21,7 @@ import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.engine.sprite.Tile;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
-import ch.aiko.pokemon.entity.Player;
+import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.util.ImageUtil;
 
