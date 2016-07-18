@@ -10,23 +10,24 @@ import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.graphics.menu.Animation;
 import ch.aiko.pokemon.graphics.menu.Menu;
-import ch.aiko.pokemon.sound.SoundPlayer;
 
 public class Fight extends LayerContainer {
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
 	public Sprite background;
+	public Sprite ground;
 	public Screen s;
 
 	public Fight(Screen s) {
 		this.s = s;
 		background = new Sprite("/ch/aiko/pokemon/textures/fight_background/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
+		ground = new Sprite("/ch/aiko/pokemon/textures/fight_ground/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
 	}
 
 	public void onOpen() {
 		openMenu(new FightMenu(s));
-		openMenu(new Animation(s, new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_boy.png", 80, 80, 200, 200).removeColor(0xFF88B8B0), false, 7).setPosition(0, 0));
-		// SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why not? Because I'm testing and it's annoying...
+		openMenu(new Animation(s, new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_boy.png", 80, 80, 300, 300).removeColor(0xFF88B8B0), false, 7).setPosition(150, s.getFrameHeight() - 300));
+		// SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why is music disabled? Because I'm testing and it's annoying...
 	}
 
 	public int getLevel() {
@@ -43,6 +44,7 @@ public class Fight extends LayerContainer {
 
 	public void layerRender(Renderer r) {
 		r.drawSprite(background, 0, 0);
+		r.drawSprite(ground, 0, 0);
 	}
 
 	public String getName() {

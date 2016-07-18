@@ -9,7 +9,7 @@ import ch.aiko.pokemon.graphics.menu.Menu;
 
 public class FightMenu extends Menu {
 
-	final int width = 300;
+	final int width = 250;
 
 	public FightMenu(Screen parent) {
 		super(parent);

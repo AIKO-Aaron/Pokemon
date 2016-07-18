@@ -24,7 +24,7 @@ public class Pokemon {
 		Player p = new Player();
 		Level level = new Level();
 
-		level.loadLevel("/ch/aiko/pokemon/level/level1.bin", null);
+		level.loadLevel("/ch/aiko/pokemon/level/level2.bin", null);
 		level.addPlayer(p);
 				
 		handler = new GraphicsHandler(level);

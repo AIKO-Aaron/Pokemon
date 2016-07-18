@@ -6,12 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import ch.aiko.as.ASArray;
 import ch.aiko.as.ASDataBase;
-import ch.aiko.as.ASDataType;
-import ch.aiko.as.ASField;
 import ch.aiko.as.ASObject;
-import ch.aiko.as.SerializationReader;
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.LayerBuilder;
 import ch.aiko.engine.graphics.LayerContainer;
@@ -32,7 +28,7 @@ public class Level extends LayerContainer {
 
 	private SpriteSheet sheet = new SpriteSheet("/ch/aiko/pokemon/textures/Sprites.png", 16, 16);
 
-	public ASDataType type;
+	public LevelSerialization type;
 	public int fieldSize = 64;
 	public ArrayList<short[]> tileData = new ArrayList<short[]>();
 	public ArrayList<Layer[]> tiles = new ArrayList<Layer[]>();
@@ -44,36 +40,9 @@ public class Level extends LayerContainer {
 
 	public Level() {
 		SpriteSerialization.TILE_SIZE = TILE_SIZE;
+		type = new LevelSerialization(this);
 		tiles = new ArrayList<Layer[]>();
 		resetOffset = false;
-		type = new ASDataType() {
-			public void load(ASObject c) {
-				ASField layers = c.getField("Layers");
-				if (layers != null) layerCount = SerializationReader.readInt(layers.data, 0);
-				for (int i = 0; i < layerCount; i++) {
-					ASArray array = c.getArray("Tiles" + i);
-					if (array != null) tileData.add(array.getShortData());
-				}
-				ASObject palette = c.getObject("Palette");
-				if (palette != null) lp = new LevelPalette(palette, this);
-				ASField size = c.getField("Size");
-				if (size != null) fieldSize = SerializationReader.readInt(size.data, 0);
-
-				decode();
-			}
-
-			public void getData(ASObject thisObject) {
-				if (tileData == null) tileData = new ArrayList<short[]>();
-				if (lp == null) lp = new LevelPalette("Palette", this);
-				thisObject.addField(ASField.Integer("Layers", tileData.size()));
-				for (int i = 0; i < tileData.size(); i++) {
-					ASArray tiles = ASArray.Short("Tiles" + i, tileData.get(i));
-					thisObject.addArray(tiles);
-				}
-				thisObject.addObject(lp.toObject());
-				thisObject.addField(ASField.Integer("Size", fieldSize));
-			}
-		};
 	}
 
 	public void getData(ASObject obj) {
@@ -146,7 +115,7 @@ public class Level extends LayerContainer {
 	}
 
 	public ArrayList<Tile> getTile(int x, int y) {
-		if (x + y * fieldSize > fieldSize * fieldSize) return null;
+		if (x + y * fieldSize >= fieldSize * fieldSize) return new ArrayList<Tile>();
 		ArrayList<Tile> ret = new ArrayList<Tile>();
 		for (int i = 0; i < tiles.size(); i++) {
 			if (tiles.get(i)[x + y * fieldSize] != null) ret.add((Tile) tiles.get(i)[x + y * fieldSize].getRenderable());
