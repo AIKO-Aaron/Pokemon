@@ -11,11 +11,13 @@ import ch.aiko.as.SerializationReader;
 public class LevelSerialization extends ASDataType {
 
 	private Level level;
-	
+
 	public LevelSerialization(Level l) {
 		level = l;
+		name = "LevelData";
+		object = new ASObject(name);
 	}
-	
+
 	public void load(ASObject c) {
 		ASField layers = c.getField("Layers");
 		if (layers != null) level.layerCount = SerializationReader.readInt(layers.data, 0);
@@ -25,8 +27,14 @@ public class LevelSerialization extends ASDataType {
 		}
 		ASObject palette = c.getObject("Palette");
 		if (palette != null) level.lp = new LevelPalette(palette, this);
-		ASField size = c.getField("Size");
-		if (size != null) level.fieldSize = SerializationReader.readInt(size.data, 0);
+		ASField width = c.getField("FieldWidth");
+		ASField height = c.getField("FieldHeight");
+		if (width != null) level.fieldWidth = SerializationReader.readInt(width.data, 0);
+		if (height != null) level.fieldHeight = SerializationReader.readInt(height.data, 0);
+		if (width == null && height == null) {
+			ASField size = c.getField("Size");
+			if (size != null) level.fieldHeight = level.fieldWidth = SerializationReader.readInt(size.data, 0);
+		}
 
 		level.decode();
 	}
@@ -40,7 +48,8 @@ public class LevelSerialization extends ASDataType {
 			thisObject.addArray(tiles);
 		}
 		thisObject.addObject(level.lp.toObject());
-		thisObject.addField(ASField.Integer("Size", level.fieldSize));
+		thisObject.addField(ASField.Integer("FieldWidth", level.fieldWidth));
+		thisObject.addField(ASField.Integer("FieldHeight", level.fieldHeight));
 	}
-	
+
 }

@@ -14,6 +14,7 @@ import ch.aiko.pokemon.level.Level;
 
 public class Player extends Entity {
 
+	private int xoff, yoff;
 	private int speed = 6;
 	private SpriteSheet sprites;
 	private int dir = 0; // down, up, left, right
@@ -22,29 +23,75 @@ public class Player extends Entity {
 	private Sprite[] walkingAnims = new Sprite[4 * 4];
 	private int anim = 0, curAnim = 0;
 	private boolean walking = false;
-	
+
+	int sx, sy;
+
+	public static final boolean CAN_WALK_SIDEWAYS = true;
+
 	public static final int PLAYER_RENDERED_LAYER = 10;
 
-	public Player() {
+	public int getWidth() {
+		return sprite.getWidth();
+	}
+
+	public int getHeight() {
+		return sprite.getHeight();
+	}
+
+	public int getX() {
+		return xPos + xoff;
+	}
+
+	public int getY() {
+		return yPos + yoff;
+	}
+
+	public void setPosition(int x, int y) {
+		xPos = x;
+		yPos = y;
+	}
+
+	public void setPositionInLevel(int x, int y) {
+		xPos = x - xoff;
+		yPos = y - yoff;
+	}
+
+	public Player(int x, int y) {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
 		for (int i = 0; i < 4 * 4; i++) {
 			walkingAnims[i] = sprites.getSprite(i);
 		}
+		xPos = x;
+		yPos = y;
 	}
 
 	public void render(Renderer renderer) {
 		renderer.setOffset(-xPos, -yPos);
 		sprite = walkingAnims[dir * 4 + curAnim];
-		renderer.drawSprite(sprite, renderer.getWidth() / 2 + xPos, renderer.getHeight() / 2 + yPos);
+		xoff = renderer.getWidth() / 2;
+		yoff = renderer.getHeight() / 2;
+		renderer.drawSprite(sprite, xPos + xoff, yPos + yoff);
+
+		int index = sx + xoff + (sy + yoff) * renderer.getWidth();
+		if ((sx != 0 || sy != 0) && index > 0 && index < renderer.getSize()) renderer.getPixels()[index] = 0xFFFF00FF;
 	}
 
 	public boolean collides(Level level, int xoff, int yoff) {
 		for (int i = 0; i < sprite.getWidth(); i++) {
 			for (int j = 0; j < sprite.getHeight(); j++) {
-				if (level.isSolid(xPos + xoff + i, yPos + yoff + j, playerLayer)) return true;
+				if (level.isSolid(xPos + xoff + i, yPos + yoff + j, playerLayer)) {
+					sx = xPos + i;
+					sy = xPos + j;
+					return true;
+				}
 			}
 		}
+		sx = sy = 0;
 		return false;
+	}
+
+	public boolean isInside(int xx, int yy) {
+		return xx > getX() && xx < getX() + getWidth() && yy > getY() && yy < getY() + getHeight();
 	}
 
 	public void update(Screen screen) {
@@ -53,13 +100,17 @@ public class Player extends Entity {
 		Layer layer = screen.getLayer((Renderable) this).getParent();
 		Level level = (Level) layer;
 
-		if(screen.getInput().popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
-		if(screen.getInput().popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
-		
+		if (screen.getInput().popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
+		if (screen.getInput().popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
+
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_LEFT)) xx--;
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_UP)) yy--;
 		if (screen.getInput().isKeyPressed(KeyEvent.VK_DOWN)) yy++;
+
+		if (!CAN_WALK_SIDEWAYS) {
+			if (xx != 0) yy = 0;
+		}
 
 		if (xx == 0 && yy == 0) {
 			walking = false;

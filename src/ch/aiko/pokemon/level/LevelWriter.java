@@ -10,8 +10,8 @@ public class LevelWriter {
 
 	// Just to write the maps --> Testing only
 	public static void main(String[] args) {
-		LevelWriter writer = new LevelWriter("level1", "/ch/aiko/pokemon/level/test.layout");
-		writer.write(System.getProperty("user.home") + "/Desktop/level1.bin");
+		LevelWriter writer = new LevelWriter("level2", "/ch/aiko/pokemon/level/test.layout");
+		writer.write(System.getProperty("user.home") + "/Desktop/level2.bin");
 		System.out.println("Done");
 	}
 

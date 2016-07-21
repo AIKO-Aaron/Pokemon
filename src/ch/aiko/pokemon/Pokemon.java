@@ -1,5 +1,6 @@
 package ch.aiko.pokemon;
 
+import ch.aiko.pokemon.entity.Teleporter;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.GraphicsHandler;
 import ch.aiko.pokemon.language.Language;
@@ -21,12 +22,18 @@ public class Pokemon {
 		Settings.load();
 		Language.setup();
 
-		Player p = new Player();
+		Level l2 = new Level("/ch/aiko/pokemon/level/center.layout");
+		
+		Player p = new Player(32 * 3, 32 * 2);
 		Level level = new Level();
 
-		level.loadLevel("/ch/aiko/pokemon/level/level2.bin", null);
+		//level.loadLevel("/ch/aiko/pokemon/level/level2.bin", null);
+		level.loadLevel("/ch/aiko/pokemon/level/test.layout");
 		level.addPlayer(p);
-				
+		
+		level.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, l2, 8 * 32 - 16, 10 * 32));
+		l2.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, level, 8 * 32 - 16, 12 * 32));		
+		
 		handler = new GraphicsHandler(level);
 	}
 

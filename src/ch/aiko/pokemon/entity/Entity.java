@@ -10,6 +10,7 @@ public class Entity implements Renderable, Updatable {
 
 	protected Sprite sprite;
 	protected int xPos, yPos;
+	protected int w, h;
 
 	public Entity() {
 		xPos = 0;

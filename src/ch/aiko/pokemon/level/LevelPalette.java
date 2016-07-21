@@ -26,6 +26,10 @@ public class LevelPalette extends ASDataType {
 		init(levelData);
 	}
 
+	public LevelPalette(ASDataType l) {
+		this("NoData", l);
+	}
+
 	public void addCoding(short c, Tile s) {
 		addCoding(c, SpriteSerialization.getSpriteID(s.sprite) + "\\$" + s.layer);
 	}
@@ -33,7 +37,7 @@ public class LevelPalette extends ASDataType {
 	public void addCoding(short c, Sprite s) {
 		addCoding(c, SpriteSerialization.getSpriteID(s) + "\\$0");
 	}
-	
+
 	public void addCoding(short c, Sprite s, int layer) {
 		addCoding(c, SpriteSerialization.getSpriteID(s) + "\\$" + layer);
 	}
@@ -41,7 +45,7 @@ public class LevelPalette extends ASDataType {
 	public void addCoding(short c, String s) {
 		shortCodes.add(new Short(c));
 		stringCodes.add(s);
-		//reload();
+		// reload();
 		if (level != null) {
 			level.removeObject(name);
 			level.addObject(this);
@@ -50,14 +54,14 @@ public class LevelPalette extends ASDataType {
 
 	// Sprite t2 = ((ASDataArray<Sprite>) base.getObject("SpriteArrayHolder").getArray("SpriteArray")).getData(0)
 	public void load(ASObject c) {
-		short[] shorts = c.getArray("shortCodes").getShortData();
 		if (shortCodes == null) shortCodes = new ArrayList<Short>();
-		String[] strings = c.getArray("sprites").getStringData();
-		if (stringCodes == null) stringCodes = new ArrayList<String>();
-
-		for (short s : shorts)
+		ASArray shor = c.getArray("shortCodes");
+		if (shor != null) for (short s : shor.getShortData())
 			shortCodes.add(s);
-		for (String s : strings)
+
+		if (stringCodes == null) stringCodes = new ArrayList<String>();
+		ASArray spri = c.getArray("sprites");
+		if (spri != null) for (String s : spri.getStringData())
 			stringCodes.add(s);
 	}
 
@@ -79,12 +83,12 @@ public class LevelPalette extends ASDataType {
 
 	public Tile getCoding(short s, int x, int y) {
 		if (!shortCodes.contains(s)) return null;
-		String code = stringCodes.get(shortCodes.indexOf((Object)s));
+		String code = stringCodes.get(shortCodes.indexOf((Object) s));
 		int id = Integer.parseInt(code.split(Pattern.quote("\\$"))[0]);
 		int layer = Integer.parseInt(code.split(Pattern.quote("\\$"))[1]);
-		
+
 		return new Tile(SpriteSerialization.getSprite(id), x, y, layer);
-		//return new Tile(id, layer, x, y, Level.TILE_SIZE, Level.TILE_SIZE);
+		// return new Tile(id, layer, x, y, Level.TILE_SIZE, Level.TILE_SIZE);
 		// return new Tile(stringCodes.get(shortCodes.indexOf((Object) s)), x, y, Level.TILE_SIZE, Level.TILE_SIZE);
 	}
 

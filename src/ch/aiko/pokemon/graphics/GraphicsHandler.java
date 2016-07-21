@@ -23,5 +23,12 @@ public class GraphicsHandler {
 		// Open Window with our screen
 		window = new Window("Pokemon", screen);
 	}
+	
+	public void setLevel(Level l) {
+		screen.removeLayer(screen.getTopLayer("Level"));
+		l.reload();
+		this.level = l;
+		screen.addLayer(l);
+	}
 
 }
