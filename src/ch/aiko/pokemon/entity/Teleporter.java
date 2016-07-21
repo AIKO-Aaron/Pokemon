@@ -41,7 +41,9 @@ public class Teleporter extends Entity {
 
 	public void update(Screen s) {
 		Level l = (Level) s.getTopLayer("Level");
+		if(l == null) return;
 		Player p = (Player) (l).getTopLayer("Player").getRenderable();
+		if(p == null) return;
 		boolean b = false;
 		for (int i = 0; i < w * h && !b; i++)
 			if (p.isInside(xPos + i % w, yPos + i / w)) b = true;

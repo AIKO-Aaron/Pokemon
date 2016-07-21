@@ -1,5 +1,7 @@
 // #SET or #DEFINE (String name, Object repl) Replace all "name"'s with "repl"
-// #FIELDSIZE (int size) sets the size of the field (64 by default and its squared obviously)
+// #FIELDWIDTH (int width) sets the width of the field (64 by default)
+// #FIELDHEIGHT (int height) sets the height of the field (64 by default)
+
 
 //###################
 //	Loading Sprites
@@ -66,8 +68,27 @@
 // LEVEL (int i) Sets the level which will be set to the sprite
 
 //###############
-// 
+// ADD (String type)
 //###############
+
+// ADD ENTITY (String type) Add an entity to the level (Types of entities look at -->//)
+
+// All entites
+// X (int x) x-coord
+// Y (int y) y-coord
+// WIDTH (int width) The width (might do nothin)
+// HEIGHT (int height) The height (might do nothing)
+
+-->//TELEPORTER
+
+// PATH (String path) path to the level file this teleporter leads to
+// DX (int dx) The destination x
+// DY (int dy) The destination y
+
+
+// ADD TRAINER
+
+// TYPE (String s) Sets the type of the trainer
 
 //#############
 //	End Doc

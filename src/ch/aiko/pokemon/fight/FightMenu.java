@@ -49,5 +49,9 @@ public class FightMenu extends Menu {
 	public String getName() {
 		return "FightMenu";
 	}
+	
+	public boolean stopsUpdating() {
+		return false;
+	}
 
 }

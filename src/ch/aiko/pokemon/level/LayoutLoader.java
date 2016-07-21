@@ -52,6 +52,7 @@ public class LayoutLoader {
 	}
 
 	public void addLayer(int id) {
+		if (!tiles.containsKey(id - 1) && id > 0) addLayer(id - 1);
 		short[] newTiles = new short[fieldWidth * fieldHeight];
 		tiles.put(id, newTiles);
 	}

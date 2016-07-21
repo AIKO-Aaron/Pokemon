@@ -2,14 +2,22 @@
 
 I try to recreate Pokemon in Java. 
 
-Todo:
+Best Description in the world 11/10. 
+		-Everyone
+
+### Todo ###
 
 -Fights
--Entities saving (Level-events)
--Sounds
+
+-Entities saving (Level-events) ✓ --> refer to layout.man in level package
+
+-Sounds 
+
 -Textures
 
-Future ideas:
+
+### Future ideas: ###
 
 -All regions
+
 -Online playing

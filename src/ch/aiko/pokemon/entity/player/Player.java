@@ -24,8 +24,6 @@ public class Player extends Entity {
 	private int anim = 0, curAnim = 0;
 	private boolean walking = false;
 
-	int sx, sy;
-
 	public static final boolean CAN_WALK_SIDEWAYS = true;
 
 	public static final int PLAYER_RENDERED_LAYER = 10;
@@ -71,22 +69,16 @@ public class Player extends Entity {
 		xoff = renderer.getWidth() / 2;
 		yoff = renderer.getHeight() / 2;
 		renderer.drawSprite(sprite, xPos + xoff, yPos + yoff);
-
-		int index = sx + xoff + (sy + yoff) * renderer.getWidth();
-		if ((sx != 0 || sy != 0) && index > 0 && index < renderer.getSize()) renderer.getPixels()[index] = 0xFFFF00FF;
 	}
 
 	public boolean collides(Level level, int xoff, int yoff) {
 		for (int i = 0; i < sprite.getWidth(); i++) {
 			for (int j = 0; j < sprite.getHeight(); j++) {
 				if (level.isSolid(xPos + xoff + i, yPos + yoff + j, playerLayer)) {
-					sx = xPos + i;
-					sy = xPos + j;
 					return true;
 				}
 			}
 		}
-		sx = sy = 0;
 		return false;
 	}
 
