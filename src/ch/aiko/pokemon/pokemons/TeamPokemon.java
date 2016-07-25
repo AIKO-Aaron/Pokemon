@@ -1,7 +1,5 @@
 package ch.aiko.pokemon.pokemons;
 
-import java.awt.event.KeyEvent;
-
 import ch.aiko.as.ASDataType;
 import ch.aiko.as.ASField;
 import ch.aiko.as.ASObject;
@@ -17,8 +15,11 @@ import ch.aiko.pokemon.graphics.GIFAnimation;
 public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 
 	public static final float SCALE = 2F;
-	
+	public static final float OWN_MOD = 1.5F;
+
 	protected GIFAnimation animation;
+
+	protected PokemonType holder;
 	protected Pokemons type;
 	protected String nickname;
 	protected int healthPoints;
@@ -34,9 +35,10 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		init(obj1);
 	}
 
-	public TeamPokemon(Pokemons type, String nickname, int atk, int satk, int def, int sdef, int speed, int xp) {
+	public TeamPokemon(Pokemons type, PokemonType holder, String nickname, int atk, int satk, int def, int sdef, int speed, int xp) {
 		this.name = "Pok";
 		this.type = type;
+		this.holder = holder;
 		this.nickname = nickname;
 		attack = atk;
 		specAttack = satk;
@@ -46,7 +48,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		this.xp = xp;
 		level = (int) Math.pow(xp, 1 / 3);
 
-		animation = new GIFAnimation(type.getPathToAnimation(), 0, 0, SCALE).replaceColor(0xFFFFFFFF, 0);
+		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
 	}
 
 	public void load(ASObject c) {
@@ -59,8 +61,9 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		level = (int) Math.pow(xp, 1 / 3);
 		healthPoints = SerializationReader.readInt(c.getField("HP").data, 0);
 		type = PokeUtil.get(SerializationReader.readInt(c.getField("NUM").data, 0));
+		holder = PokeUtil.getType(SerializationReader.readInt(c.getField("TYP").data, 0));
 		nickname = c.getString("NCN").toString();
-		animation = new GIFAnimation(type.getPathToAnimation(), 0, 0, SCALE).replaceColor(0xFFFFFFFF, 0);
+		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
 	}
 
 	public void getData(ASObject thisObject) {
@@ -72,6 +75,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		thisObject.addField(ASField.Integer("XP", xp));
 		thisObject.addField(ASField.Integer("HP", healthPoints));
 		thisObject.addField(ASField.Integer("NUM", type.getPokedexNumber()));
+		thisObject.addField(ASField.Integer("NUM", holder.in));
 		thisObject.addString(ASString.Create("NCN", nickname.toCharArray()));
 	}
 
@@ -90,16 +94,34 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	}
 
 	public void render(Renderer renderer) {
-		animation.render(renderer, renderer.getWidth() - 250 - animation.getMaxWidth(), (int) (310 - animation.getMaxHeight() * animation.getScale()));
+		int x = holder == PokemonType.OWNED ? 200 : renderer.getWidth() - 250 - animation.getMaxWidth();
+		int y = holder == PokemonType.OWNED ? renderer.getHeight() - (int) (animation.getMaxHeight() * animation.getScale()) : (int) (310 - animation.getMaxHeight() * animation.getScale());
+		animation.render(renderer, x, y);
+	}
+
+	public void setType(Pokemons t) {
+		type = t;
+		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0).replaceColor(0xFF000000, 0);
+	}
+
+	public void advance() {
+		if (type.isMegaEvolution()) type = PokeUtil.get(type.getChild().getPokedexNumber() + 1);
+		else type = PokeUtil.get(type.getPokedexNumber() + 1);
+		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0).replaceColor(0xFF000000, 0);
 	}
 
 	public void update(Screen screen) {
 		animation.update(screen);
+	}
 
-		if (screen.popKeyPressed(KeyEvent.VK_N)) {
-			type = PokeUtil.get(type.getPokedexNumber() + 1);
-			animation = new GIFAnimation(type.getPathToAnimation(), 0, 0).replaceColor(0xFFFFFFFF, 0).replaceColor(0xFF000000, 0);
-		}
+	public void mega() {
+		if (type.hasMegaEvolution()) {
+			int index = 1;
+			setType(type.getMegaEvolution(index));
+		} else if (type.isMegaEvolution()) {
+			Pokemons sub = type.getChild();
+			if (sub.getMegaEvolutions().length > type.getIndex()) setType(sub.getMegaEvolution(type.getIndex() + 1));
+		} else System.err.println("This pokmon doesn't have a mega-evolution");
 	}
 
 }

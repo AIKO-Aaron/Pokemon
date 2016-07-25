@@ -2,6 +2,7 @@ package ch.aiko.pokemon.fight;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.event.KeyEvent;
 import java.util.Stack;
 
 import ch.aiko.engine.graphics.Layer;
@@ -13,12 +14,14 @@ import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.graphics.menu.Animation;
 import ch.aiko.pokemon.graphics.menu.Menu;
+import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
 
 public class Fight extends LayerContainer {
 
-	public TeamPokemon pok1 = new TeamPokemon(Pokemons.BLUBASAUR, "Test", 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok1 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.OWNED, "Test", 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok2 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.ENEMY, "Hi", 0, 0, 0, 0, 0, 1);
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
 	public Sprite background;
@@ -36,18 +39,19 @@ public class Fight extends LayerContainer {
 		pixels = background.getPixels();
 
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok1).setUpdatable(pok1).toLayer());
+		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok2).setUpdatable(pok2).toLayer());
 
 		for (int i = 0; i < 50 * 50; i++) {
 			pixels[i % 50 + (i / 50) * background.getWidth()] = 0xFFFF00FF;
 		}
 		background.getImage().getGraphics().drawString("Test", 0, 50);
 	}
-	
+
 	public int getStringWidth(String s) {
 		FontMetrics metrics = background.getImage().getGraphics().getFontMetrics(f);
 		return metrics.stringWidth(s);
 	}
-	
+
 	public int getStringHeight() {
 		FontMetrics metrics = background.getImage().getGraphics().getFontMetrics(f);
 		return metrics.getHeight();
@@ -57,7 +61,7 @@ public class Fight extends LayerContainer {
 		openMenu(new FightMenu(s));
 		openMenu(new Animation(s, new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_boy.png", 80, 80, 300, 300).removeColor(0xFF88B8B0), false, 7).setPosition(150, s.getFrameHeight() - 300));
 		// SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why is music disabled? Because I'm testing and it's annoying...
-	
+
 		// Set background of the renderer to the background image. It can be modified afterwards
 		s.getRenderer().setClearPixels(pixels);
 	}
@@ -80,7 +84,13 @@ public class Fight extends LayerContainer {
 
 	public void layerRender(Renderer r) {}
 
-	public void layerUpdate(Screen s) {}
+	public void layerUpdate(Screen s) {
+		if (s.popKeyPressed(KeyEvent.VK_N)) {
+			pok1.advance();
+		} else if (s.popKeyPressed(KeyEvent.VK_M)) {
+			pok1.mega();
+		}
+	}
 
 	public String getName() {
 		return "Fight";

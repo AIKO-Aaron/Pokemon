@@ -9,6 +9,8 @@ import ch.aiko.util.ImageUtil;
 
 public class GIFAnimation implements Renderable, Updatable {
 
+	public static final float TIME_MOD = 1;// 10;
+
 	protected int x, y;
 	protected ImageFrame[] animation;
 	protected int curIndex = 0;
@@ -61,7 +63,7 @@ public class GIFAnimation implements Renderable, Updatable {
 
 	public void update(Screen screen) {
 		if (lastTime == 0L) lastTime = System.currentTimeMillis();
-		if (System.currentTimeMillis() - lastTime > animation[curIndex].getDelay() * 10) {
+		if (System.currentTimeMillis() - lastTime > animation[curIndex].getDelay() * TIME_MOD) {
 			curIndex++;
 			curIndex %= animation.length;
 			lastTime = System.currentTimeMillis();
@@ -73,7 +75,7 @@ public class GIFAnimation implements Renderable, Updatable {
 	}
 
 	public void render(Renderer renderer, int x, int y) {
-		renderer.drawImage(animation[curIndex].getImage(), x + (maxWidth - animation[curIndex].getWidth()) / 2, y + (maxHeight - animation[curIndex].getHeight()) / 2);
+		renderer.drawImage(animation[curIndex].getImage(), (int) (x - animation[curIndex].getWidth() / 2 * scale), y + (maxHeight - animation[curIndex].getHeight()) / 2);
 	}
 
 	public int getMaxWidth() {
