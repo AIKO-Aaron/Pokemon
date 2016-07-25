@@ -12,9 +12,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
+
+import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.language.Language;
 
 public abstract class FileUtil {
 
@@ -27,6 +31,17 @@ public abstract class FileUtil {
 	 */
 	public static File LoadFile(String path) {
 		return new File(path);
+	}
+	
+	public static File getRunningJar() {
+		File Me = null;
+		try {
+			Me = new File(Language.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+		} catch (URISyntaxException e) {
+			Pokemon.out.err("Error while searching for running file.");
+			return null;
+		}
+		return Me;
 	}
 
 	/**

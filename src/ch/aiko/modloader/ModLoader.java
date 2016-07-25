@@ -55,6 +55,7 @@ public class ModLoader {
 	public static final void loadMods(PrintStream ps, String dir, Runnable initCore) {
 		new Thread(() -> displayStatus()).start();
 		findMethods(ps, dir);
+		preInit(ps);
 		initCore.run();
 		start(ps);
 	}
@@ -81,7 +82,7 @@ public class ModLoader {
 			ClassPool pool = new ClassPool();
 
 			try {
-				cl = new URLClassLoader(new URL[] { new URL("jar:file:" + f.getAbsolutePath() + "!/") }, null);
+				cl = new URLClassLoader(new URL[] { new URL("jar:file:" + f.getAbsolutePath() + "!/") }, ClassLoader.getSystemClassLoader());
 				file = new JarFile(f);
 			} catch (Throwable t) {
 				t.printStackTrace();
@@ -139,7 +140,7 @@ public class ModLoader {
 							Object inst = null;
 							try {
 								inst = c.getField(field.getName()).get(null);
-							} catch (IllegalArgumentException | IllegalAccessException e) {}
+							} catch (Throwable e) {e.printStackTrace();}
 							if (inst != null) {
 								instances.put(c.getName(), inst);
 							}
@@ -161,7 +162,7 @@ public class ModLoader {
 							}
 						}
 					}
-				} catch (NotFoundException | ClassNotFoundException | NoSuchFieldException | SecurityException | NoSuchMethodException e) {
+				} catch (NotFoundException | ClassNotFoundException | SecurityException | NoSuchMethodException e) {
 					ps.println(e);
 				}
 			});
@@ -302,8 +303,8 @@ public class ModLoader {
 		}
 		return instance;
 	}
-
-	private static void start(PrintStream ps) {
+	
+	private static void preInit(PrintStream ps) {
 		if (preInits.size() > 0) {
 			Status = 4;
 			InitIndex = 0;
@@ -317,6 +318,9 @@ public class ModLoader {
 				} catch (Throwable t) {}
 			});
 		}
+	}
+
+	private static void start(PrintStream ps) {
 		if (Inits.size() > 0) {
 			Status = 5;
 			InitIndex = 0;
