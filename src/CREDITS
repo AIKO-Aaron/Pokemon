@@ -4,8 +4,9 @@ Original Pokémon by GameFreak / Nintendo
 This application is entirely programmed in Java.
 
 Here's a list of libraries used in this project:
-	-JLayer by JavaZoom (Player classes modified by me)
 	-GameEngine by Aiko (Util Library for all my programs)
+	-(JavaAssist for modloading?)
+	-JLayer by JavaZoom (Player classes modified by me)
 	
 Compiled with Java 8
 

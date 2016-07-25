@@ -11,7 +11,7 @@ public enum Pokemons {
 	SQUIRTLE(7, 16),
 	WARTORTLE(8, 36),
 	BLASTOISE(9);
-	
+
 	private int lvlForEvo;
 	private int pokedexNumber;
 
@@ -30,14 +30,22 @@ public enum Pokemons {
 	public boolean canEvolve(int lvl) {
 		return lvl >= lvlForEvo;
 	}
-	
+
 	public int getPokedexNumber() {
 		return pokedexNumber;
 	}
 
+	public String getAnimationName() {
+		String curNum = "" + pokedexNumber;
+		while (curNum.length() < 3)
+			curNum = "0" + curNum;
+		return curNum;
+	}
+
 	public String getPathToAnimation() {
 		String curNum = "" + pokedexNumber;
-		while(curNum.length() < 3) curNum = "0" + curNum;
+		while (curNum.length() < 3)
+			curNum = "0" + curNum;
 		return "/ch/aiko/pokemon/textures/pokemon/" + curNum + ".gif";
 	}
 

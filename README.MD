@@ -11,9 +11,11 @@ Best Description in the world 11/10.
 
 -Entities saving (Level-events) ✓ --> refer to layout.man in level package
 
--Sounds 
+-ModLoader (No Reflections)
 
--Textures
+-Sounds (1/2 ✓ Player done! --> Need new sounds! And more)
+
+-Textures (1/2 ✓: 138MB gifs for all pokemons without backsprites)
 
 
 ### Future ideas: ###

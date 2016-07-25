@@ -16,6 +16,8 @@ import ch.aiko.pokemon.graphics.GIFAnimation;
 
 public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 
+	public static final float SCALE = 2F;
+	
 	protected GIFAnimation animation;
 	protected Pokemons type;
 	protected String nickname;
@@ -44,7 +46,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		this.xp = xp;
 		level = (int) Math.pow(xp, 1 / 3);
 
-		animation = new GIFAnimation(type.getPathToAnimation()).replaceColor(0xFFFFFFFF, 0);
+		animation = new GIFAnimation(type.getPathToAnimation(), 0, 0, SCALE).replaceColor(0xFFFFFFFF, 0);
 	}
 
 	public void load(ASObject c) {
@@ -58,7 +60,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		healthPoints = SerializationReader.readInt(c.getField("HP").data, 0);
 		type = PokeUtil.get(SerializationReader.readInt(c.getField("NUM").data, 0));
 		nickname = c.getString("NCN").toString();
-		animation = new GIFAnimation(type.getPathToAnimation(), 0, 0).replaceColor(0xFFFFFFFF, 0);
+		animation = new GIFAnimation(type.getPathToAnimation(), 0, 0, SCALE).replaceColor(0xFFFFFFFF, 0);
 	}
 
 	public void getData(ASObject thisObject) {
@@ -88,7 +90,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	}
 
 	public void render(Renderer renderer) {
-		animation.render(renderer, renderer.getWidth() - 250 - animation.getMaxWidth(), 310 - animation.getMaxHeight() * 2);
+		animation.render(renderer, renderer.getWidth() - 250 - animation.getMaxWidth(), (int) (310 - animation.getMaxHeight() * animation.getScale()));
 	}
 
 	public void update(Screen screen) {

@@ -14,20 +14,36 @@ public class GIFAnimation implements Renderable, Updatable {
 	protected int curIndex = 0;
 	protected long lastTime;
 	int maxWidth = 0, maxHeight = 0;
+	private float scale = 1;
 
-	public GIFAnimation(String path, int x, int y) {
+	public GIFAnimation(GIF gif, int x, int y) {
 		this.x = x;
 		this.y = y;
-		animation = ImageUtil.readGifInClassPath(path, 2);
+		animation = gif.animation;
+		scale = gif.scale;
 		lastTime = 0L;
 		for (ImageFrame frame : animation) {
 			maxWidth = Math.max(maxWidth, frame.getWidth());
 			maxHeight = Math.max(maxHeight, frame.getHeight());
 		}
 	}
-	
-	public GIFAnimation(String path) {
-		animation = ImageUtil.readGifInClassPath(path, 2);
+
+	public GIFAnimation(String path, int x, int y) {
+		this.x = x;
+		this.y = y;
+		animation = ImageUtil.readGifInClassPath(path, 1);
+		lastTime = 0L;
+		for (ImageFrame frame : animation) {
+			maxWidth = Math.max(maxWidth, frame.getWidth());
+			maxHeight = Math.max(maxHeight, frame.getHeight());
+		}
+	}
+
+	public GIFAnimation(String path, int x, int y, float scale) {
+		this.x = x;
+		this.y = y;
+		animation = ImageUtil.readGifInClassPath(path, scale);
+		this.scale = scale;
 		lastTime = 0L;
 		for (ImageFrame frame : animation) {
 			maxWidth = Math.max(maxWidth, frame.getWidth());
@@ -53,19 +69,22 @@ public class GIFAnimation implements Renderable, Updatable {
 	}
 
 	public void render(Renderer renderer) {
-		renderer.drawImage(animation[curIndex].getImage(), x + (maxWidth - animation[curIndex].getWidth()) / 2, y+ (maxHeight - animation[curIndex].getHeight()) / 2);
+		renderer.drawImage(animation[curIndex].getImage(), x + (maxWidth - animation[curIndex].getWidth()) / 2, y + (maxHeight - animation[curIndex].getHeight()) / 2);
 	}
-	
+
 	public void render(Renderer renderer, int x, int y) {
-		renderer.drawImage(animation[curIndex].getImage(), x + (maxWidth - animation[curIndex].getWidth()) / 2, y+ (maxHeight - animation[curIndex].getHeight()) / 2);
+		renderer.drawImage(animation[curIndex].getImage(), x + (maxWidth - animation[curIndex].getWidth()) / 2, y + (maxHeight - animation[curIndex].getHeight()) / 2);
 	}
 
 	public int getMaxWidth() {
 		return maxWidth;
 	}
-	
+
 	public int getMaxHeight() {
 		return maxHeight;
 	}
 
+	public float getScale() {
+		return scale;
+	}
 }
