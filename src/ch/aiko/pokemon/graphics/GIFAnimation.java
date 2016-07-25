@@ -9,7 +9,7 @@ import ch.aiko.util.ImageUtil;
 
 public class GIFAnimation implements Renderable, Updatable {
 
-	public static final float TIME_MOD = 1;// 10;
+	public static final float TIME_MOD = 10; // default: 10;
 
 	protected int x, y;
 	protected ImageFrame[] animation;

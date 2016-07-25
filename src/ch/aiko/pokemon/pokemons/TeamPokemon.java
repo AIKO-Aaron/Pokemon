@@ -22,7 +22,10 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	protected PokemonType holder;
 	protected Pokemons type;
 	protected String nickname;
+
+	// STATS
 	protected int healthPoints;
+	protected int maxHP;
 	protected int attack;
 	protected int specAttack;
 	protected int defense;
@@ -35,8 +38,10 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		init(obj1);
 	}
 
-	public TeamPokemon(Pokemons type, PokemonType holder, String nickname, int atk, int satk, int def, int sdef, int speed, int xp) {
+	public TeamPokemon(Pokemons type, PokemonType holder, String nickname, int hp, int maxHP, int atk, int satk, int def, int sdef, int speed, int xp) {
 		this.name = "Pok";
+		this.healthPoints = hp;
+		this.maxHP = maxHP;
 		this.type = type;
 		this.holder = holder;
 		this.nickname = nickname;
@@ -46,7 +51,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		specDefense = sdef;
 		this.speed = speed;
 		this.xp = xp;
-		level = (int) Math.pow(xp, 1 / 3);
+		level = (int) Math.pow(xp, 1F / 3F);
 
 		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
 	}
@@ -56,13 +61,15 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		specAttack = SerializationReader.readInt(c.getField("SAT").data, 0);
 		defense = SerializationReader.readInt(c.getField("DFS").data, 0);
 		specDefense = SerializationReader.readInt(c.getField("SDF").data, 0);
-		level = SerializationReader.readInt(c.getField("SPD").data, 0);
+		speed = SerializationReader.readInt(c.getField("SPD").data, 0);
 		xp = SerializationReader.readInt(c.getField("XP").data, 0);
-		level = (int) Math.pow(xp, 1 / 3);
 		healthPoints = SerializationReader.readInt(c.getField("HP").data, 0);
+		maxHP = SerializationReader.readInt(c.getField("MHP").data, 0);
 		type = PokeUtil.get(SerializationReader.readInt(c.getField("NUM").data, 0));
 		holder = PokeUtil.getType(SerializationReader.readInt(c.getField("TYP").data, 0));
 		nickname = c.getString("NCN").toString();
+
+		level = (int) Math.pow(xp, 1F / 3F);
 		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
 	}
 
@@ -74,14 +81,19 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		thisObject.addField(ASField.Integer("SPD", speed));
 		thisObject.addField(ASField.Integer("XP", xp));
 		thisObject.addField(ASField.Integer("HP", healthPoints));
+		thisObject.addField(ASField.Integer("MHP", maxHP));
 		thisObject.addField(ASField.Integer("NUM", type.getPokedexNumber()));
-		thisObject.addField(ASField.Integer("NUM", holder.in));
+		thisObject.addField(ASField.Integer("TYP", holder.in));
 		thisObject.addString(ASString.Create("NCN", nickname.toCharArray()));
 	}
 
 	public void gainXP(int amount) {
+		if(xp >= 1000000) return;
 		xp += amount;
-		level = (int) Math.pow(xp, 1 / 3);
+		if(xp >= 1000000) xp = 1000000;
+		int ol = level;
+		level = (int) Math.pow(xp, 1F / 3F);
+		if(level > ol) System.out.println("Level up to: " + level);
 		if (type.canEvolve(level)) evolve();
 	}
 
@@ -90,11 +102,15 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	}
 
 	private void evolve() {
-		Pokemon.out.err("I don't do a thing and I'm proud of it!");
+		int t = type.getEvolvesInto();
+		if (t < 0 || t > PokeUtil.pokemons.size()) Pokemon.out.err("I don't do a thing and I'm proud of it!");
+		else {
+			setType(PokeUtil.get(t));
+		}
 	}
 
 	public void render(Renderer renderer) {
-		int x = holder == PokemonType.OWNED ? 200 : renderer.getWidth() - 250 - animation.getMaxWidth();
+		int x = holder == PokemonType.OWNED ? 200 : (int) (renderer.getWidth() - 250 - animation.getMaxWidth() / 2);
 		int y = holder == PokemonType.OWNED ? renderer.getHeight() - (int) (animation.getMaxHeight() * animation.getScale()) : (int) (310 - animation.getMaxHeight() * animation.getScale());
 		animation.render(renderer, x, y);
 	}
@@ -122,6 +138,18 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 			Pokemons sub = type.getChild();
 			if (sub.getMegaEvolutions().length > type.getIndex()) setType(sub.getMegaEvolution(type.getIndex() + 1));
 		} else System.err.println("This pokmon doesn't have a mega-evolution");
+	}
+
+	public String getNickName() {
+		return nickname;
+	}
+
+	public int getHP() {
+		return healthPoints;
+	}
+
+	public int getMaxHP() {
+		return maxHP;
 	}
 
 }

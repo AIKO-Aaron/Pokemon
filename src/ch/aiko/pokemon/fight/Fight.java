@@ -20,8 +20,8 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 
 public class Fight extends LayerContainer {
 
-	public TeamPokemon pok1 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.OWNED, "Test", 0, 0, 0, 0, 0, 1);
-	public TeamPokemon pok2 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.ENEMY, "Hi", 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok1 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.OWNED, "EnemyPokemonNickName1", 1, 2, 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok2 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.ENEMY, "MyPokemonNickName2", 2, 2, 0, 0, 0, 0, 0, 1);
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
 	public Sprite background;
@@ -44,7 +44,7 @@ public class Fight extends LayerContainer {
 		for (int i = 0; i < 50 * 50; i++) {
 			pixels[i % 50 + (i / 50) * background.getWidth()] = 0xFFFF00FF;
 		}
-		background.getImage().getGraphics().drawString("Test", 0, 50);
+		background.getImage().getGraphics().drawString(pok1.getNickName(), 0, 50);
 	}
 
 	public int getStringWidth(String s) {
@@ -89,6 +89,16 @@ public class Fight extends LayerContainer {
 			pok1.advance();
 		} else if (s.popKeyPressed(KeyEvent.VK_M)) {
 			pok1.mega();
+		} else if(s.popKeyPressed(KeyEvent.VK_B)) {
+			pok1.gainXP(pok1.getXPToLevel());
+		}
+		
+		if (s.popKeyPressed(KeyEvent.VK_U)) {
+			pok2.advance();
+		} else if (s.popKeyPressed(KeyEvent.VK_I)) {
+			pok2.mega();
+		} else if(s.popKeyPressed(KeyEvent.VK_Z)) {
+			pok2.gainXP(pok2.getXPToLevel());
 		}
 	}
 
