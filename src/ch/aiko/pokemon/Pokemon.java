@@ -28,10 +28,11 @@ public class Pokemon {
 		Settings.load();
 		Language.setup();
 		
-		System.out.println(FileUtil.getRunningJar());
+		// If we are in eclipse
+		boolean isDir = FileUtil.getRunningJar().isDirectory();
 
 		out.println("Starting Modloader...");
-		ModLoader.loadMods(out, System.getProperty("user.home") + "/Desktop/test/", () -> load());
+		ModLoader.loadMods(out, (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getAbsolutePath()) + "/mods/", () -> load());
 		out.println("Done loading mods. Starting threads...");
 		
 		handler.start();
