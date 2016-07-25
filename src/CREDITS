@@ -5,8 +5,8 @@ This application is entirely programmed in Java.
 
 Here's a list of libraries used in this project:
 	-GameEngine by Aiko (Util Library for all my programs)
-	-(JavaAssist for modloading?)
-	-JLayer by JavaZoom (Player classes modified by me)
+	-JavaAssist for modloading
+	-JLayer by JavaZoom (Compiled by me)
 	
 Compiled with Java 8
 

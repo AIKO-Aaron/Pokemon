@@ -1,5 +1,6 @@
 package ch.aiko.pokemon;
 
+import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.entity.Teleporter;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.GraphicsHandler;
@@ -15,6 +16,10 @@ public class Pokemon {
 	public static Pokemon pokemon;
 	public static boolean DEBUG = false;
 	public static final Log out = new Log(Pokemon.class);
+	/**
+	 * The only player you'll need
+	 */
+	public static Player player;
 
 	public GraphicsHandler handler;
 
@@ -22,19 +27,25 @@ public class Pokemon {
 		Settings.load();
 		Language.setup();
 
-		Level l2 = new Level("/ch/aiko/pokemon/level/center.layout");
+		ModLoader.loadMods(out, System.getProperty("user.home") + "/test/", ()->load());
 		
-		Player p = new Player(32 * 3, 32 * 2);
+		handler.start();
+	}
+	
+	public void load() {
+		player = new Player(32 * 3, 32 * 2);
+		
 		Level level = new Level();
+		Level l2 = new Level("/ch/aiko/pokemon/level/center.layout");
 
 		//level.loadLevel("/ch/aiko/pokemon/level/level2.bin", null);
 		level.loadLevel("/ch/aiko/pokemon/level/test.layout");
-		level.addPlayer(p);
+		level.addPlayer(player);
 		
 		level.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, l2, 8 * 32 - 16, 10 * 32));
 		l2.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, level, 8 * 32 - 16, 12 * 32));		
 		
-		handler = new GraphicsHandler(level);
+		handler = new GraphicsHandler(level, player);
 	}
 
 	public static void main(String[] args) {

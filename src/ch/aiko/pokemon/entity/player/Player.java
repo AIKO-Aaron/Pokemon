@@ -24,6 +24,8 @@ public class Player extends Entity {
 	private int anim = 0, curAnim = 0;
 	private boolean walking = false;
 
+	public boolean isPaused = false;
+
 	public static final boolean CAN_WALK_SIDEWAYS = true;
 
 	public static final int PLAYER_RENDERED_LAYER = 10;
@@ -74,9 +76,7 @@ public class Player extends Entity {
 	public boolean collides(Level level, int xoff, int yoff) {
 		for (int i = 0; i < sprite.getWidth(); i++) {
 			for (int j = 0; j < sprite.getHeight(); j++) {
-				if (level.isSolid(xPos + xoff + i, yPos + yoff + j, playerLayer)) {
-					return true;
-				}
+				if (level.isSolid(xPos + xoff + i, yPos + yoff + j, playerLayer)) { return true; }
 			}
 		}
 		return false;
@@ -87,6 +87,7 @@ public class Player extends Entity {
 	}
 
 	public void update(Screen screen) {
+		if (isPaused) return;
 		int xx = 0, yy = 0;
 
 		Layer layer = screen.getLayer((Renderable) this).getParent();
@@ -148,6 +149,10 @@ public class Player extends Entity {
 
 	public boolean isMoving() {
 		return walking;
+	}
+
+	public void setPaused(boolean b) {
+		isPaused = b;
 	}
 
 }
