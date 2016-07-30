@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import ch.aiko.pokemon.Pokemon;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
@@ -44,7 +46,7 @@ public class ImageUtil {
 		try {
 			img = ImageIO.read(f);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 			System.err.println("File not found" + f.getAbsolutePath());
 		}
 		return img;
@@ -85,7 +87,7 @@ public class ImageUtil {
 		try {
 			img = ImageIO.read(ImageUtil.class.getResource(path));
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 			System.err.println("File not found: " + path);
 		}
 		return img;
@@ -156,7 +158,7 @@ public class ImageUtil {
 		try {
 			return ImageIO.read(website);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 
 		return null;
@@ -166,7 +168,7 @@ public class ImageUtil {
 		try {
 			return ImageIO.read(new URL(website));
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 
 		return null;
@@ -234,7 +236,7 @@ public class ImageUtil {
 			Robot r = new Robot();
 			img = r.createScreenCapture(new Rectangle(0, 0, getScreenWidth(), getScreenHeight()));
 		} catch (AWTException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 
 		return img;
@@ -259,7 +261,7 @@ public class ImageUtil {
 			Robot r = new Robot();
 			img = r.createScreenCapture(new Rectangle(x, y, width + x, height + y));
 		} catch (AWTException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 
 		return img;
@@ -312,7 +314,7 @@ public class ImageUtil {
 		try {
 			return new Robot().createScreenCapture(screenRect);
 		} catch (AWTException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -330,7 +332,7 @@ public class ImageUtil {
 		try {
 			return new Robot().createScreenCapture(screenRect);
 		} catch (AWTException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -352,8 +354,8 @@ public class ImageUtil {
 	public static ImageFrame[] readGifInClassPath(String path, float scale) {
 		try {
 			return readGif(ImageUtil.class.getResourceAsStream(path), scale);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -361,13 +363,22 @@ public class ImageUtil {
 	public static ImageFrame[] readGif(String path, float scale) {
 		try {
 			return readGif(new FileInputStream(path), scale);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
+			e.printStackTrace(Pokemon.out);
+		}
+		return null;
+	}
+	
+	public static ImageFrame[] readGifInClassPath(String path, float scale, ClassLoader cl) {
+		try {
+			return readGif(cl.getResourceAsStream(path), scale);
+		} catch (Throwable e) {
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
 
-	public static ImageFrame[] readGif(InputStream stream, float scale) throws IOException {
+	public static ImageFrame[] readGif(InputStream stream, float scale) throws IOException, Throwable {
 		ArrayList<ImageFrame> frames = new ArrayList<ImageFrame>(2);
 
 		ImageReader reader = (ImageReader) ImageIO.getImageReadersByFormatName("gif").next();

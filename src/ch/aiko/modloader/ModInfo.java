@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 
 public class ModInfo extends PropertyUtil {
 
+	public ModInfo() {
+		
+	}
+	
     public ModInfo(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String entire = "";

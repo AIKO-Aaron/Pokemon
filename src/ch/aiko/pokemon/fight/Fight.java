@@ -20,8 +20,8 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 
 public class Fight extends LayerContainer {
 
-	public TeamPokemon pok1 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.OWNED, "EnemyPokemonNickName1", 1, 2, 0, 0, 0, 0, 0, 1);
-	public TeamPokemon pok2 = new TeamPokemon(Pokemons.BLUBASAUR, PokemonType.ENEMY, "MyPokemonNickName2", 2, 2, 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok1 = new TeamPokemon(Pokemons.get(1), PokemonType.OWNED, "EnemyPokemonNickName1", 1, 2, 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok2 = new TeamPokemon(Pokemons.get(1), PokemonType.ENEMY, "MyPokemonNickName2", 2, 2, 0, 0, 0, 0, 0, 1);
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
 	public Sprite background;

@@ -3,6 +3,7 @@ package ch.aiko.pokemon.sounds;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.settings.Settings;
 
 import javazoom.jl.decoder.JavaLayerException;
@@ -25,19 +26,19 @@ public class SoundPlayer {
 					try {
 						player.play();
 					} catch (JavaLayerException e) {
-						e.printStackTrace();
+						e.printStackTrace(Pokemon.out);
 					} finally {
 						try {
 							bis.close();
 						} catch (IOException e) {
-							e.printStackTrace();
+							e.printStackTrace(Pokemon.out);
 						}
 					}
 				}
 			}.start();
 			return player;
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -59,7 +60,7 @@ public class SoundPlayer {
 			music.start();
 			return currentLoop;
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -77,7 +78,7 @@ public class SoundPlayer {
 			music.start();
 			return currentLoop;
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -93,7 +94,7 @@ public class SoundPlayer {
 			music.start();
 			return currentLoop;
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -109,7 +110,7 @@ public class SoundPlayer {
 			music.start();
 			return currentLoop;
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
@@ -156,7 +157,7 @@ public class SoundPlayer {
 		try {
 			currentLoop = new AdvancedPlayer(bis);
 		} catch (JavaLayerException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 	}
 
@@ -167,7 +168,7 @@ public class SoundPlayer {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				e.printStackTrace(Pokemon.out);
 			}
 			timeout--;
 			if (timeout == 0) return;
@@ -219,7 +220,7 @@ public class SoundPlayer {
 					bis.close();
 					times_played++;
 				} catch (Exception e) {
-					e.printStackTrace();
+					e.printStackTrace(Pokemon.out);
 				}
 			}
 		}

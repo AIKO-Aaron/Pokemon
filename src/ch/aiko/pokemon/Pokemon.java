@@ -6,6 +6,8 @@ import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.GraphicsHandler;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
+import ch.aiko.pokemon.pokemons.PokeUtil;
+import ch.aiko.pokemon.pokemons.Pokemons;
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.util.FileUtil;
 import ch.aiko.util.Log;
@@ -27,19 +29,24 @@ public class Pokemon {
 	public Pokemon() {
 		Settings.load();
 		Language.setup();
-		
+
 		// If we are in eclipse
 		boolean isDir = FileUtil.getRunningJar().isDirectory();
 
 		out.println("Starting Modloader...");
 		ModLoader.loadMods(out, (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getAbsolutePath()) + "/mods/", () -> load());
 		out.println("Done loading mods. Starting threads...");
-		
+
+		PokeUtil.loadEmAll();
+
 		handler.start();
 	}
 
 	public void load() {
 		out.println("Core engine started loading");
+
+		Pokemons.init();
+
 		player = new Player(32 * 3, 32 * 2);
 
 		Level level = new Level();

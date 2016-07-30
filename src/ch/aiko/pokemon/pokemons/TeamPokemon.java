@@ -14,9 +14,6 @@ import ch.aiko.pokemon.graphics.GIFAnimation;
 
 public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 
-	public static final float SCALE = 2F;
-	public static final float OWN_MOD = 1.5F;
-
 	protected GIFAnimation animation;
 
 	protected PokemonType holder;
@@ -53,7 +50,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		this.xp = xp;
 		level = (int) Math.pow(xp, 1F / 3F);
 
-		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
+		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
 	public void load(ASObject c) {
@@ -70,7 +67,8 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		nickname = c.getString("NCN").toString();
 
 		level = (int) Math.pow(xp, 1F / 3F);
-		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
+		//animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
+		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
 	public void getData(ASObject thisObject) {
@@ -117,13 +115,14 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 
 	public void setType(Pokemons t) {
 		type = t;
-		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0).replaceColor(0xFF000000, 0);
+		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
 	public void advance() {
 		if (type.isMegaEvolution()) type = PokeUtil.get(type.getChild().getPokedexNumber() + 1);
 		else type = PokeUtil.get(type.getPokedexNumber() + 1);
-		animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0).replaceColor(0xFF000000, 0);
+		System.out.println(type.getPathToAnimation(holder));
+		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
 	public void update(Screen screen) {

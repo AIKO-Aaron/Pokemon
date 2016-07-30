@@ -90,7 +90,7 @@ public abstract class FileUtil {
 
 			reader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return file;
 	}
@@ -116,7 +116,7 @@ public abstract class FileUtil {
 
 			reader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 
 		return file;
@@ -134,7 +134,7 @@ public abstract class FileUtil {
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 	}
 
@@ -177,7 +177,7 @@ public abstract class FileUtil {
 
 			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 	}
 
@@ -268,7 +268,7 @@ public abstract class FileUtil {
 				in.close();
 				ou.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.printStackTrace(Pokemon.out);
 			}
 		}
 	}
@@ -400,7 +400,7 @@ public abstract class FileUtil {
 			FileUtil.WriteFile(text, f);
 			return f;
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(Pokemon.out);
 		}
 		return null;
 	}
