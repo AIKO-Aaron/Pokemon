@@ -199,8 +199,11 @@ public class Level extends LayerContainer {
 
 		int xcol = x / tileSize;
 		int ycol = y / tileSize;
+		int xof = x % tileSize;
+		int yof = y % tileSize;
+		
 		for (Tile t : getTile(xcol, ycol)) {
-			if (t != null && t.layer > layer) return true;
+			if (t != null && t.isSolid(xof, yof, layer)) return true;
 		}
 		return false;
 	}
