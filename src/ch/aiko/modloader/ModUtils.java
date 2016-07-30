@@ -52,7 +52,6 @@ public class ModUtils {
 	
 	public static void createMegaEvolution(String name, int origPokemon) {
 		Pokemons orig = PokeUtil.get(origPokemon);
-		System.out.println(orig.getMegaEvolutions().size() + 1);
 		Pokemons mega = new Pokemons(name, orig.getMegaEvolutions().size() + 1, origPokemon);
 		orig.addMegaEvolution(mega);
 	}

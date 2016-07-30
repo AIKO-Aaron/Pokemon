@@ -29,7 +29,6 @@ public class Language extends PropertyUtil {
 		Pokemon.out.println("Successfully loaded: " + pathToFile + " as a Language File");
 		lang_id = pathToFile.replace("lang", "").replace(".", "");
 		lang_id = lang_id.split("/")[lang_id.split("/").length - 1];
-		System.out.println(lang_id);
 		__lang = pathToFile.split("/")[pathToFile.split("/").length - 1].split("\\.")[0];
 	}
 
