@@ -121,7 +121,6 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	public void advance() {
 		if (type.isMegaEvolution()) type = PokeUtil.get(type.getChild().getPokedexNumber() + 1);
 		else type = PokeUtil.get(type.getPokedexNumber() + 1);
-		System.out.println(type.getPathToAnimation(holder));
 		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 

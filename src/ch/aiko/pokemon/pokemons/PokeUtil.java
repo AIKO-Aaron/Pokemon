@@ -24,24 +24,32 @@ public class PokeUtil {
 	public static void registerPokemon(Pokemons p) {
 		if (p.getPokedexNumber() == 1) START_INDEX = pokemons.size();
 		pokemons.add(p);
+		frontAnimations.add(null);
+		backAnimations.add(null);
 		++MAX_POKEMON;
 		Pokemon.out.println("Registered: " + p.getName());
 	}
 
 	public static void registerPokemon(Pokemons p, Class<?> loader) {
 		pokemons.add(p);
+		frontAnimations.add(null);
+		backAnimations.add(null);
 		++MAX_POKEMON;
 		Pokemon.out.println("Registered: " + p.getName());
 	}
 
 	public static void loadEmAll() {
-		for (Pokemons p : pokemons) {
-			frontAnimations.add(TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.ENEMY), SCALE).replaceColor(0xFFFFFFFF, 0));
-			backAnimations.add(TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.OWNED), SCALE * OWN_MOD).replaceColor(0xFFFFFFFF, 0));
+		ModLoader.Status = 3;
+		for (int i = 0; i < pokemons.size(); i++) {
+			Pokemons p = pokemons.get(i);
+			ModLoader.CoreInit = "Loading sprites for: " + p.getName();
+			frontAnimations.set(i, TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.ENEMY), SCALE).replaceColor(0xFFFFFFFF, 0));
+			backAnimations.set(i, TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.OWNED), SCALE * OWN_MOD).replaceColor(0xFFFFFFFF, 0));
 			Pokemon.out.println("Loaded: " + p.getName());
 			index++;
 			ModLoader.bar3.setValue(100 * index / MAX_POKEMON);
 		}
+		ModLoader.Status = 7;
 	}
 
 	public static void load(int num) {
@@ -49,10 +57,10 @@ public class PokeUtil {
 	}
 
 	public static void load(Pokemons p) {
-		frontAnimations.add(TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.ENEMY), SCALE).replaceColor(0xFFFFFFFF, 0));
-		backAnimations.add(TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.OWNED), SCALE * OWN_MOD).replaceColor(0xFFFFFFFF, 0));
+		int indexOf = pokemons.indexOf(p);
+		frontAnimations.set(indexOf, TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.ENEMY), SCALE).replaceColor(0xFFFFFFFF, 0));
+		backAnimations.set(indexOf, TextureLoader.loadGIF(p.getPathToAnimation(PokemonType.OWNED), SCALE * OWN_MOD).replaceColor(0xFFFFFFFF, 0));
 		Pokemon.out.println("Loaded: " + p.getName());
-		index++;
 	}
 
 	public static GIF getFrontAnimation(Pokemons p) {

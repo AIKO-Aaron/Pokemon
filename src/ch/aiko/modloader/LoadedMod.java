@@ -15,4 +15,8 @@ public class LoadedMod {
 	public HashMap<String, Object> instances = new HashMap<>();
 	public ClassLoader loader;
 	
+	public String toString() {
+		return name;
+	}
+	
 }

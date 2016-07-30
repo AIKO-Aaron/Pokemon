@@ -40,7 +40,7 @@ public class ModLoader {
 
 	public static ArrayList<LoadedMod> loadedMods = new ArrayList<LoadedMod>();
 
-	private static int Status = 0;
+	public static int Status = 0;
 	private static int FileIndex = 0;
 	private static int CurrentFile = 0;
 	private static int ClassIndex = 0;
@@ -111,7 +111,9 @@ public class ModLoader {
 
 			currentMod.name = currentMod.modInfoList.get("name");
 			if (currentMod.name.equals("name")) currentMod.name = "Add a name in the .amf file: name=<insertNameHere>";
-
+			
+			ps.println("Loading Mod: " + currentMod);
+			
 			try {
 				ALL_MOD_FILES.add(new URL("jar:file:" + f.getAbsolutePath() + "!/"));
 			} catch (MalformedURLException e) {
@@ -310,7 +312,7 @@ public class ModLoader {
 					text += "Class " + CurrentClass + " from " + ClassIndex + "\n" + CurrentClassName + "\nfrom File: " + CurrentFile + "/" + FileIndex + ": " + CurrentFileName + "\n";
 					break;
 				case 3:
-					text += "Loading Stuff: " + CoreInit;
+					text += "Loading Core: " + CoreInit;
 					break;
 				case 4:
 					text += "Pre-initializing: " + InitIndex + "/" + preInitSize;

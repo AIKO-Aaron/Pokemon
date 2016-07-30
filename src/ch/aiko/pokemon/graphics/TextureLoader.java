@@ -23,21 +23,11 @@ public class TextureLoader {
 	}
 	
 	public static GIF loadGIF(String path, float scale) {
-		if(path.startsWith("/")) path = path.substring(1);
 		for(LoadedMod mod : ModLoader.loadedMods) {
 			InputStream inStream = mod.loader.getResourceAsStream(path);
-			InputStream inStream2 = mod.loader.getResourceAsStream("/" + path);
 			if(inStream != null) {
 				try {
-					System.out.println("Found image " + path + " in Mod: " + mod.name);
 					return new GIF(ImageUtil.readGif(inStream, scale), scale);
-				} catch (Throwable e) {
-					e.printStackTrace(Pokemon.out);
-				}
-			} else if(inStream2 != null) {
-				try {
-					System.out.println("Found image " + path + " in Mod: " + mod.name);
-					return new GIF(ImageUtil.readGif(inStream2, scale), scale);
 				} catch (Throwable e) {
 					e.printStackTrace(Pokemon.out);
 				}
