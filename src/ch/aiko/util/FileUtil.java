@@ -17,6 +17,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ch.aiko.modloader.LoadedMod;
+import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.language.Language;
 
@@ -43,7 +45,7 @@ public abstract class FileUtil {
 		}
 		return Me;
 	}
-
+	
 	/**
 	 * Loads a File, which is in your ClassPath. Try to use a slash at the beginning of the String
 	 * 
@@ -53,6 +55,21 @@ public abstract class FileUtil {
 	 */
 	public static File LoadFileInClassPath(String path) {
 		return new File(new File("").getAbsolutePath() + path);
+	}
+	
+	/**
+	 * For Pokemon project
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static InputStream getResourceAsStream(String path) {
+		for (LoadedMod mod : ModLoader.loadedMods) {
+			InputStream inStream = mod.loader.getResourceAsStream(path);
+			if (inStream != null) return inStream;
+		}
+		Pokemon.out.err("Error loading " + path + ". Resource cannot be found. EVERYBODY PANIC!!!");
+		return null;
 	}
 
 	public static InputStream LoadFileInClassPathAsStream(String path) {

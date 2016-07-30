@@ -134,7 +134,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 			setType(type.getMegaEvolution(index));
 		} else if (type.isMegaEvolution()) {
 			Pokemons sub = type.getChild();
-			if (sub.getMegaEvolutions().length > type.getIndex()) setType(sub.getMegaEvolution(type.getIndex() + 1));
+			if (sub.getMegaEvolutions().size() > type.getIndex()) setType(sub.getMegaEvolution(type.getIndex() + 1));
 		} else System.err.println("This pokmon doesn't have a mega-evolution");
 	}
 

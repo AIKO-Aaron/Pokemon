@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -17,7 +18,6 @@ import ch.aiko.util.PropertyUtil;
 public class Language extends PropertyUtil {
 
 	public static final String defaultLang = "de_de";
-	public static final String pathToLanguageFiles = "ch.aiko.pokemon.lang";
 	private static HashMap<String, Language> languages = new HashMap<String, Language>();
 	public static Language current;
 
@@ -27,15 +27,29 @@ public class Language extends PropertyUtil {
 	public Language(String pathToFile) {
 		super(FileUtil.ReadFileInClassPath((pathToFile.startsWith("/") ? "" : "/") + pathToFile), pathToFile);
 		Pokemon.out.println("Successfully loaded: " + pathToFile + " as a Language File");
-		lang_id = pathToFile.replace("lang", "").replace(".", "").replace("/", "");
+		lang_id = pathToFile.replace("lang", "").replace(".", "");
+		lang_id = lang_id.split("/")[lang_id.split("/").length - 1];
+		System.out.println(lang_id);
 		__lang = pathToFile.split("/")[pathToFile.split("/").length - 1].split("\\.")[0];
 	}
 
-	public static void setup() {
-		/**
-		 * Set<String> langFiles = new Reflections(pathToLanguageFiles, new ResourcesScanner()).getResources(new com.google.common.base.Predicate<String>() { public boolean apply(String arg0) { System.out.println("Found file: " + arg0); return true; } });
-		 */
+	public static void appendTranslations(String lang, String file) {
+		if (languages.containsKey(lang)) {
+			Language l = languages.get(lang);
+			l.appendTranslations(new ArrayList<String>(Arrays.asList(file.split("\n"))));
+		}
+	}
 
+	public void appendTranslation(String key, String value) {
+		if (exists(key)) setValue(key, value);
+		else addValue(key, value);
+	}
+
+	public void appendTranslations(ArrayList<String> lines) {
+		this.lines.addAll(lines);
+	}
+
+	public static void setup() {
 		File Me = null;
 		try {
 			Me = new File(Language.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());

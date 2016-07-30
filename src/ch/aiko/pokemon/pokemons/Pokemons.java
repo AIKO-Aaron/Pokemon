@@ -1,5 +1,8 @@
 package ch.aiko.pokemon.pokemons;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Pokemons {
 
 	// MEGA-EVOLUTIONS
@@ -38,8 +41,8 @@ public class Pokemons {
 	private String unlocName;
 	private int lvlForEvo;
 	private int pokedexNumber;
-	private boolean hasMega = false, isMega = false;
-	private Pokemons[] megas = new Pokemons[0];
+	private boolean isMega = false;
+	private ArrayList<Pokemons> megas = new ArrayList<Pokemons>();
 	private int index, evolvesTo, evolvesFrom;
 
 	public Pokemons(String unlocName, int pokedexNumber, int lvlForEvo, int evolvesTo) {
@@ -54,8 +57,7 @@ public class Pokemons {
 		this.lvlForEvo = lvlForEvo;
 		this.pokedexNumber = pokedexNumber;
 		this.evolvesTo = evolvesTo;
-		this.hasMega = megas.length != 0;
-		this.megas = megas;
+		this.megas = new ArrayList<Pokemons>(Arrays.asList(megas));
 		this.unlocName = unlocName;
 		PokeUtil.registerPokemon(this);
 	}
@@ -63,9 +65,8 @@ public class Pokemons {
 	public Pokemons(String unlocName, int pokedexNumber, Pokemons... megas) {
 		this.lvlForEvo = Integer.MAX_VALUE;
 		this.pokedexNumber = pokedexNumber;
-		this.hasMega = megas.length != 0;
 		this.unlocName = unlocName;
-		this.megas = megas;
+		this.megas = new ArrayList<Pokemons>(Arrays.asList(megas));
 		PokeUtil.registerPokemon(this);
 	}
 
@@ -87,7 +88,7 @@ public class Pokemons {
 	}
 
 	public boolean hasMegaEvolution() {
-		return hasMega;
+		return megas.size() != 0;
 	}
 
 	public int getEvolvesInto() {
@@ -109,16 +110,20 @@ public class Pokemons {
 		return get(1);
 	}
 
-	public Pokemons[] getMegaEvolutions() {
+	public ArrayList<Pokemons> getMegaEvolutions() {
 		return megas;
 	}
 
 	public Pokemons getMegaEvolution(int i) {
-		if (megas.length <= 0) return this;
+		if (megas.size() <= 0) return this;
 		for (Pokemons p : megas) {
 			if (p.getIndex() == i) return p;
 		}
-		return megas[0];
+		return megas.get(i);
+	}
+	
+	public void addMegaEvolution(Pokemons p) {
+		megas.add(p);
 	}
 
 	public boolean canEvolve(int lvl) {

@@ -12,7 +12,7 @@ import ch.aiko.util.ImageUtil;
 import javax.imageio.ImageIO;
 
 public class TextureLoader {
-	
+
 	public static BufferedImage loadImage(String path, Class<?> caller) {
 		try {
 			return ImageIO.read(caller.getClassLoader().getResourceAsStream(path));
@@ -21,11 +21,11 @@ public class TextureLoader {
 		}
 		return null;
 	}
-	
+
 	public static GIF loadGIF(String path, float scale) {
-		for(LoadedMod mod : ModLoader.loadedMods) {
+		for (LoadedMod mod : ModLoader.loadedMods) {
 			InputStream inStream = mod.loader.getResourceAsStream(path);
-			if(inStream != null) {
+			if (inStream != null) {
 				try {
 					return new GIF(ImageUtil.readGif(inStream, scale), scale);
 				} catch (Throwable e) {
@@ -36,5 +36,5 @@ public class TextureLoader {
 		Pokemon.out.err("Error loading " + path + ". It cannot be found. EVERYBODY PANIC!!!");
 		return null;
 	}
-	
+
 }

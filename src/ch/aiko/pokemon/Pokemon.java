@@ -16,6 +16,8 @@ import javax.swing.UIManager;
 
 public class Pokemon {
 
+	public static boolean PRELOAD = false;
+
 	public static Pokemon pokemon;
 	public static boolean DEBUG = false;
 	public static final Log out = new Log(Pokemon.class);
@@ -37,7 +39,7 @@ public class Pokemon {
 		ModLoader.loadMods(out, (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getAbsolutePath()) + "/mods/", () -> load());
 		out.println("Done loading mods. Starting threads...");
 
-		PokeUtil.loadEmAll();
+		if (PRELOAD) PokeUtil.loadEmAll();
 
 		handler.start();
 	}
@@ -69,7 +71,10 @@ public class Pokemon {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (args.length >= 1 && args[0] != null && args[0].equalsIgnoreCase("--debug-mode=true")) DEBUG = true;
+		for (String arg : args) {
+			if (arg.equalsIgnoreCase("--debug-mode=true")) DEBUG = true;
+			if(arg.equalsIgnoreCase("-preload")) PRELOAD = true;
+		}
 		pokemon = new Pokemon();
 	}
 }

@@ -333,8 +333,8 @@ public class ModLoader {
 				break;
 			}
 		}
-		// frame.setVisible(false);
-		// frame.dispose();
+		frame.setVisible(false);
+		frame.dispose();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 

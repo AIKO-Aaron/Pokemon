@@ -1,21 +1,23 @@
 package ch.aiko.util;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class PropertyUtil {
 
-	protected String[] lines;
+	protected ArrayList<String> lines;
 	protected File file;
 
 	public PropertyUtil(File f) {
-		lines = FileUtil.ReadFile(f).split("\n");
+		lines = new ArrayList<String>(Arrays.asList(FileUtil.ReadFile(f).split("\n")));
 		file = f;
 	}
 
 	public PropertyUtil(String lines, String path) {
 		file = FileUtil.LoadFileInClassPath(path);
-		this.lines = lines.split("\n");
+		this.lines = new ArrayList<String>(Arrays.asList(lines.split("\n")));
 	}
 
 	/**
@@ -169,20 +171,20 @@ public class PropertyUtil {
 	}
 
 	public void setValue(String key, String value) {
-		for (int i = 0; i < lines.length; i++) {
-			String line = lines[i];
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
 			if (!line.contains("=") || line.replace(" ", "").startsWith("//") || line.replace(" ", "").startsWith("#")) continue;
 			if (line.split("=")[0].replace(" ", "").trim().equalsIgnoreCase(key)) {
 				line = key + "=" + value;
-				lines[i] = line;
-				if (lines[0].trim().replace(" ", "").replace("\n", "").trim().equalsIgnoreCase("")) ArrayUtil.delete(lines, 0);
-				FileUtil.WriteFile(ArrayUtil.combineToFile(lines), file);
+				lines.set(i, line);
+				if (lines.get(0).trim().replace(" ", "").replace("\n", "").trim().equalsIgnoreCase("")) ArrayUtil.delete(lines.toArray(new String[lines.size()]), 0);
+				FileUtil.WriteFile(ArrayUtil.combineToFile(lines.toArray(new String[lines.size()])), file);
 				return;
 			}
 		}
 
-		FileUtil.WriteFile(ArrayUtil.combineToFile(lines) + key + "=" + value, file);
-		lines = FileUtil.ReadFile(file).split("\n");
+		FileUtil.WriteFile(ArrayUtil.combineToFile(lines.toArray(new String[lines.size()])) + key + "=" + value, file);
+		lines = new ArrayList<String>(Arrays.asList(FileUtil.ReadFile(file).split("\n")));
 	}
 
 	public void printFile() {
@@ -205,8 +207,8 @@ public class PropertyUtil {
 	}
 
 	public boolean exists(String key) {
-		for (int i = 0; i < lines.length; i++) {
-			String line = lines[i];
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
 			if (line.split("=")[0].replace(" ", "").trim().equalsIgnoreCase(key)) return true;
 		}
 		return false;
@@ -228,5 +230,9 @@ public class PropertyUtil {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public void addValue(String key, String value) {
+		lines.add(key + "=" + value);
 	}
 }
