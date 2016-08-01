@@ -46,6 +46,14 @@ public class Player extends Entity {
 		return yPos + yoff;
 	}
 
+	public int getRealX() {
+		return xPos;
+	}
+	
+	public int getRealY() {
+		return yPos;
+	}
+	
 	public void setPosition(int x, int y) {
 		xPos = x;
 		yPos = y;

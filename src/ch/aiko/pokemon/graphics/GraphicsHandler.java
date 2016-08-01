@@ -37,7 +37,7 @@ public class GraphicsHandler {
 	}
 
 	private void quit() {
-		Pokemon.client.sendText("/spos/" + Pokemon.player.getX() + "/" + Pokemon.player.getY() + "/" + Pokemon.player.getDirection());
+		Pokemon.client.sendText("/spos/" + Pokemon.player.getRealX() + "/" + Pokemon.player.getRealY() + "/" + Pokemon.player.getDirection());
 	}
 	
 	public void setLevel(Level l) {
