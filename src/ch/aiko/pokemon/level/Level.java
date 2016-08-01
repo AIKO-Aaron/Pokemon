@@ -29,7 +29,7 @@ public class Level extends LayerContainer {
 	public ArrayList<Layer[]> tiles = new ArrayList<Layer[]>();
 	public int layerCount = 0;
 	public LevelPalette lp;
-	private String path;
+	public String path;
 
 	private int tileSize = 32;
 	public Stack<Layer> openMenus = new Stack<Layer>();

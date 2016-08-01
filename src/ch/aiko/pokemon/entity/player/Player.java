@@ -155,4 +155,12 @@ public class Player extends Entity {
 		isPaused = b;
 	}
 
+	public void setDirection(int dir2) {
+		dir = dir2;
+	}
+
+	public int getDirection() {
+		return dir;
+	}
+
 }

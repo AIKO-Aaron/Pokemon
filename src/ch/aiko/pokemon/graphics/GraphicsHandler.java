@@ -17,7 +17,14 @@ public class GraphicsHandler {
 	public Player p;
 
 	public GraphicsHandler(Level level, Player p) {
-		screen = new Screen(960, 540);
+		screen = new Screen(960, 540){
+			private static final long serialVersionUID = 9052690094292517622L;
+
+			public void stopThreads() {
+				super.stopThreads();
+				quit();
+			}
+		};
 		this.p = p;
 		// Screen setup
 		screen.setResetOffset(false);
@@ -29,6 +36,10 @@ public class GraphicsHandler {
 		window = new Window("Pokemon", screen);
 	}
 
+	private void quit() {
+		Pokemon.client.sendText("/spos/" + Pokemon.player.getX() + "/" + Pokemon.player.getY() + "/" + Pokemon.player.getDirection());
+	}
+	
 	public void setLevel(Level l) {
 		p.setPaused(true);
 		screen.removeLayer(screen.getTopLayer("Level"));
@@ -40,6 +51,7 @@ public class GraphicsHandler {
 				p.setPaused(false);
 			}
 		}, 100);
+		Pokemon.client.sendText("/slvl/" + l.path);
 	}
 
 	public void start() {

@@ -29,6 +29,11 @@ public class Pokemon {
 	 * The only player you'll need
 	 */
 	public static Player player;
+	
+	/**
+	 * Only when online playing
+	 */
+	public static PokemonClient client; 
 
 	public GraphicsHandler handler;
 
@@ -45,13 +50,12 @@ public class Pokemon {
 
 		if (PRELOAD) PokeUtil.loadEmAll();
 
-		if(handler != null) handler.start();
+		if (handler != null) handler.start();
 	}
 
 	public void load() {
+		out.println("Core engine started loading");
 		if (!ONLINE) {
-			out.println("Core engine started loading");
-
 			Pokemons.init();
 
 			player = new Player(32 * 3, 32 * 2);
@@ -63,20 +67,33 @@ public class Pokemon {
 			level.loadLevel("/ch/aiko/pokemon/level/test.layout");
 			level.addPlayer(player);
 
-			level.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, l2, 8 * 32 - 16, 10 * 32));
-			l2.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, level, 8 * 32 - 16, 12 * 32));
+			//level.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, l2, 8 * 32 - 16, 10 * 32));
+			//l2.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, level, 8 * 32 - 16, 12 * 32));
 
 			handler = new GraphicsHandler(level, player);
-			out.println("Core engine done loading");
 		} else {
-			String ip = "10.0.0.96";
+			String ip = "10.0.0.96"; // TODO cool menu stuff
+			// It hurts when ip
 			String uuid = serverUUIDs.getValue(ip);
-			System.out.println(uuid);
+
+			Pokemons.init();
+
+			client = new PokemonClient(ip, uuid); // Now you know my ip :(
+			client.synchronize();
+			System.out.println(client.x);
+
+			player = new Player(client.x, client.y);
+			player.setDirection(client.dir);
+
+			Level level = new Level();
+			level.loadLevel(client.pathToLevel);
 			
-			PokemonClient client = new PokemonClient("10.0.0.96", uuid); // Now you know my ip :(
-			
-			// handler = new GraphicsHandler(null, null);
+			level.addPlayer(player);
+
+
+			handler = new GraphicsHandler(level, player);
 		}
+		out.println("Core engine done loading");
 	}
 
 	public static void main(String[] args) {
