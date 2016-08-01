@@ -80,7 +80,6 @@ public class Pokemon {
 
 			client = new PokemonClient(ip, uuid); // Now you know my ip :(
 			client.synchronize();
-			System.out.println(client.x);
 
 			player = new Player(client.x, client.y);
 			player.setDirection(client.dir);

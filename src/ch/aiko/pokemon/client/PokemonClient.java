@@ -22,12 +22,14 @@ public class PokemonClient {
 	public int x, y, dir;
 	public Socket socket;
 	public boolean synchrone = false, lvl;
+	public BufferedWriter writer;
 
 	public PokemonClient(String connectTo, String uuid) {
 		address = connectTo;
 		receiver = new Thread(() -> receive());
 		try {
 			socket = new Socket(InetAddress.getByName(connectTo), PORT);
+			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		} catch (Throwable e) {
 			e.printStackTrace(Pokemon.out);
 		}
@@ -39,7 +41,6 @@ public class PokemonClient {
 	public void sendText(String text) {
 		try {
 			while (!socket.isConnected());
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(text + "\n");
 			writer.flush();
 		} catch (Throwable e) {
@@ -54,7 +55,6 @@ public class PokemonClient {
 			while (running) {
 				String received = reader.readLine();
 				if (received == null) continue;
-				System.out.println(received);
 				perform(received.trim(), socket);
 			}
 		} catch (IOException e) {

@@ -37,6 +37,10 @@ public class GraphicsHandler {
 	}
 
 	private void quit() {
+		saveData();
+	}
+	
+	public void saveData() {
 		Pokemon.client.sendText("/spos/" + Pokemon.player.getRealX() + "/" + Pokemon.player.getRealY() + "/" + Pokemon.player.getDirection());
 	}
 	
