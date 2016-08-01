@@ -235,4 +235,8 @@ public class PropertyUtil {
 	public void addValue(String key, String value) {
 		lines.add(key + "=" + value);
 	}
+	
+	public void saveFile() {
+		FileUtil.WriteFile(ArrayUtil.combineToFile(lines.toArray(new String[lines.size()])), file);
+	}
 }

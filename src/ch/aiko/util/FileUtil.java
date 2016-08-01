@@ -34,7 +34,7 @@ public abstract class FileUtil {
 	public static File LoadFile(String path) {
 		return new File(path);
 	}
-	
+
 	public static File getRunningJar() {
 		File Me = null;
 		try {
@@ -45,7 +45,7 @@ public abstract class FileUtil {
 		}
 		return Me;
 	}
-	
+
 	/**
 	 * Loads a File, which is in your ClassPath. Try to use a slash at the beginning of the String
 	 * 
@@ -56,7 +56,7 @@ public abstract class FileUtil {
 	public static File LoadFileInClassPath(String path) {
 		return new File(new File("").getAbsolutePath() + path);
 	}
-	
+
 	/**
 	 * For Pokemon project
 	 * 
@@ -98,7 +98,7 @@ public abstract class FileUtil {
 		if (FileUtil.class.getResource(f) == null) CreateNewFileInClassPath(f);
 		String file = "";
 		try {
-			
+
 			BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtil.class.getClass().getResourceAsStream(f)));
 			String line = "";
 			while ((line = reader.readLine()) != null) {
@@ -122,7 +122,7 @@ public abstract class FileUtil {
 	 */
 	public static String ReadFile(File f) {
 		String file = "";
-
+		if(!f.exists()) CreateNewFile(f);
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(f.getAbsolutePath()));
 
@@ -387,7 +387,10 @@ public abstract class FileUtil {
 	public static ArrayList<File> listFiles(String dir) {
 		ArrayList<File> files = new ArrayList<File>();
 		File f = new File(dir);
-		if(!f.isDirectory()) {files.add(f); return files;}
+		if (!f.isDirectory()) {
+			files.add(f);
+			return files;
+		}
 		for (File file : f.listFiles()) {
 			if (f.isDirectory()) {
 				ArrayList<File> second = listFiles(file.getAbsolutePath());
@@ -396,7 +399,7 @@ public abstract class FileUtil {
 		}
 		return files;
 	}
-	
+
 	public static ArrayList<File> listFiles(String dir, String endFileName) {
 		ArrayList<File> files = new ArrayList<File>();
 		File f = new File(dir);
@@ -404,7 +407,7 @@ public abstract class FileUtil {
 			if (file.isDirectory()) {
 				ArrayList<File> second = listFiles(file.getAbsolutePath());
 				files.addAll(second);
-			} else if(file.getName().endsWith(endFileName)) files.add(file);
+			} else if (file.getName().endsWith(endFileName)) files.add(file);
 		}
 		return files;
 	}
