@@ -1,5 +1,8 @@
 ###  Pokemon  ###
 
+Client/SinglePlayer version 
+Server is on https://github.com/AIKO-Aaron/Pokemon-server
+
 I try to recreate Pokemon in Java. 
 
 Best Description in the world 11/10. 
@@ -15,11 +18,11 @@ Best Description in the world 11/10.
 
 -Sounds (1/2 ✓ Player done! --> Need new sounds! And more)
 
--Textures (1/2 ✓: 138MB gifs for all pokemons without backsprites)
+-Textures (1/2 ✓: X/Y sprites (as gif))
 
 
 ### Future ideas: ###
 
 -All regions
 
--Online playing
+-Online playing ✓ --> Optimize
