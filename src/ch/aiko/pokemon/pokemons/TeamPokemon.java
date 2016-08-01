@@ -150,4 +150,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		return maxHP;
 	}
 
+	public void setHP(int i) {healthPoints = i;}
+	public void addHP(int i) {healthPoints += i;}
+
 }
