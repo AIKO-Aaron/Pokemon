@@ -4,8 +4,6 @@ import ch.aiko.pokemon.entity.Entity;
 
 public class Trainer extends Entity {
 
-	public Trainer() {
-		
-	}
-	
+	public Trainer() {}
+
 }

@@ -15,7 +15,6 @@ import ch.aiko.engine.sprite.SpriteSerialization;
 import ch.aiko.engine.sprite.Tile;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
-import ch.aiko.pokemon.entity.player.OtherPlayer;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.menu.Menu;
 
@@ -178,10 +177,10 @@ public class Level extends LayerContainer {
 	}
 
 	public void layerUpdate(Screen s) {
-		if (s.getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
+		if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
 			if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
 			else closeTopMenu();
-		} else if (s.popKeyPressed(KeyEvent.VK_R)) loadLevel(path);
+		} else if (popKeyPressed(KeyEvent.VK_R)) loadLevel(path);
 	}
 
 	public ArrayList<Tile> getTile(int x, int y) {
@@ -236,11 +235,11 @@ public class Level extends LayerContainer {
 	}
 
 	public void addEntity(Entity p) {
-		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(Player.PLAYER_RENDERED_LAYER).setName("Entity").toLayer());
+		addLayer(p);
 	}
 
 	public void addPlayer(Player p) {
-		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(Player.PLAYER_RENDERED_LAYER).setName("Player").toLayer());
+		addLayer(p);
 	}
 
 	/**
@@ -253,9 +252,8 @@ public class Level extends LayerContainer {
 		return this;
 	}
 
-	public void removeEntity(OtherPlayer p) {
-		removeRenderable(p);
-		removeUpdatable(p);
+	public void removeEntity(Entity p) {
+		removeLayer(p);
 	}
 
 }

@@ -63,7 +63,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		while (buttons.size() <= index) {
 			buttons.add(null);
 		}
-		buttons.set(index, addLayer(b.toLayer(layer)));
+		buttons.set(index, addLayer(b.setLayer(layer)));
 	}
 
 	public Button getButton(int index) {
@@ -102,19 +102,19 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	}
 
 	public final void layerUpdate(Screen s) {
-		if (x_for_close && s.popKeyPressed(KeyEvent.VK_X)) closeMe();
+		if (x_for_close && popKeyPressed(KeyEvent.VK_X)) closeMe();
 
 		if (manage_buttons && buttons.size() > 0) {
 			Point pos = s.getMousePosition();
-			int mx = pos == null ? s.getMouseXInFrame() : pos.x;
-			int my = pos == null ? s.getMouseYInFrame() : pos.y;
+			int mx = pos == null ? getMouseXInFrame(s) : pos.x;
+			int my = pos == null ? getMouseYInFrame(s) : pos.y;
 
-			if (s.popMouseKey(MouseEvent.BUTTON1)) if (((Button) buttons.get(index).getRenderable()).isInside(mx, my)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
+			if (popMouseKey(MouseEvent.BUTTON1)) if (((Button) buttons.get(index).getRenderable()).isInside(mx, my)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
 
-			if (s.popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
+			if (popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
 
-			if (s.popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
-			if (s.popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
+			if (popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
+			if (popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
 
 			for (int i = 0; i < buttons.size(); i++)
 				if (i != mouseSel && ((Button) buttons.get(i).getRenderable()).isInside(mx, my)) mouseSel = index = i;

@@ -18,7 +18,7 @@ public class GameHandler {
 	public Level level;
 	public Player p;
 
-	public GameHandler(Level level, Player p) {
+	public GameHandler() {
 		screen = new Screen(960, 540) {
 			private static final long serialVersionUID = 9052690094292517622L;
 
@@ -27,15 +27,18 @@ public class GameHandler {
 				quit();
 			}
 		};
-		this.level = level;
-		this.p = p;
-		// Screen setup
 		screen.setResetOffset(false);
 		screen.ps = Pokemon.out;
+		
+		window = new Window("Pokemon", screen);
+		start();
+	}
+	
+	public void init(Level level, Player p) {
+		this.level = level;
+		this.p = p;
 		setLevel(level);
 		level.addPlayer(p);
-		// Open Window with our screen
-		window = new Window("Pokemon", screen);
 	}
 
 	private void quit() {
@@ -53,18 +56,18 @@ public class GameHandler {
 		p.setPaused(true);
 		Layer current = null;
 		if ((current = screen.getTopLayer("Level")) != null) screen.removeLayer(current);
+		if (Pokemon.ONLINE) Pokemon.client.sendText("/slvl/" + l.path);
+		this.level = l;
+		screen.addLayer(l);
 		l.reload();
 		if (Pokemon.ONLINE) if (Pokemon.client != null && Pokemon.client.players != null) for (OtherPlayer p : Pokemon.client.players) {
 			p.add(l);
 		}
-		this.level = l;
-		screen.addLayer(l);
 		new Timer().schedule(new TimerTask() {
 			public void run() {
 				p.setPaused(false);
 			}
 		}, 100);
-		if (Pokemon.ONLINE) Pokemon.client.sendText("/slvl/" + l.path);
 	}
 
 	public void start() {

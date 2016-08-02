@@ -95,15 +95,8 @@ public class PokemonClient {
 			dir = Integer.parseInt(received.substring(5).split("/")[2]);
 			synchrone = true;
 		} else if (received.startsWith("/padd/") || receivingPlayers) {
-			try {
-				OtherPlayer otpl = new OtherPlayer(received.startsWith("/padd/") ? received.substring(6) : received);
-				System.out.println("Adding Player: " + otpl.uuid);
-				if (Pokemon.pokemon != null && Pokemon.pokemon.handler != null && Pokemon.pokemon.handler.level != null) Pokemon.pokemon.handler.level.addEntity(otpl);
-				players.add(otpl);
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-
+			OtherPlayer otpl = new OtherPlayer(received.startsWith("/padd/") ? received.substring(6) : received);
+			addPlayer(otpl);
 		} else if (received.startsWith("/prem/")) {
 			String uuid = received.substring(6);
 			for (int i = 0; i < players.size(); i++) {
@@ -125,17 +118,30 @@ public class PokemonClient {
 					break;
 				}
 			}
-			if(i >= players.size()) return;
+			if (i >= players.size()) {
+				addPlayer(otpl);
+				return;
+			}
 			OtherPlayer op = players.get(i);
 			op.setX(otpl.getX()).setY(otpl.getY()).setUUID(otpl.uuid).setDirection(otpl.getDirection());
 		}
 	}
 
-	/**
-	 * public void close() { try { socket.close(); } catch (IOException e) { e.printStackTrace(Pokemon.out); } }
-	 */
+	public void addPlayer(OtherPlayer otpl) {
+		System.out.println("Adding Player: " + otpl.uuid);
+		if (Pokemon.pokemon != null && Pokemon.pokemon.handler != null && Pokemon.pokemon.handler.level != null) Pokemon.pokemon.handler.level.addEntity(otpl);
+		players.add(otpl);
 
-	/***/
+	}
+
+	public void close() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace(Pokemon.out);
+		}
+	}
+
 	public String getLevel() {
 		lvl = false;
 		sendText("/rlvl/");

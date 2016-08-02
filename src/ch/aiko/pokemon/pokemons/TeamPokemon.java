@@ -5,6 +5,7 @@ import ch.aiko.as.ASField;
 import ch.aiko.as.ASObject;
 import ch.aiko.as.ASString;
 import ch.aiko.as.SerializationReader;
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
@@ -124,8 +125,8 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
-	public void update(Screen screen) {
-		animation.update(screen);
+	public void update(Screen screen, Layer l) {
+		animation.update(screen, l);
 	}
 
 	public void mega() {

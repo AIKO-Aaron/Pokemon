@@ -41,7 +41,7 @@ public class FightMenu extends Menu {
 	}
 
 	public void updateMenu(Screen s) {
-		if (s.popKeyPressed(KeyEvent.VK_RIGHT) || s.popKeyPressed(KeyEvent.VK_LEFT)) index = (index + 2) % buttons.size();
+		if (popKeyPressed(KeyEvent.VK_RIGHT) || popKeyPressed(KeyEvent.VK_LEFT)) index = (index + 2) % buttons.size();
 
 		if (xOffset > 0) xOffset -= 10;
 	}

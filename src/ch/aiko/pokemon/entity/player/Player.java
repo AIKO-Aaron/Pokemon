@@ -2,8 +2,6 @@ package ch.aiko.pokemon.entity.player;
 
 import java.awt.event.KeyEvent;
 
-import ch.aiko.engine.graphics.Layer;
-import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
@@ -64,9 +62,7 @@ public class Player extends Entity {
 		yPos = y - yoff;
 	}
 
-	public Player() {
-
-	}
+	public Player() {}
 
 	public Player(int x, int y) {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
@@ -102,16 +98,15 @@ public class Player extends Entity {
 		if (isPaused) return;
 		int xx = 0, yy = 0;
 
-		Layer layer = screen.getLayer((Renderable) this).getParent();
-		Level level = (Level) layer;
+		Level level = (Level) getParent();
 
-		if (screen.getInput().popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
-		if (screen.getInput().popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
+		if (input.popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
+		if (input.popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
 
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_LEFT)) xx--;
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_UP)) yy--;
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_DOWN)) yy++;
+		if (input.isKeyPressed(KeyEvent.VK_LEFT)) xx--;
+		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
+		if (input.isKeyPressed(KeyEvent.VK_UP)) yy--;
+		if (input.isKeyPressed(KeyEvent.VK_DOWN)) yy++;
 
 		if (!CAN_WALK_SIDEWAYS) {
 			if (xx != 0) yy = 0;
@@ -181,6 +176,14 @@ public class Player extends Entity {
 
 	public int getDirection() {
 		return dir;
+	}
+
+	public String getName() {
+		return "Player";
+	}
+
+	public int getLevel() {
+		return PLAYER_RENDERED_LAYER;
 	}
 
 }

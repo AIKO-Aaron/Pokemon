@@ -1,24 +1,22 @@
 package ch.aiko.pokemon.graphics.menu;
 
 import java.awt.Font;
-import java.awt.FontMetrics;
+import java.awt.event.MouseEvent;
 
 import ch.aiko.engine.graphics.Layer;
-import ch.aiko.engine.graphics.LayerBuilder;
-import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
-import ch.aiko.engine.graphics.Updatable;
 import ch.aiko.pokemon.settings.Settings;
 
-public class Button implements Renderable, Updatable {
+public class Button extends MenuObject {
 
 	private static final int THICKNESS = 3;
 
+	protected int layer;
 	protected int x, y, w, h;
 	protected String text;
 	protected boolean selected = false;
-	protected ButtonAction r = (Button b) -> {};
+	protected MenuObjectAction r = (MenuObject b) -> {};
 
 	public Button() {
 		x = y = w = h = 0;
@@ -33,7 +31,7 @@ public class Button implements Renderable, Updatable {
 		this.text = text;
 	}
 
-	public Button(int x, int y, int w, int h, String text, ButtonAction r) {
+	public Button(int x, int y, int w, int h, String text, MenuObjectAction r) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
@@ -72,7 +70,7 @@ public class Button implements Renderable, Updatable {
 		return this;
 	}
 
-	public Button setAction(ButtonAction r) {
+	public Button setAction(MenuObjectAction r) {
 		this.r = r;
 		return this;
 	}
@@ -105,40 +103,38 @@ public class Button implements Renderable, Updatable {
 		return selected;
 	}
 
-	public ButtonAction getAction() {
+	public MenuObjectAction getAction() {
 		return r;
 	}
 
-	public void update(Screen screen) {
-		
+	public void update(Screen screen, Layer l) {
+		int xx = getMouseXInFrame(screen);
+		int yy = getMouseYInFrame(screen);
+		if (xx > x && xx < x + w && yy > y && yy < y + h) {
+			selected = true;
+			if (input.popMouseKey(MouseEvent.BUTTON1)) {
+				buttonPressed();
+			}
+		} else selected = false;
 	}
 
 	public void render(Renderer renderer) {
 		renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
-		renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS, h - 2 * THICKNESS, 0xFFFFFFFF);
+		renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);
 
-		int xstart = x + (w - getWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), text)) / 2;
-		int ystart = y + (h - getHeight(renderer.getScreen(), new Font(Settings.font, 0, h / 2))) / 2;
-		
+		int xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), text)) / 2;
+		int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, h / 2))) / 2;
+
 		renderer.drawText(text, Settings.font, h / 2, 0, xstart, ystart, 0xFF000000);
 	}
 
-	public static final int getWidth(Screen s, Font f, String text) {
-		FontMetrics metrics = s.getGraphics().getFontMetrics(f);
-		return metrics.stringWidth(text);
-	}
-
-	public static final int getHeight(Screen s, Font f) {
-		FontMetrics metrics = s.getGraphics().getFontMetrics(f);
-		return metrics.getHeight();
-	}
-
 	public void buttonPressed() {
-		r.buttonPressed(this);
+		r.actionPerformed(this);
 	}
 
-	public Layer toLayer(int layer) {
-		return new LayerBuilder().setRenderable(this).setUpdatable(this).setLayer(layer).toLayer();
+	public Layer setLayer(int layer) {
+		this.layer = layer;
+		return this;
 	}
 
 }

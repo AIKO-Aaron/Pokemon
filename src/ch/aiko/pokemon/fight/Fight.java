@@ -31,6 +31,7 @@ public class Fight extends LayerContainer {
 	public int[] pixels;
 
 	public Fight(Screen s) {
+		super();
 		this.s = s;
 		background = new Sprite("/ch/aiko/pokemon/textures/fight_background/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
 		Sprite ground = new Sprite("/ch/aiko/pokemon/textures/fight_ground/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
@@ -85,19 +86,19 @@ public class Fight extends LayerContainer {
 	public void layerRender(Renderer r) {}
 
 	public void layerUpdate(Screen s) {
-		if (s.popKeyPressed(KeyEvent.VK_N)) {
+		if (popKeyPressed(KeyEvent.VK_N)) {
 			pok1.advance();
-		} else if (s.popKeyPressed(KeyEvent.VK_M)) {
+		} else if (popKeyPressed(KeyEvent.VK_M)) {
 			pok1.mega();
-		} else if(s.popKeyPressed(KeyEvent.VK_B)) {
+		} else if (popKeyPressed(KeyEvent.VK_B)) {
 			pok1.gainXP(pok1.getXPToLevel());
 		}
-		
-		if (s.popKeyPressed(KeyEvent.VK_U)) {
+
+		if (popKeyPressed(KeyEvent.VK_U)) {
 			pok2.advance();
-		} else if (s.popKeyPressed(KeyEvent.VK_I)) {
+		} else if (popKeyPressed(KeyEvent.VK_I)) {
 			pok2.mega();
-		} else if(s.popKeyPressed(KeyEvent.VK_Z)) {
+		} else if (popKeyPressed(KeyEvent.VK_Z)) {
 			pok2.gainXP(pok2.getXPToLevel());
 		}
 	}
