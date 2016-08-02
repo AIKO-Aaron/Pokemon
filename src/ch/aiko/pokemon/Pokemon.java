@@ -2,9 +2,8 @@ package ch.aiko.pokemon;
 
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.client.PokemonClient;
-import ch.aiko.pokemon.entity.Teleporter;
 import ch.aiko.pokemon.entity.player.Player;
-import ch.aiko.pokemon.graphics.GraphicsHandler;
+import ch.aiko.pokemon.graphics.GameHandler;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
@@ -35,9 +34,10 @@ public class Pokemon {
 	 */
 	public static PokemonClient client; 
 
-	public GraphicsHandler handler;
+	public GameHandler handler;
 
 	public Pokemon() {
+		pokemon = this;
 		Settings.load();
 		Language.setup();
 
@@ -61,25 +61,21 @@ public class Pokemon {
 			player = new Player(32 * 3, 32 * 2);
 
 			Level level = new Level();
-			Level l2 = new Level("/ch/aiko/pokemon/level/center.layout");
 
-			// level.loadLevel("/ch/aiko/pokemon/level/level2.bin", null);
 			level.loadLevel("/ch/aiko/pokemon/level/test.layout");
 			level.addPlayer(player);
 
-			//level.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, l2, 8 * 32 - 16, 10 * 32));
-			//l2.addEntity(new Teleporter(8 * 32 - 16, 11 * 32, level, 8 * 32 - 16, 12 * 32));
-
-			handler = new GraphicsHandler(level, player);
+			handler = new GameHandler(level, player);
 		} else {
 			String ip = "10.0.0.96"; // TODO cool menu stuff
 			// It hurts when ip
-			String uuid = serverUUIDs.getValue(ip);
+			//String uuid = serverUUIDs.getValue(ip);
+			String uuid = "nix";
 
 			Pokemons.init();
 
 			client = new PokemonClient(ip, uuid); // Now you know my ip :(
-			client.synchronize();
+			client.waitFor();
 
 			player = new Player(client.x, client.y);
 			player.setDirection(client.dir);
@@ -87,10 +83,7 @@ public class Pokemon {
 			Level level = new Level();
 			level.loadLevel(client.pathToLevel);
 			
-			level.addPlayer(player);
-
-
-			handler = new GraphicsHandler(level, player);
+			handler = new GameHandler(level, player);
 		}
 		out.println("Core engine done loading");
 	}

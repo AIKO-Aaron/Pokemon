@@ -15,6 +15,7 @@ import ch.aiko.engine.sprite.SpriteSerialization;
 import ch.aiko.engine.sprite.Tile;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
+import ch.aiko.pokemon.entity.player.OtherPlayer;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.menu.Menu;
 
@@ -201,7 +202,7 @@ public class Level extends LayerContainer {
 		int ycol = y / tileSize;
 		int xof = x % tileSize;
 		int yof = y % tileSize;
-		
+
 		for (Tile t : getTile(xcol, ycol)) {
 			if (t != null && t.isSolid(xof, yof, layer)) return true;
 		}
@@ -235,7 +236,7 @@ public class Level extends LayerContainer {
 	}
 
 	public void addEntity(Entity p) {
-		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(1).toLayer());
+		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(Player.PLAYER_RENDERED_LAYER).setName("Entity").toLayer());
 	}
 
 	public void addPlayer(Player p) {
@@ -250,6 +251,11 @@ public class Level extends LayerContainer {
 	public Level reload() {
 		if (path != null) loadLevel(path);
 		return this;
+	}
+
+	public void removeEntity(OtherPlayer p) {
+		removeRenderable(p);
+		removeUpdatable(p);
 	}
 
 }

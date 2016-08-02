@@ -8,22 +8,22 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
 
 public class Player extends Entity {
 
-	private int xoff, yoff;
-	private int speed = 6;
-	private SpriteSheet sprites;
-	private int dir = 0; // down, up, left, right
-	private int playerLayer = 0;
+	protected int xoff, yoff;
+	protected int speed = 6;
+	protected SpriteSheet sprites;
+	protected int dir = 0; // down, up, left, right
+	protected int playerLayer = 0;
 
-	private Sprite[] walkingAnims = new Sprite[4 * 4];
-	private int anim = 0, curAnim = 0;
-	private boolean walking = false;
-
+	protected Sprite[] walkingAnims = new Sprite[4 * 4];
+	protected int anim = 0, curAnim = 0, send = 0;
+	protected boolean walking = false;
 	public boolean isPaused = false;
 
 	public static final boolean CAN_WALK_SIDEWAYS = true;
@@ -49,11 +49,11 @@ public class Player extends Entity {
 	public int getRealX() {
 		return xPos;
 	}
-	
+
 	public int getRealY() {
 		return yPos;
 	}
-	
+
 	public void setPosition(int x, int y) {
 		xPos = x;
 		yPos = y;
@@ -64,10 +64,14 @@ public class Player extends Entity {
 		yPos = y - yoff;
 	}
 
+	public Player() {
+
+	}
+
 	public Player(int x, int y) {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
 		for (int i = 0; i < 4 * 4; i++) {
-			walkingAnims[i] = sprites.getSprite(i);
+			walkingAnims[i] = sprites.getSprite(i, false);
 		}
 		xPos = x;
 		yPos = y;
@@ -148,6 +152,14 @@ public class Player extends Entity {
 					curAnim %= 4;
 				}
 			} else curAnim = anim = 0;
+		}
+
+		send++;
+		send %= 3;
+
+		if (Pokemon.client != null && walking) {
+			Pokemon.client.sendText("/spos/" + xPos + "/" + yPos + "/" + dir);
+			Pokemon.client.sendText("/slvl/" + level.path);
 		}
 	}
 
