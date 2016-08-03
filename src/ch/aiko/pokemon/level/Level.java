@@ -176,7 +176,7 @@ public class Level extends LayerContainer {
 		}
 	}
 
-	public void layerUpdate(Screen s) {
+	public void layerUpdate(Screen s, Layer l) {
 		if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
 			if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
 			else closeTopMenu();

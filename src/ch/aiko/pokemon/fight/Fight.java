@@ -85,7 +85,7 @@ public class Fight extends LayerContainer {
 
 	public void layerRender(Renderer r) {}
 
-	public void layerUpdate(Screen s) {
+	public void layerUpdate(Screen s, Layer l) {
 		if (popKeyPressed(KeyEvent.VK_N)) {
 			pok1.advance();
 		} else if (popKeyPressed(KeyEvent.VK_M)) {
