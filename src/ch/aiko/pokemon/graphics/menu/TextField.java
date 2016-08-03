@@ -82,6 +82,10 @@ public class TextField extends MenuObject implements KeyListener {
 	public void setAction(MenuObjectAction r) {
 		onEnter = r;
 	}
+	
+	public void onClose() {
+		input.screen.removeKeyListener(this);
+	}
 
 	public void render(Renderer renderer) {
 		renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);

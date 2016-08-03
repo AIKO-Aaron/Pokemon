@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.pokemon.graphics.menu.ButtonMenuTest;
@@ -40,7 +41,7 @@ public class PlayerMenu extends Menu {
 		}
 	}
 
-	public void updateMenu(Screen s) {
+	public void updateMenu(Screen s, Layer l) {
 		if (getMouseXInFrame(s) > s.getFrameWidth() - width && getMouseXInFrame(s) < s.getFrameWidth()) {
 			float fieldSize = (float) s.getFrameHeight() / (float) texts.length;
 			int ypos = getMouseYInFrame(s);

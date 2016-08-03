@@ -4,7 +4,6 @@ import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.entity.player.Player;
-import ch.aiko.pokemon.graphics.GameHandler;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;

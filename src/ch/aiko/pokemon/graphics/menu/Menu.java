@@ -33,7 +33,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		this.parent = parent;
 		this.level = (Level) parent.getTopLayer("Level");
 		this.fight = (Fight) parent.getTopLayer("Fight");
-		this.holder = (Player) (level).getTopLayer("Player").getRenderable();
+		this.holder = (Player) (level).getTopLayer("Player");
 	}
 
 	/**
@@ -101,7 +101,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		r.setOffset(x, y);
 	}
 
-	public final void layerUpdate(Screen s) {
+	public final void layerUpdate(Screen s, Layer l) {
 		if (x_for_close && popKeyPressed(KeyEvent.VK_X)) closeMe();
 
 		if (manage_buttons && buttons.size() > 0) {
@@ -109,21 +109,21 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 			int mx = pos == null ? getMouseXInFrame(s) : pos.x;
 			int my = pos == null ? getMouseYInFrame(s) : pos.y;
 
-			if (popMouseKey(MouseEvent.BUTTON1)) if (((Button) buttons.get(index).getRenderable()).isInside(mx, my)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
+			if (popMouseKey(MouseEvent.BUTTON1)) if (((Button) buttons.get(index)).isInside(mx, my)) ((Button) buttons.get(index)).buttonPressed();
 
-			if (popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index).getRenderable()).buttonPressed();
+			if (popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index)).buttonPressed();
 
 			if (popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
 			if (popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
 
 			for (int i = 0; i < buttons.size(); i++)
-				if (i != mouseSel && ((Button) buttons.get(i).getRenderable()).isInside(mx, my)) mouseSel = index = i;
+				if (i != mouseSel && ((Button) buttons.get(i)).isInside(mx, my)) mouseSel = index = i;
 
 			for (int i = 0; i < buttons.size(); i++)
-				((Button) buttons.get(i).getRenderable()).setSelected(i == index);
+				((Button) buttons.get(i)).setSelected(i == index);
 		}
 
-		updateMenu(s);
+		updateMenu(s, l);
 	}
 
 	public void closeMe() {
@@ -137,6 +137,6 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 	public abstract void renderMenu(Renderer r);
 
-	public abstract void updateMenu(Screen s);
+	public abstract void updateMenu(Screen s, Layer l);
 
 }

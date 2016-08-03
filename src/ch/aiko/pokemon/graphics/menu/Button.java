@@ -17,6 +17,7 @@ public class Button extends MenuObject {
 	protected String text;
 	protected boolean selected = false;
 	protected MenuObjectAction r = (MenuObject b) -> {};
+	protected int lastX, lastY;
 
 	public Button() {
 		x = y = w = h = 0;
@@ -111,11 +112,13 @@ public class Button extends MenuObject {
 		int xx = getMouseXInFrame(screen);
 		int yy = getMouseYInFrame(screen);
 		if (xx > x && xx < x + w && yy > y && yy < y + h) {
-			selected = true;
+			if (xx != lastX || yy != lastY) selected = true;
 			if (input.popMouseKey(MouseEvent.BUTTON1)) {
 				buttonPressed();
 			}
 		} else selected = false;
+		lastX = xx;
+		lastY = yy;
 	}
 
 	public void render(Renderer renderer) {

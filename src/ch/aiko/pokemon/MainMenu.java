@@ -8,6 +8,8 @@ import ch.aiko.pokemon.graphics.menu.Button;
 import ch.aiko.pokemon.graphics.menu.MenuObject;
 import ch.aiko.pokemon.graphics.menu.TextField;
 
+import com.sun.glass.events.KeyEvent;
+
 public class MainMenu extends LayerContainer {
 
 	public MainMenu() {
@@ -42,7 +44,7 @@ public class MainMenu extends LayerContainer {
 	}
 
 	public void layerUpdate(Screen s, Layer l) {
-
+		if(popKeyPressed(KeyEvent.VK_ESCAPE)) System.exit(0);
 	}
 
 	public String getName() {

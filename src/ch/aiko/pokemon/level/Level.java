@@ -110,7 +110,7 @@ public class Level extends LayerContainer {
 				if (b) continue;
 				addedTiles++;
 				Tile tile = lp.getCoding(data[indexed], (indexed % fieldWidth) * tileSize, (indexed / fieldWidth) * tileSize);
-				if (indexed < current.length) current[indexed] = addLayer(new LayerBuilder().setLayer(layer).setName("Tile" + indexed).setRenderable(tile).toLayer());
+				if (indexed < current.length) current[indexed] = addLayer(new LayerBuilder().setLayer(layer).setNeedsInput(false).setName("Tile" + indexed).setRenderable(tile).toLayer());
 			}
 			tiles.add(current);
 		}

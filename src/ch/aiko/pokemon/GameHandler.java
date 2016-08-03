@@ -1,4 +1,4 @@
-package ch.aiko.pokemon.graphics;
+package ch.aiko.pokemon;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -6,7 +6,6 @@ import java.util.TimerTask;
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Window;
-import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.level.Level;
@@ -41,7 +40,7 @@ public class GameHandler {
 		level.addPlayer(p);
 	}
 
-	private void quit() {
+	public void quit() {
 		if (Pokemon.ONLINE) {
 			saveData();
 			Pokemon.client.sendText("/q/");
@@ -54,8 +53,8 @@ public class GameHandler {
 
 	public void setLevel(Level l) {
 		p.setPaused(true);
-		Layer current = null;
-		if ((current = screen.getTopLayer("Level")) != null) screen.removeLayer(current);
+		Layer current = screen.getTopLayer("Level");
+		if (current != null) screen.removeLayer(current);
 		if (Pokemon.ONLINE) Pokemon.client.sendText("/slvl/" + l.path);
 		this.level = l;
 		screen.addLayer(l);
