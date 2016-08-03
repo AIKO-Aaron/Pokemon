@@ -28,7 +28,8 @@ public class Fight extends LayerContainer {
 	public Screen s;
 
 	public Font f = new Font("Arial", 0, 25);
-	public int[] pixels;
+	public int color, color2;
+	public PixelRenderer renderer;
 
 	public Fight(Screen s) {
 		super();
@@ -37,7 +38,9 @@ public class Fight extends LayerContainer {
 		Sprite ground = new Sprite("/ch/aiko/pokemon/textures/fight_ground/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
 
 		background.getImage().getGraphics().drawImage(ground.getImage(), 0, 0, null);
-		pixels = background.getPixels();
+		int[] pixels = background.getPixels();
+
+		renderer = new PixelRenderer(background, background.getWidth(), background.getHeight());
 
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok1).setUpdatable(pok1).toLayer());
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok2).setUpdatable(pok2).toLayer());
@@ -64,7 +67,7 @@ public class Fight extends LayerContainer {
 		// SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why is music disabled? Because I'm testing and it's annoying...
 
 		// Set background of the renderer to the background image. It can be modified afterwards
-		s.getRenderer().setClearPixels(pixels);
+		s.getRenderer().setClearPixels(renderer.pixels);
 	}
 
 	public void onClose() {
@@ -83,7 +86,11 @@ public class Fight extends LayerContainer {
 		return true;
 	}
 
-	public void layerRender(Renderer r) {}
+	public void layerRender(Renderer r) {
+		renderer.fillRect(0, 0, 50, 50, color);
+		renderer.fillRect(50, 0, 50, 50, color2);
+		renderer.drawString("Test", 50, 50, 50, 0xFF000000);
+	}
 
 	public void layerUpdate(Screen s, Layer l) {
 		if (popKeyPressed(KeyEvent.VK_N)) {
@@ -92,6 +99,10 @@ public class Fight extends LayerContainer {
 			pok1.mega();
 		} else if (popKeyPressed(KeyEvent.VK_B)) {
 			pok1.gainXP(pok1.getXPToLevel());
+		} else if (popKeyPressed(KeyEvent.VK_V)) {
+			pok1.addHP(+1);
+		} else if (popKeyPressed(KeyEvent.VK_C)) {
+			pok1.addHP(-1);
 		}
 
 		if (popKeyPressed(KeyEvent.VK_U)) {
@@ -101,6 +112,18 @@ public class Fight extends LayerContainer {
 		} else if (popKeyPressed(KeyEvent.VK_Z)) {
 			pok2.gainXP(pok2.getXPToLevel());
 		}
+
+		/**
+		 * int col1 = 0x00FF00; // green int col2 = 0xFFFF00; // yellow int col3 = 0xFF0000; // red
+		 * 
+		 * int mod = 100 * pok1.getHP() / pok1.getMaxHP(); int mod2 = 100 * pok2.getHP() / pok2.getMaxHP();
+		 * 
+		 * int col1amount = mod; int col2amount = 100 - Math.abs(50 - mod); int col3amount = Math.abs(100 - mod);
+		 * 
+		 * Vector3f vec = new Vector3f(col1amount, col2amount, col3amount); vec.normalize();
+		 * 
+		 * int col = 0xFF << 24 | (int) (col1 * vec.x) + (int) (col2 * vec.y) + (int) (col3 * vec.z); color = col; // color = 0xFF << 24 | (int) (0xFF - mod) << 16 | ((int) (mod) & 0xFF) << 8 | (Math.abs(0x7F - mod)) << 16 | (Math.abs(0x7F - mod)) << 8; color2 = 0xFF << 24 | (int) (0xFF - mod2) << 16 | ((int) (mod2) & 0xFF) << 8 | (Math.abs(0x7F - mod2)) << 16 | (Math.abs(0x7F - mod2)) << 8;
+		 */
 	}
 
 	public String getName() {
