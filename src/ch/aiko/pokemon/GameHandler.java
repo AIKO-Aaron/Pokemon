@@ -48,7 +48,7 @@ public class GameHandler {
 	}
 
 	public void saveData() {
-		if (Pokemon.ONLINE) Pokemon.client.sendText("/spos/" + Pokemon.player.getRealX() + "/" + Pokemon.player.getRealY() + "/" + Pokemon.player.getDirection());
+		if (Pokemon.ONLINE && Pokemon.client != null && Pokemon.player != null) Pokemon.client.sendText("/spos/" + Pokemon.player.getRealX() + "/" + Pokemon.player.getRealY() + "/" + Pokemon.player.getDirection());
 	}
 
 	public void setLevel(Level l) {
@@ -57,8 +57,8 @@ public class GameHandler {
 		if (current != null) screen.removeLayer(current);
 		if (Pokemon.ONLINE) Pokemon.client.sendText("/slvl/" + l.path);
 		this.level = l;
-		screen.addLayer(l);
 		l.reload();
+		screen.addLayer(l);
 		if (Pokemon.ONLINE) if (Pokemon.client != null && Pokemon.client.players != null) for (OtherPlayer p : Pokemon.client.players) {
 			p.add(l);
 		}

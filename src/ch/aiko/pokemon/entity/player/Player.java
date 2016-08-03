@@ -91,7 +91,9 @@ public class Player extends Entity {
 	}
 
 	public boolean isInside(int xx, int yy) {
-		return xx > getX() && xx < getX() + getWidth() && yy > getY() && yy < getY() + getHeight();
+		int width = sprite == null ? 32 : sprite.getWidth();
+		int height = sprite == null ? 32 : sprite.getHeight();
+		return xx > getX() && xx < getX() + width && yy > getY() && yy < getY() + height;
 	}
 
 	public void update(Screen screen) {
