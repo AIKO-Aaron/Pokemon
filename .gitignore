@@ -2,5 +2,6 @@ bin/
 *.zip
 *.log
 push.sh
+deleteDSStore.sh
 .*
 !/.gitignore
