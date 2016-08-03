@@ -12,16 +12,19 @@ import com.sun.glass.events.KeyEvent;
 
 public class MainMenu extends LayerContainer {
 
+	public static final int WIDTH = 400;
+	public static final int HEIGHT = 100;
+	
 	public MainMenu() {
 		Pokemon.getScreen().setClearColor(0xFF00FF00);
 		Pokemon.getScreen().addLayer(this);
-		addLayer(new Button(0, 0, 200, 50, "SinglePlayer", (MenuObject sender) -> startSinglePlayer()));
-		addLayer(new Button(0, 50, 200, 50, "MultiPlayer", (MenuObject sender) -> openMultiPlayerMenu()));
+		addLayer(new Button(0, 0, WIDTH, HEIGHT, "SinglePlayer", (MenuObject sender) -> startSinglePlayer()));
+		addLayer(new Button(0, HEIGHT, WIDTH, HEIGHT, "MultiPlayer", (MenuObject sender) -> openMultiPlayerMenu()));
 	}
 
 	public void openMultiPlayerMenu() {
-		removeAllLayers();
-		addLayer(new TextField(0, 0, 200, 50, 25, "IP", (MenuObject sender) -> startMultiPlayer((TextField) sender)));
+		//removeAllLayers();
+		addLayer(new TextField(WIDTH, HEIGHT, WIDTH, HEIGHT, 25, "IP", (MenuObject sender) -> startMultiPlayer((TextField) sender)));
 	}
 
 	public void startMultiPlayer(TextField sender) {

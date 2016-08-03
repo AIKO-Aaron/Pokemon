@@ -7,8 +7,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
+import ch.aiko.modloader.LoadedMod;
+import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
 
@@ -24,8 +27,10 @@ public class PokemonClient {
 	public String pathToLevel;
 	public int x, y, dir;
 	public Socket socket;
-	public boolean synchrone = false, lvl = false;
+	public boolean synchrone = false, lvl = false, pos = false;
 	private String textToSend = "";
+	private int waitingForMods = 0;
+	private ArrayList<String> modNames = new ArrayList<String>();
 
 	private boolean receivingPlayers = false;
 
@@ -52,6 +57,7 @@ public class PokemonClient {
 		sending = true;
 		while (sending) {
 			try {
+				if (socket == null) continue;
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 				while (!socket.isConnected()) {
 					Thread.sleep(10);
@@ -61,7 +67,7 @@ public class PokemonClient {
 				writer.flush();
 				textToSend = "";
 			} catch (Throwable e) {
-				e.printStackTrace(Pokemon.out);
+				if (!(e instanceof SocketException)) e.printStackTrace(Pokemon.out);
 			}
 		}
 	}
@@ -81,6 +87,27 @@ public class PokemonClient {
 	}
 
 	private void perform(String received, Socket s) {
+		if (waitingForMods > 0) {
+			modNames.add(received);
+			waitingForMods--;
+			if (waitingForMods == 0) {
+				for (LoadedMod lm : ModLoader.loadedMods) {
+					String rec = lm.modInfoList.get("name") + "=" + lm.modInfoList.get("version");
+					if (!modNames.contains(rec)) {
+						Pokemon.out.err("Stopped loading unnecessary mod: " + rec.replace("=", ", version: "));
+						ModLoader.loadedMods.remove(lm);
+					}
+					else modNames.remove(rec);
+				}
+				if (modNames.size() == 0) synchrone = true;
+				else {
+					Pokemon.out.err("Didn't find required mods: " );
+					for(String t : modNames) Pokemon.out.err("\t" + t.replace("=", ", version: "));
+					Pokemon.pokemon.handler.window.quit();
+				}
+			}
+			return; // If mod name is /padd/X/Y/0/0000-0000-0000-0000-0000, we would add a player. Not what we want really
+		}
 		if (received.equals("/pend/")) receivingPlayers = false;
 		else if (received.startsWith("/guuid/")) {
 			uuid = received.substring(7).trim();
@@ -89,11 +116,14 @@ public class PokemonClient {
 		} else if (received.startsWith("/lvl/")) {
 			pathToLevel = received.substring(5);
 			lvl = true;
+		} else if (received.startsWith("/mods/")) {
+			waitingForMods = Integer.parseInt(received.substring(6));
+			if (waitingForMods == 0) synchrone = true;
 		} else if (received.startsWith("/pos/")) {
 			x = Integer.parseInt(received.substring(5).split("/")[0]);
 			y = Integer.parseInt(received.substring(5).split("/")[1]);
 			dir = Integer.parseInt(received.substring(5).split("/")[2]);
-			synchrone = true;
+			pos = true;
 		} else if (received.startsWith("/padd/") || receivingPlayers) {
 			OtherPlayer otpl = new OtherPlayer(received.startsWith("/padd/") ? received.substring(6) : received);
 			addPlayer(otpl);
@@ -131,7 +161,6 @@ public class PokemonClient {
 		System.out.println("Adding Player: " + otpl.uuid);
 		if (Pokemon.pokemon != null && Pokemon.pokemon.handler != null && Pokemon.pokemon.handler.level != null) Pokemon.pokemon.handler.level.addEntity(otpl);
 		players.add(otpl);
-
 	}
 
 	public void close() {
@@ -155,7 +184,7 @@ public class PokemonClient {
 	}
 
 	public void waitFor() {
-		while (!synchrone || !lvl) {
+		while (!synchrone || !lvl || !pos) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
