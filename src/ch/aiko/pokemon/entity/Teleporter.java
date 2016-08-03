@@ -29,7 +29,7 @@ public class Teleporter extends Entity {
 
 	public void teleportPlayer(Screen s) {
 		Level old = (Level) s.getTopLayer("Level");
-		Player p = (Player) (old).getTopLayer("Player").getRenderable();
+		Player p = (Player) (old).getTopLayer("Player");
 		Pokemon.pokemon.handler.setLevel(level);
 		level.addPlayer(p);
 		p.setPositionInLevel(dx, dy);
@@ -42,7 +42,7 @@ public class Teleporter extends Entity {
 	public void update(Screen s) {
 		Level l = (Level) s.getTopLayer("Level");
 		if(l == null) return;
-		Player p = (Player) (l).getTopLayer("Player").getRenderable();
+		Player p = (Player) (l).getTopLayer("Player");
 		if(p == null) return;
 		boolean b = false;
 		for (int i = 0; i < w * h && !b; i++)

@@ -29,7 +29,7 @@ public class Level extends LayerContainer {
 	public ArrayList<Layer[]> tiles = new ArrayList<Layer[]>();
 	public int layerCount = 0;
 	public LevelPalette lp;
-	private String path;
+	public String path;
 
 	private int tileSize = 32;
 	public Stack<Layer> openMenus = new Stack<Layer>();
@@ -110,7 +110,7 @@ public class Level extends LayerContainer {
 				if (b) continue;
 				addedTiles++;
 				Tile tile = lp.getCoding(data[indexed], (indexed % fieldWidth) * tileSize, (indexed / fieldWidth) * tileSize);
-				if (indexed < current.length) current[indexed] = addLayer(new LayerBuilder().setLayer(layer).setName("Tile" + indexed).setRenderable(tile).toLayer());
+				if (indexed < current.length) current[indexed] = addLayer(new LayerBuilder().setLayer(layer).setNeedsInput(false).setName("Tile" + indexed).setRenderable(tile).toLayer());
 			}
 			tiles.add(current);
 		}
@@ -176,11 +176,11 @@ public class Level extends LayerContainer {
 		}
 	}
 
-	public void layerUpdate(Screen s) {
-		if (s.getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
+	public void layerUpdate(Screen s, Layer l) {
+		if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
 			if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
 			else closeTopMenu();
-		} else if (s.popKeyPressed(KeyEvent.VK_R)) loadLevel(path);
+		} else if (popKeyPressed(KeyEvent.VK_R)) loadLevel(path);
 	}
 
 	public ArrayList<Tile> getTile(int x, int y) {
@@ -201,7 +201,7 @@ public class Level extends LayerContainer {
 		int ycol = y / tileSize;
 		int xof = x % tileSize;
 		int yof = y % tileSize;
-		
+
 		for (Tile t : getTile(xcol, ycol)) {
 			if (t != null && t.isSolid(xof, yof, layer)) return true;
 		}
@@ -235,11 +235,11 @@ public class Level extends LayerContainer {
 	}
 
 	public void addEntity(Entity p) {
-		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(1).toLayer());
+		addLayer(p);
 	}
 
 	public void addPlayer(Player p) {
-		addLayer(new LayerBuilder().setRenderable(p).setUpdatable(p).setLayer(Player.PLAYER_RENDERED_LAYER).setName("Player").toLayer());
+		addLayer(p);
 	}
 
 	/**
@@ -250,6 +250,10 @@ public class Level extends LayerContainer {
 	public Level reload() {
 		if (path != null) loadLevel(path);
 		return this;
+	}
+
+	public void removeEntity(Entity p) {
+		removeLayer(p);
 	}
 
 }

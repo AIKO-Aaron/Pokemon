@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.pokemon.graphics.menu.ButtonMenuTest;
@@ -40,21 +41,21 @@ public class PlayerMenu extends Menu {
 		}
 	}
 
-	public void updateMenu(Screen s) {
-		if (s.getMouseXInFrame() > s.getFrameWidth() - width && s.getMouseXInFrame() < s.getFrameWidth()) {
+	public void updateMenu(Screen s, Layer l) {
+		if (getMouseXInFrame(s) > s.getFrameWidth() - width && getMouseXInFrame(s) < s.getFrameWidth()) {
 			float fieldSize = (float) s.getFrameHeight() / (float) texts.length;
-			int ypos = s.getMouseYInFrame();
+			int ypos = getMouseYInFrame(s);
 			index = (int) (ypos / fieldSize);
 			
-			if(s.popMouseKey(MouseEvent.BUTTON1)) performAction();
+			if(popMouseKey(MouseEvent.BUTTON1)) performAction();
 		}
 
-		if (s.getInput().popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % texts.length;
-		if (s.getInput().popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : texts.length - 1;
+		if (input.popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % texts.length;
+		if (input.popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : texts.length - 1;
 
-		if (s.getInput().popKeyPressed(KeyEvent.VK_X)) closeMe();
+		if (input.popKeyPressed(KeyEvent.VK_X)) closeMe();
 
-		if (s.getInput().popKeyPressed(KeyEvent.VK_SPACE)) performAction();
+		if (input.popKeyPressed(KeyEvent.VK_SPACE)) performAction();
 	}
 
 	public void performAction() {

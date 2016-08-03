@@ -2,28 +2,26 @@ package ch.aiko.pokemon.entity.player;
 
 import java.awt.event.KeyEvent;
 
-import ch.aiko.engine.graphics.Layer;
-import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
 
 public class Player extends Entity {
 
-	private int xoff, yoff;
-	private int speed = 6;
-	private SpriteSheet sprites;
-	private int dir = 0; // down, up, left, right
-	private int playerLayer = 0;
+	protected int xoff, yoff;
+	protected int speed = 6;
+	protected SpriteSheet sprites;
+	protected int dir = 0; // down, up, left, right
+	protected int playerLayer = 0;
 
-	private Sprite[] walkingAnims = new Sprite[4 * 4];
-	private int anim = 0, curAnim = 0;
-	private boolean walking = false;
-
+	protected Sprite[] walkingAnims = new Sprite[4 * 4];
+	protected int anim = 0, curAnim = 0, send = 0;
+	protected boolean walking = false;
 	public boolean isPaused = false;
 
 	public static final boolean CAN_WALK_SIDEWAYS = true;
@@ -46,6 +44,14 @@ public class Player extends Entity {
 		return yPos + yoff;
 	}
 
+	public int getRealX() {
+		return xPos;
+	}
+
+	public int getRealY() {
+		return yPos;
+	}
+
 	public void setPosition(int x, int y) {
 		xPos = x;
 		yPos = y;
@@ -56,10 +62,12 @@ public class Player extends Entity {
 		yPos = y - yoff;
 	}
 
+	public Player() {}
+
 	public Player(int x, int y) {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
 		for (int i = 0; i < 4 * 4; i++) {
-			walkingAnims[i] = sprites.getSprite(i);
+			walkingAnims[i] = sprites.getSprite(i, false);
 		}
 		xPos = x;
 		yPos = y;
@@ -90,16 +98,15 @@ public class Player extends Entity {
 		if (isPaused) return;
 		int xx = 0, yy = 0;
 
-		Layer layer = screen.getLayer((Renderable) this).getParent();
-		Level level = (Level) layer;
+		Level level = (Level) getParent();
 
-		if (screen.getInput().popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
-		if (screen.getInput().popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
+		if (input.popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
+		if (input.popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
 
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_LEFT)) xx--;
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_UP)) yy--;
-		if (screen.getInput().isKeyPressed(KeyEvent.VK_DOWN)) yy++;
+		if (input.isKeyPressed(KeyEvent.VK_LEFT)) xx--;
+		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
+		if (input.isKeyPressed(KeyEvent.VK_UP)) yy--;
+		if (input.isKeyPressed(KeyEvent.VK_DOWN)) yy++;
 
 		if (!CAN_WALK_SIDEWAYS) {
 			if (xx != 0) yy = 0;
@@ -141,6 +148,14 @@ public class Player extends Entity {
 				}
 			} else curAnim = anim = 0;
 		}
+
+		send++;
+		send %= 3;
+
+		if (Pokemon.client != null && walking) {
+			Pokemon.client.sendText("/spos/" + xPos + "/" + yPos + "/" + dir);
+			Pokemon.client.sendText("/slvl/" + level.path);
+		}
 	}
 
 	private void startBattle(Screen screen) {
@@ -153,6 +168,22 @@ public class Player extends Entity {
 
 	public void setPaused(boolean b) {
 		isPaused = b;
+	}
+
+	public void setDirection(int dir2) {
+		dir = dir2;
+	}
+
+	public int getDirection() {
+		return dir;
+	}
+
+	public String getName() {
+		return "Player";
+	}
+
+	public int getLevel() {
+		return PLAYER_RENDERED_LAYER;
 	}
 
 }

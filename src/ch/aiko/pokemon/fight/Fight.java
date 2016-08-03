@@ -32,6 +32,7 @@ public class Fight extends LayerContainer {
 	public PixelRenderer renderer;
 
 	public Fight(Screen s) {
+		super();
 		this.s = s;
 		background = new Sprite("/ch/aiko/pokemon/textures/fight_background/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
 		Sprite ground = new Sprite("/ch/aiko/pokemon/textures/fight_ground/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
@@ -91,45 +92,38 @@ public class Fight extends LayerContainer {
 		renderer.drawString("Test", 50, 50, 50, 0xFF000000);
 	}
 
-	public void layerUpdate(Screen s) {
-		if (s.popKeyPressed(KeyEvent.VK_N)) {
+	public void layerUpdate(Screen s, Layer l) {
+		if (popKeyPressed(KeyEvent.VK_N)) {
 			pok1.advance();
-		} else if (s.popKeyPressed(KeyEvent.VK_M)) {
+		} else if (popKeyPressed(KeyEvent.VK_M)) {
 			pok1.mega();
-		} else if (s.popKeyPressed(KeyEvent.VK_B)) {
+		} else if (popKeyPressed(KeyEvent.VK_B)) {
 			pok1.gainXP(pok1.getXPToLevel());
-		} else if (s.popKeyPressed(KeyEvent.VK_V)) {
+		} else if (popKeyPressed(KeyEvent.VK_V)) {
 			pok1.addHP(+1);
-		} else if (s.popKeyPressed(KeyEvent.VK_C)) {
+		} else if (popKeyPressed(KeyEvent.VK_C)) {
 			pok1.addHP(-1);
 		}
 
-		if (s.popKeyPressed(KeyEvent.VK_U)) {
+		if (popKeyPressed(KeyEvent.VK_U)) {
 			pok2.advance();
-		} else if (s.popKeyPressed(KeyEvent.VK_I)) {
+		} else if (popKeyPressed(KeyEvent.VK_I)) {
 			pok2.mega();
-		} else if (s.popKeyPressed(KeyEvent.VK_Z)) {
+		} else if (popKeyPressed(KeyEvent.VK_Z)) {
 			pok2.gainXP(pok2.getXPToLevel());
 		}
 
-		/**int col1 = 0x00FF00; // green
-		int col2 = 0xFFFF00; // yellow
-		int col3 = 0xFF0000; // red
-
-		int mod = 100 * pok1.getHP() / pok1.getMaxHP();
-		int mod2 = 100 * pok2.getHP() / pok2.getMaxHP();
-
-		int col1amount = mod;
-		int col2amount = 100 - Math.abs(50 - mod);
-		int col3amount = Math.abs(100 - mod);
-
-		Vector3f vec = new Vector3f(col1amount, col2amount, col3amount);
-		vec.normalize();
-
-		int col = 0xFF << 24 | (int) (col1 * vec.x) + (int) (col2 * vec.y) + (int) (col3 * vec.z);
-		color = col;
-		// color = 0xFF << 24 | (int) (0xFF - mod) << 16 | ((int) (mod) & 0xFF) << 8 | (Math.abs(0x7F - mod)) << 16 | (Math.abs(0x7F - mod)) << 8;
-		color2 = 0xFF << 24 | (int) (0xFF - mod2) << 16 | ((int) (mod2) & 0xFF) << 8 | (Math.abs(0x7F - mod2)) << 16 | (Math.abs(0x7F - mod2)) << 8;*/
+		/**
+		 * int col1 = 0x00FF00; // green int col2 = 0xFFFF00; // yellow int col3 = 0xFF0000; // red
+		 * 
+		 * int mod = 100 * pok1.getHP() / pok1.getMaxHP(); int mod2 = 100 * pok2.getHP() / pok2.getMaxHP();
+		 * 
+		 * int col1amount = mod; int col2amount = 100 - Math.abs(50 - mod); int col3amount = Math.abs(100 - mod);
+		 * 
+		 * Vector3f vec = new Vector3f(col1amount, col2amount, col3amount); vec.normalize();
+		 * 
+		 * int col = 0xFF << 24 | (int) (col1 * vec.x) + (int) (col2 * vec.y) + (int) (col3 * vec.z); color = col; // color = 0xFF << 24 | (int) (0xFF - mod) << 16 | ((int) (mod) & 0xFF) << 8 | (Math.abs(0x7F - mod)) << 16 | (Math.abs(0x7F - mod)) << 8; color2 = 0xFF << 24 | (int) (0xFF - mod2) << 16 | ((int) (mod2) & 0xFF) << 8 | (Math.abs(0x7F - mod2)) << 16 | (Math.abs(0x7F - mod2)) << 8;
+		 */
 	}
 
 	public String getName() {

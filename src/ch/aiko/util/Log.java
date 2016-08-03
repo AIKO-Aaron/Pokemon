@@ -2,6 +2,7 @@ package ch.aiko.util;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -147,8 +148,8 @@ public class Log extends PrintStream {
 	 *            The Level of the Message
 	 */
 	public void print(String s, Level l) {
-		String time = (String.format("%02d", System.currentTimeMillis() / 1000 / 60 / 60 % 24 + (TimeZone.getDefault().inDaylightTime(new Date()) ? 0 : 1))) + ":" + String.format("%02d", System.currentTimeMillis() / 1000 / 60 % 60) + ":" + String.format("%02d", System.currentTimeMillis() / 1000 % 60);
-
+		Calendar cal = Calendar.getInstance();
+		String time = String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", cal.get(Calendar.MINUTE)) + ":" + String.format("%02d", cal.get(Calendar.SECOND));		
 		s = "[" + time + "]" + (className != null ? "[" + className + "]" : "") + l.getLevelName() + " " + s;
 
 		if (hasConsoleOutput) l.print(s);
@@ -205,6 +206,65 @@ public class Log extends PrintStream {
 	 */
 	public void println(float s) {
 		println(s + "", DEFAULT);
+	}
+
+	/**
+	 * Prints a int to the log and adds a new line. The default Level is Info
+	 * 
+	 * @param s
+	 *            The message to print
+	 */
+	public void println(int s) {
+		println(s + "", DEFAULT);
+	}
+
+	/**
+	 * Prints a boolean to the log and adds a new line. The default Level is Info
+	 * 
+	 * @param s
+	 *            The message to print
+	 */
+	public void println(boolean x) {
+		println(x + "", DEFAULT);
+	}
+
+	public void println() {
+		println("");
+	}
+
+	public void println(char x) {
+		println(x + "");
+	}
+
+	public void println(char[] x) {
+		println(new String(x));
+	}
+
+	public void println(double x) {
+		println("" + x);
+	}
+
+	public void println(long x) {
+		println("" + x);
+	}
+	
+	public void println(Object x) {
+		println(x.toString());
+	}
+	
+	public PrintStream append(char c) {
+		print(c);
+		return this;
+	}
+	
+	public PrintStream append(CharSequence csq) {
+		print(csq);
+		return this;
+	}
+	
+	public PrintStream append(CharSequence csq, int start, int end) {
+		print(csq.subSequence(start, end));
+		return this;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package ch.aiko.pokemon.graphics.menu;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.SpriteSheet;
@@ -77,7 +78,7 @@ public class Animation extends Menu {
 		r.drawSprite(sheet.getSprite(currentAnim), xpos, ypos);
 	}
 
-	public void updateMenu(Screen s) {
+	public void updateMenu(Screen s, Layer l) {
 		time++;
 		if (time >= timePerFrame) {
 			time = 0;

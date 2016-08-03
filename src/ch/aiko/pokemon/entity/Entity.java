@@ -1,12 +1,14 @@
 package ch.aiko.pokemon.entity;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Updatable;
 import ch.aiko.engine.sprite.Sprite;
+import ch.aiko.pokemon.entity.player.Player;
 
-public class Entity implements Renderable, Updatable {
+public class Entity extends Layer {
 
 	protected Sprite sprite;
 	protected int xPos, yPos;
@@ -62,6 +64,30 @@ public class Entity implements Renderable, Updatable {
 
 	public void render(Renderer renderer) {
 		renderer.drawSprite(sprite, xPos, yPos);
+	}
+
+	public Renderable getRenderable() {
+		return (Renderer r) -> render(r);
+	}
+
+	public Updatable getUpdatable() {
+		return (Screen s, Layer l) -> update(s);
+	}
+
+	public int getLevel() {
+		return Player.PLAYER_RENDERED_LAYER - 1;
+	}
+
+	public boolean stopsRendering() {
+		return false;
+	}
+
+	public boolean stopsUpdating() {
+		return false;
+	}
+
+	public String getName() {
+		return "Entity";
 	}
 
 }

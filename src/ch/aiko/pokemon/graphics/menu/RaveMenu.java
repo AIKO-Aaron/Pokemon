@@ -2,6 +2,7 @@ package ch.aiko.pokemon.graphics.menu;
 
 import java.util.Random;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 
@@ -25,7 +26,7 @@ public class RaveMenu extends Menu {
 		r.fillRect(0, 0, r.getWidth(), r.getHeight(), rand.nextInt(0xFFFFFF) + 0xFF000000);
 	}
 
-	public void updateMenu(Screen s) {}
+	public void updateMenu(Screen s, Layer l) {}
 
 	public String getName() {
 		return "RaveMenu";
