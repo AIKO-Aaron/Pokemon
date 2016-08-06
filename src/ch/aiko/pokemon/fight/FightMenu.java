@@ -31,26 +31,32 @@ public class FightMenu extends Menu {
 		addButton(new Button(0, 0, 350, 100, sender.getText(), (b) -> buttonPressed((Button) b)), 1, 0);
 	}
 
+	@Override
 	public void onOpen() {
 		xOffset = 2 * width;
 	}
 
+	@Override
 	public void onClose() {}
 
+	@Override
 	public void renderMenu(Renderer r) {
 
 	}
 
+	@Override
 	public void updateMenu(Screen s, Layer l) {
 		if (popKeyPressed(KeyEvent.VK_RIGHT) || popKeyPressed(KeyEvent.VK_LEFT)) index = (index + 2) % buttons.size();
 
 		if (xOffset > 0) xOffset -= 10;
 	}
 
+	@Override
 	public String getName() {
 		return "FightMenu";
 	}
 
+	@Override
 	public boolean stopsUpdating() {
 		return false;
 	}

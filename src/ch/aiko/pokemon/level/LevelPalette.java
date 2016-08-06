@@ -53,6 +53,7 @@ public class LevelPalette extends ASDataType {
 	}
 
 	// Sprite t2 = ((ASDataArray<Sprite>) base.getObject("SpriteArrayHolder").getArray("SpriteArray")).getData(0)
+	@Override
 	public void load(ASObject c) {
 		if (shortCodes == null) shortCodes = new ArrayList<Short>();
 		ASArray shor = c.getArray("shortCodes");
@@ -65,6 +66,7 @@ public class LevelPalette extends ASDataType {
 			stringCodes.add(s);
 	}
 
+	@Override
 	public void getData(ASObject thisObject) {
 		if (shortCodes == null) shortCodes = new ArrayList<Short>();
 		short[] shorts = new short[shortCodes.size()];

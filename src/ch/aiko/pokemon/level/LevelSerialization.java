@@ -18,6 +18,7 @@ public class LevelSerialization extends ASDataType {
 		object = new ASObject(name);
 	}
 
+	@Override
 	public void load(ASObject c) {
 		ASField layers = c.getField("Layers");
 		if (layers != null) level.layerCount = SerializationReader.readInt(layers.data, 0);
@@ -39,6 +40,7 @@ public class LevelSerialization extends ASDataType {
 		level.decode();
 	}
 
+	@Override
 	public void getData(ASObject thisObject) {
 		if (level.tileData == null) level.tileData = new ArrayList<short[]>();
 		if (level.lp == null) level.lp = new LevelPalette("Palette", this);

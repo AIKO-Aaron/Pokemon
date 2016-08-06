@@ -66,18 +66,23 @@ public class Animation extends Menu {
 		return timePerFrame;
 	}
 
+	@Override
 	public void onOpen() {}
 
+	@Override
 	public void onClose() {}
 
+	@Override
 	public boolean stopsUpdating() {
 		return false;
 	}
 
+	@Override
 	public void renderMenu(Renderer r) {
 		r.drawSprite(sheet.getSprite(currentAnim), xpos, ypos);
 	}
 
+	@Override
 	public void updateMenu(Screen s, Layer l) {
 		time++;
 		if (time >= timePerFrame) {

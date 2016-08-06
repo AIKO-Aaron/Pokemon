@@ -26,10 +26,12 @@ public class PlayerMenu extends Menu {
 		super(parent);
 	}
 
+	@Override
 	public String getName() {
 		return "MainMenu";
 	}
 
+	@Override
 	public void renderMenu(Renderer r) {
 		r.drawRect(r.getWidth() - width, 0, width, r.getHeight(), lines, 5);
 		r.fillRect(r.getWidth() - width + 5, 5, width - 10, r.getHeight() - 10, background);
@@ -41,6 +43,7 @@ public class PlayerMenu extends Menu {
 		}
 	}
 
+	@Override
 	public void updateMenu(Screen s, Layer l) {
 		if (getMouseXInFrame(s) > s.getFrameWidth() - width && getMouseXInFrame(s) < s.getFrameWidth()) {
 			float fieldSize = (float) s.getFrameHeight() / (float) texts.length;
@@ -71,8 +74,10 @@ public class PlayerMenu extends Menu {
 		}
 	}
 
+	@Override
 	public void onOpen() {}
 
+	@Override
 	public void onClose() {}
 
 }

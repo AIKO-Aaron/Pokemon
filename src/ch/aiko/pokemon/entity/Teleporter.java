@@ -1,5 +1,6 @@
 package ch.aiko.pokemon.entity;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.pokemon.Pokemon;
@@ -35,11 +36,13 @@ public class Teleporter extends Entity {
 		p.setPositionInLevel(dx, dy);
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		renderer.drawRect(xPos, yPos, w, h, 0xFFFF0000);
 	}
-
-	public void update(Screen s) {
+	
+	@Override
+	public void update(Screen s, Layer layer) {
 		Level l = (Level) s.getTopLayer("Level");
 		if(l == null) return;
 		Player p = (Player) (l).getTopLayer("Player");

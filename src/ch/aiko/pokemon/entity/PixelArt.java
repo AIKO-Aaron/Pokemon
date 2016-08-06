@@ -8,7 +8,7 @@ public class PixelArt implements Renderable {
 
 	/**
 	 * To Pokemon.java (after Level leve = new Level();)
-	 *  
+	 * 
 	 * PixelArt art = new PixelArt(16, 0xFF000000, 0xFF00AA00);
 	 * 
 	 * for (int i = 0; i < 4; i++) { for (int j = 0; j < 4; j++) { art.enable(2 + i, 2 + j); art.enable(10 + i, 2 + j); } } for (int i = 0; i < 4; i++) { for (int j = 0; j < 6; j++) { art.enable(6 + i, 6 + j); } } for(int i = 0; i < 6; i++) { art.enable(4, 8 + i); art.enable(5, 8 + i); art.enable(10, 8 + i); art.enable(11, 8 + i); }
@@ -48,6 +48,7 @@ public class PixelArt implements Renderable {
 		onoff[x + y * size] = b;
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {

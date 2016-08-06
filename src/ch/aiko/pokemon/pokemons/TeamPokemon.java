@@ -108,6 +108,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		}
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		int x = holder == PokemonType.OWNED ? 200 : (int) (renderer.getWidth() - 250 - animation.getMaxWidth() / 2);
 		int y = holder == PokemonType.OWNED ? renderer.getHeight() - (int) (animation.getMaxHeight() * animation.getScale()) : (int) (310 - animation.getMaxHeight() * animation.getScale());
@@ -125,6 +126,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
+	@Override
 	public void update(Screen screen, Layer l) {
 		animation.update(screen, l);
 	}

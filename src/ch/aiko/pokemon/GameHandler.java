@@ -21,6 +21,7 @@ public class GameHandler {
 		screen = new Screen(960, 540) {
 			private static final long serialVersionUID = 9052690094292517622L;
 
+			@Override
 			public void stopThreads() {
 				super.stopThreads();
 				quit();
@@ -48,7 +49,10 @@ public class GameHandler {
 	}
 
 	public void saveData() {
-		if (Pokemon.ONLINE && Pokemon.client != null && Pokemon.player != null) Pokemon.client.sendText("/spos/" + Pokemon.player.getRealX() + "/" + Pokemon.player.getRealY() + "/" + Pokemon.player.getDirection());
+		if (Pokemon.ONLINE && Pokemon.client != null && Pokemon.player != null) {
+			Pokemon.client.sendText("/spos/" + Pokemon.player.getRealX() + "/" + Pokemon.player.getRealY() + "/" + Pokemon.player.getDirection());
+			Pokemon.client.sendText("/slvl/" + level.path);
+		}
 	}
 
 	public void setLevel(Level l) {

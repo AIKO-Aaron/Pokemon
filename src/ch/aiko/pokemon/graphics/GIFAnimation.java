@@ -62,6 +62,7 @@ public class GIFAnimation implements Renderable, Updatable {
 		return this;
 	}
 
+	@Override
 	public void update(Screen screen, Layer l) {
 		if (lastTime == 0L) lastTime = System.currentTimeMillis();
 		if (System.currentTimeMillis() - lastTime > animation[curIndex].getDelay() * TIME_MOD) {
@@ -71,6 +72,7 @@ public class GIFAnimation implements Renderable, Updatable {
 		}
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		renderer.drawImage(animation[curIndex].getImage(), x + (maxWidth - animation[curIndex].getWidth()) / 2, y + (maxHeight - animation[curIndex].getHeight()) / 2);
 	}

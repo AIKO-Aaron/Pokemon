@@ -52,6 +52,7 @@ public class TextField extends MenuObject implements KeyListener {
 		onEnter = r;
 	}
 
+	@Override
 	public void update(Screen screen, Layer l) {
 		if (input.popMouseKey(MouseEvent.BUTTON1)) {
 			int xx = getMouseXInFrame(screen);
@@ -70,6 +71,7 @@ public class TextField extends MenuObject implements KeyListener {
 		}
 	}
 
+	@Override
 	public void setInput(Input input) {
 		this.input = input;
 		input.screen.addKeyListener(this);
@@ -83,10 +85,12 @@ public class TextField extends MenuObject implements KeyListener {
 		onEnter = r;
 	}
 	
+	@Override
 	public void onClose() {
 		input.screen.removeKeyListener(this);
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
 		renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);
@@ -99,13 +103,16 @@ public class TextField extends MenuObject implements KeyListener {
 		renderer.drawText(text, Settings.font, h / 2, 0, xstart, ystart, 0xFF000000);
 	}
 
+	@Override
 	public void keyTyped(KeyEvent e) {}
 
+	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		if (!blackList.contains(keyCode)) text += e.getKeyChar();
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {}
 	
 	public String getText() {

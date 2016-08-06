@@ -2,6 +2,7 @@ package ch.aiko.pokemon.entity.player;
 
 import java.awt.event.KeyEvent;
 
+import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
@@ -36,10 +37,12 @@ public class Player extends Entity {
 		return sprite.getHeight();
 	}
 
+	@Override
 	public int getX() {
 		return xPos + xoff;
 	}
 
+	@Override
 	public int getY() {
 		return yPos + yoff;
 	}
@@ -52,6 +55,7 @@ public class Player extends Entity {
 		return yPos;
 	}
 
+	@Override
 	public void setPosition(int x, int y) {
 		xPos = x;
 		yPos = y;
@@ -73,6 +77,7 @@ public class Player extends Entity {
 		yPos = y;
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		renderer.setOffset(-xPos, -yPos);
 		sprite = walkingAnims[dir * 4 + curAnim];
@@ -96,7 +101,8 @@ public class Player extends Entity {
 		return xx > getX() && xx < getX() + width && yy > getY() && yy < getY() + height;
 	}
 
-	public void update(Screen screen) {
+	@Override
+	public void update(Screen screen, Layer l) {
 		if (isPaused) return;
 		int xx = 0, yy = 0;
 
@@ -180,10 +186,12 @@ public class Player extends Entity {
 		return dir;
 	}
 
+	@Override
 	public String getName() {
 		return "Player";
 	}
 
+	@Override
 	public int getLevel() {
 		return PLAYER_RENDERED_LAYER;
 	}

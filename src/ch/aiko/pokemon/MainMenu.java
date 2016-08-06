@@ -42,26 +42,32 @@ public class MainMenu extends LayerContainer {
 		Pokemon.pokemon.start(null);
 	}
 
+	@Override
 	public void layerRender(Renderer r) {
 
 	}
 
+	@Override
 	public void layerUpdate(Screen s, Layer l) {
 		if(popKeyPressed(KeyEvent.VK_ESCAPE)) System.exit(0);
 	}
 
+	@Override
 	public String getName() {
 		return "MainMenu";
 	}
 
+	@Override
 	public int getLevel() {
 		return 0;
 	}
 
+	@Override
 	public boolean stopsRendering() {
 		return false;
 	}
 
+	@Override
 	public boolean stopsUpdating() {
 		return false;
 	}

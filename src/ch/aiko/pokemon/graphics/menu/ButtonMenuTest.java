@@ -13,6 +13,7 @@ public class ButtonMenuTest extends Menu {
 		super(parent);
 	}
 
+	@Override
 	public void onOpen() {		
 		float bs = parent.getFrameHeight() / count;
 		for (float i = 0; i < count; i++)
@@ -21,16 +22,21 @@ public class ButtonMenuTest extends Menu {
 			}), 1, (int) i);
 	}
 
+	@Override
 	public void onClose() {}
 
+	@Override
 	public void renderMenu(Renderer r) {}
 
+	@Override
 	public void updateMenu(Screen s, Layer l) {}
 
+	@Override
 	public boolean stopsUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getName() {
 		return "TestMenuForButtons";
 	}

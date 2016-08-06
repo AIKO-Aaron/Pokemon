@@ -8,6 +8,7 @@ import ch.aiko.pokemon.level.Level;
 public class OtherPlayer extends Player {
 
 	public String uuid = "0000-0000-0000-0000-0000";
+	public int lx, ly;
 
 	public OtherPlayer(String data) {
 		String[] da = data.split("/");
@@ -32,7 +33,16 @@ public class OtherPlayer extends Player {
 	}
 
 	public void update(Screen screen) {
-
+		if (walking) {
+			anim++;
+			if (anim > 15) {
+				anim = 0;
+				curAnim++;
+				curAnim %= 4;
+			}
+		}
+		lx = xPos;
+		ly = yPos;
 	}
 
 	public void render(Renderer renderer) {
@@ -53,5 +63,9 @@ public class OtherPlayer extends Player {
 	public OtherPlayer setUUID(String uuid) {
 		this.uuid = uuid;
 		return this;
+	}
+
+	public void setWalking(boolean b) {
+		walking = b;
 	}
 }

@@ -160,8 +160,10 @@ public class Level extends LayerContainer {
 		return true;
 	}
 
+	@Override
 	public void layerRender(Renderer r) {}
 
+	@Override
 	public void postRender(Renderer r) {
 		if (DEBUG) {
 			for (int i = 0; i < tiles.size(); i++) {
@@ -176,6 +178,7 @@ public class Level extends LayerContainer {
 		}
 	}
 
+	@Override
 	public void layerUpdate(Screen s, Layer l) {
 		if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
 			if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
@@ -208,6 +211,7 @@ public class Level extends LayerContainer {
 		return false;
 	}
 
+	@Override
 	public String getName() {
 		return "Level";
 	}

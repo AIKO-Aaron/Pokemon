@@ -108,6 +108,7 @@ public class Button extends MenuObject {
 		return r;
 	}
 
+	@Override
 	public void update(Screen screen, Layer l) {
 		int xx = getMouseXInFrame(screen);
 		int yy = getMouseYInFrame(screen);
@@ -121,6 +122,7 @@ public class Button extends MenuObject {
 		lastY = yy;
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
 		renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);

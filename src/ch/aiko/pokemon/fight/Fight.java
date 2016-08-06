@@ -61,6 +61,7 @@ public class Fight extends LayerContainer {
 		return metrics.getHeight();
 	}
 
+	@Override
 	public void onOpen() {
 		openMenu(new FightMenu(s));
 		openMenu(new Animation(s, new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_boy.png", 80, 80, 300, 300).removeColor(0xFF88B8B0), false, 7).setPosition(150, s.getFrameHeight() - 300));
@@ -70,6 +71,7 @@ public class Fight extends LayerContainer {
 		s.getRenderer().setClearPixels(renderer.pixels);
 	}
 
+	@Override
 	public void onClose() {
 		s.getRenderer().removeClearImage();
 	}
@@ -86,12 +88,14 @@ public class Fight extends LayerContainer {
 		return true;
 	}
 
+	@Override
 	public void layerRender(Renderer r) {
 		renderer.fillRect(0, 0, 50, 50, color);
 		renderer.fillRect(50, 0, 50, 50, color2);
 		renderer.drawString("Test", 50, 50, 50, 0xFF000000);
 	}
 
+	@Override
 	public void layerUpdate(Screen s, Layer l) {
 		if (popKeyPressed(KeyEvent.VK_N)) {
 			pok1.advance();
@@ -126,6 +130,7 @@ public class Fight extends LayerContainer {
 		 */
 	}
 
+	@Override
 	public String getName() {
 		return "Fight";
 	}

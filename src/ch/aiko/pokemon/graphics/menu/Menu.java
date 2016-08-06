@@ -39,22 +39,27 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	/**
 	 * Gets the level of the current layer. The player gets rendered on layer 1 so yeah... probably over 1
 	 */
+	@Override
 	public int getLevel() {
 		return Player.PLAYER_RENDERED_LAYER + 1;
 	}
 
+	@Override
 	public boolean stopsRendering() {
 		return false;
 	}
 
+	@Override
 	public boolean stopsUpdating() {
 		return true;
 	}
 
+	@Override
 	public Renderable getRenderable() {
 		return this;
 	}
 
+	@Override
 	public Updatable getUpdatable() {
 		return this;
 	}
@@ -90,6 +95,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 	private int x, y;
 
+	@Override
 	public final void layerRender(Renderer r) {
 		x = r.getXOffset();
 		y = r.getYOffset();
@@ -97,10 +103,12 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		renderMenu(r);
 	}
 
+	@Override
 	public final void postRender(Renderer r) {
 		r.setOffset(x, y);
 	}
 
+	@Override
 	public final void layerUpdate(Screen s, Layer l) {
 		if (x_for_close && popKeyPressed(KeyEvent.VK_X)) closeMe();
 
@@ -131,8 +139,10 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 		if (fight != null) fight.closeMenu(this);
 	}
 
+	@Override
 	public abstract void onOpen();
 
+	@Override
 	public abstract void onClose();
 
 	public abstract void renderMenu(Renderer r);

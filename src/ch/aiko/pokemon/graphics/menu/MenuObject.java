@@ -22,30 +22,38 @@ public abstract class MenuObject extends Layer {
 		return metrics.getHeight();
 	}
 
+	@Override
 	public void render(Renderer r) {}
 
+	@Override
 	public void update(Screen s, Layer l) {}
 
+	@Override
 	public Renderable getRenderable() {
 		return (Renderer r) -> render(r);
 	}
 
+	@Override
 	public Updatable getUpdatable() {
 		return (Screen s, Layer l) -> update(s, l);
 	}
 
+	@Override
 	public int getLevel() {
 		return Player.PLAYER_RENDERED_LAYER + 1;
 	}
 
+	@Override
 	public boolean stopsRendering() {
 		return false;
 	}
 
+	@Override
 	public boolean stopsUpdating() {
 		return false;
 	}
 
+	@Override
 	public String getName() {
 		return null;
 	}

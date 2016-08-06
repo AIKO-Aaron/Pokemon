@@ -60,8 +60,6 @@ public class Entity extends Layer {
 		yPos += yamount;
 	}
 
-	public void update(Screen screen) {}
-
 	public void render(Renderer renderer) {
 		renderer.drawSprite(sprite, xPos, yPos);
 	}
@@ -71,7 +69,7 @@ public class Entity extends Layer {
 	}
 
 	public Updatable getUpdatable() {
-		return (Screen s, Layer l) -> update(s);
+		return (Screen s, Layer l) -> update(s, l);
 	}
 
 	public int getLevel() {

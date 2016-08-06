@@ -28,9 +28,10 @@ public class PokemonClient {
 	public int x, y, dir;
 	public Socket socket;
 	public boolean synchrone = false, lvl = false, pos = false;
-	private String textToSend = "";
 	private int waitingForMods = 0;
 	private ArrayList<String> modNames = new ArrayList<String>();
+
+	private ArrayList<String> texts = new ArrayList<String>();
 
 	private boolean receivingPlayers = false;
 
@@ -50,7 +51,7 @@ public class PokemonClient {
 	}
 
 	public void sendText(String text) {
-		textToSend = text;
+		texts.add(text);
 	}
 
 	public void send() {
@@ -63,9 +64,11 @@ public class PokemonClient {
 					Thread.sleep(10);
 					System.out.println("Waiting for socket...");
 				}
-				writer.write(textToSend + "\n");
+				if (texts.size() > 0) {
+					writer.write(texts.get(texts.size() - 1) + "\n");
+					texts.remove(texts.size() - 1);
+				} else writer.write("\n");
 				writer.flush();
-				textToSend = "";
 			} catch (Throwable e) {
 				if (!(e instanceof SocketException)) e.printStackTrace(Pokemon.out);
 			}
@@ -96,13 +99,13 @@ public class PokemonClient {
 					if (!modNames.contains(rec)) {
 						Pokemon.out.err("Stopped loading unnecessary mod: " + rec.replace("=", ", version: "));
 						ModLoader.loadedMods.remove(lm);
-					}
-					else modNames.remove(rec);
+					} else modNames.remove(rec);
 				}
 				if (modNames.size() == 0) synchrone = true;
 				else {
-					Pokemon.out.err("Didn't find required mods: " );
-					for(String t : modNames) Pokemon.out.err("\t" + t.replace("=", ", version: "));
+					Pokemon.out.err("Didn't find required mods: ");
+					for (String t : modNames)
+						Pokemon.out.err("\t" + t.replace("=", ", version: "));
 					Pokemon.pokemon.handler.window.quit();
 				}
 			}
@@ -153,13 +156,14 @@ public class PokemonClient {
 				return;
 			}
 			OtherPlayer op = players.get(i);
+			op.setWalking(op.lx != otpl.getX() || op.ly != otpl.getY());
 			op.setX(otpl.getX()).setY(otpl.getY()).setUUID(otpl.uuid).setDirection(otpl.getDirection());
 		}
 	}
 
 	public void addPlayer(OtherPlayer otpl) {
 		System.out.println("Adding Player: " + otpl.uuid);
-		if (Pokemon.pokemon != null && Pokemon.pokemon.handler != null && Pokemon.pokemon.handler.level != null) Pokemon.pokemon.handler.level.addEntity(otpl);
+		if (Pokemon.pokemon != null && Pokemon.pokemon.handler != null && Pokemon.pokemon.handler.level != null) otpl.add(Pokemon.pokemon.handler.level);// Pokemon.pokemon.handler.level.addEntity(otpl);
 		players.add(otpl);
 	}
 
