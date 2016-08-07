@@ -12,6 +12,8 @@ import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.fight.Fight;
+import ch.aiko.pokemon.graphics.menu.MenuObject;
+import ch.aiko.pokemon.graphics.menu.TextBox;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
 import ch.aiko.util.FileUtil;
@@ -81,11 +83,18 @@ public class Player extends Entity {
 		xPos = x;
 		yPos = y;
 	}
-	
+
+	public boolean isTeamEmpty() {
+		if (team == null) return true;
+		for (TeamPokemon pom : team)
+			if (pom != null) return false;
+		return true;
+	}
+
 	public void save() {
 		ASDataBase base = new ASDataBase("Team");
-		for(TeamPokemon pok : team) {
-			if(pok != null) {
+		for (TeamPokemon pok : team) {
+			if (pok != null) {
 				pok.reload();
 				base.addObject(pok);
 			}
@@ -182,7 +191,7 @@ public class Player extends Entity {
 	}
 
 	public void startBattle(Screen screen, Trainer t) {
-		screen.addLayer(new Fight(screen, this, t));
+		screen.addLayer(new TextBox(t.name + ": " + t.battletext, (MenuObject sender) -> screen.addLayer(new Fight(screen, this, t)), true));
 	}
 
 	public boolean isMoving() {

@@ -183,7 +183,7 @@ public class Level extends LayerContainer {
 		if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
 			if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
 			else closeTopMenu();
-		} else if (popKeyPressed(KeyEvent.VK_R)) loadLevel(path);
+		} else if (popKeyPressed(KeyEvent.VK_R)) Pokemon.pokemon.handler.setLevel(this);
 	}
 
 	public ArrayList<Tile> getTile(int x, int y) {

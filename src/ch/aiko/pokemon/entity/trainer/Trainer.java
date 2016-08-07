@@ -21,9 +21,15 @@ public class Trainer extends Entity {
 	public int spinFunc;
 	public int spinTime;
 	private int spinTimer = 0;
+	private int xdistance;
+	private int ydistance;
+	private boolean walkingToPlayer;
 
 	protected SpriteSheet sprites;
 	protected Sprite[] walkingAnims = new Sprite[4 * 4];
+	protected int anim, curAnim;
+
+	private static final int speed = 3;
 
 	public Trainer() {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
@@ -34,11 +40,8 @@ public class Trainer extends Entity {
 
 	@Override
 	public void render(Renderer renderer) {
-		Level level = (Level) renderer.getScreen().getTopLayer("Level");
-		sprite = walkingAnims[dir * 4];
+		sprite = walkingAnims[dir * 4 + anim];
 		renderer.drawSprite(sprite, xPos, yPos);
-		int xdistance = sight * level.fieldWidth;
-		int ydistance = sight * level.fieldHeight;
 		renderer.drawRect(xPos + (dir == 2 ? -xdistance : dir == 3 ? sprite.getWidth() : 0), yPos + (dir == 1 ? -ydistance : dir == 0 ? sprite.getHeight() : 0), dir == 2 || dir == 3 ? xdistance : sprite.getWidth(), dir == 0 || dir == 1 ? ydistance : sprite.getHeight(), 0xFFFF00FF);
 	}
 
@@ -46,15 +49,51 @@ public class Trainer extends Entity {
 	public void update(Screen s, Layer l) {
 		Level level = (Level) s.getTopLayer("Level");
 		Player holder = (Player) (level).getTopLayer("Player");
+		if (holder == null) return;
+		if (walkingToPlayer) {
+			if ((xPos == holder.getX() && (dir == 2 || dir == 3)) || (yPos == holder.getY() && (dir == 0 || dir == 1))) holder.startBattle(s, this);
+			xPos += dir == 2 ? (Math.abs(holder.getX() - xPos) < speed ? holder.getX() - xPos : -speed) : dir == 3 ? (Math.abs(holder.getX() - xPos) < speed ? holder.getX() - xPos : speed) : holder.getX() - xPos;
+			yPos += dir == 0 ? (Math.abs(holder.getY() - yPos) < speed ? holder.getY() - yPos : speed) : dir == 1 ? (Math.abs(holder.getY() - yPos) < speed ? holder.getY() - yPos : -speed) : holder.getY() - yPos;
+			if (curAnim >= 10) {
+				anim++;
+				anim %= 4;
+				curAnim = 0;
+			}
+			curAnim++;
+			return;
+		}
+
 		if (holder != null) {
 			int x = holder.getX();
 			int y = holder.getY();
 			int w = holder.getWidth();
 			int h = holder.getHeight();
-			int xdistance = sight * level.fieldWidth;
-			int ydistance = sight * level.fieldHeight;
+			xdistance = sight * level.fieldWidth;
+			ydistance = sight * level.fieldHeight;
+			if (dir == 0) {
+				int yOff = 0;
+				while (!level.isSolid(xPos + sprite.getWidth() / 2, yPos + yOff + sprite.getHeight(), 0) && yOff < ydistance)
+					yOff++;
+				ydistance = yOff;
+			} else if (dir == 1) {
+				int yOff = 0;
+				while (!level.isSolid(xPos + sprite.getWidth() / 2, yPos - yOff, 0) && yOff < ydistance)
+					yOff++;
+				ydistance = yOff;
+			} else if (dir == 2) {
+				int xOff = 0;
+				while (!level.isSolid(xPos - xOff, yPos, 0) && xOff < xdistance)
+					xOff++;
+				xdistance = xOff;
+			} else if (dir == 3) {
+				int xOff = 0;
+				while (!level.isSolid(xPos + xOff + sprite.getWidth(), yPos, 0) && xOff < xdistance)
+					xOff++;
+				xdistance = xOff;
+			}
 			if (x + w + (dir == 2 ? xdistance : 0) > xPos && x < xPos + sprite.getWidth() + (dir == 3 ? xdistance : 0) && y + h + (dir == 1 ? ydistance : 0) > yPos && y < yPos + sprite.getHeight() + (dir == 0 ? ydistance : 0)) {
-				holder.startBattle(s, this);
+				holder.isPaused = true;
+				walkingToPlayer = true;
 			}
 		}
 
@@ -73,7 +112,7 @@ public class Trainer extends Entity {
 		} else if (spinFunc == 3) { // Follow player
 			int xv = xPos - holder.getX();
 			int yv = yPos - holder.getY();
-			dir = (Math.abs(xv) < Math.abs(yv)) ? (xv > 0 ? 3 : 2) : (yv > 0 ? 1 : 0);
+			dir = (Math.abs(xv) > Math.abs(yv)) ? (xv > 0 ? 2 : 3) : (yv > 0 ? 1 : 0);
 		}
 	}
 

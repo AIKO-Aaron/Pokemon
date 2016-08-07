@@ -9,7 +9,7 @@ ONLOST "Aw snap! I lost. AGAIN!!!!"
 ONWIN "Yes my first victory! Now I'm going for champ"
 DIR 1
 SIGHT 4
-SPIN 1
+SPIN 3
 SPINTIME 2
 
 TEAMSET INDEX 0 NUMBER 4 NICKNAME "Gargoile" HP 5 MAXHP 10 ATK 10 SPECATK 10 DEF 10 SPECDEF 10 SPEED 10 XP 26
