@@ -4,6 +4,7 @@ import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.LayerContainer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
+import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.graphics.menu.Button;
 import ch.aiko.pokemon.graphics.menu.MenuObject;
 import ch.aiko.pokemon.graphics.menu.TextField;
@@ -14,17 +15,27 @@ public class MainMenu extends LayerContainer {
 
 	public static final int WIDTH = 400;
 	public static final int HEIGHT = 100;
-	
+
+	protected boolean mpopen;
+
 	public MainMenu() {
 		Pokemon.getScreen().setClearColor(0xFF00FF00);
 		Pokemon.getScreen().addLayer(this);
-		addLayer(new Button(0, 0, WIDTH, HEIGHT, "SinglePlayer", (MenuObject sender) -> startSinglePlayer()));
-		addLayer(new Button(0, HEIGHT, WIDTH, HEIGHT, "MultiPlayer", (MenuObject sender) -> openMultiPlayerMenu()));
+		addLayer(new Button(0, HEIGHT * 0, WIDTH, HEIGHT, "SinglePlayer", (MenuObject sender) -> startSinglePlayer()));
+		addLayer(new Button(0, HEIGHT * 1, WIDTH, HEIGHT, "MultiPlayer", (MenuObject sender) -> openMultiPlayerMenu()));
+		//addLayer(new Button(0, HEIGHT * 2, WIDTH, HEIGHT, "Test", (MenuObject sender) -> test()));
 	}
 
+	public void test() {
+		PokemonClient client = new PokemonClient("10.0.0.96", "0000-0000-0000-0000-0000");
+		client.sendBytes(new byte[] { 0x41, 0x61, 0x72, 0x6F, 0x6E, 0x3F });
+	}
+	
 	public void openMultiPlayerMenu() {
-		//removeAllLayers();
-		addLayer(new TextField(WIDTH, HEIGHT, WIDTH, HEIGHT, 25, "IP", (MenuObject sender) -> startMultiPlayer((TextField) sender)));
+		if (mpopen) return;
+		Layer tf = addLayer(new TextField(WIDTH, HEIGHT, WIDTH, HEIGHT, 25, "IP", (MenuObject sender) -> startMultiPlayer((TextField) sender)));
+		addLayer(new Button(WIDTH, HEIGHT * 2, WIDTH, HEIGHT, "Connect", (MenuObject sender) -> startMultiPlayer((TextField) tf)));
+		mpopen = true;
 	}
 
 	public void startMultiPlayer(TextField sender) {
@@ -49,7 +60,7 @@ public class MainMenu extends LayerContainer {
 
 	@Override
 	public void layerUpdate(Screen s, Layer l) {
-		if(popKeyPressed(KeyEvent.VK_ESCAPE)) System.exit(0);
+		if (popKeyPressed(KeyEvent.VK_ESCAPE)) System.exit(0);
 	}
 
 	@Override

@@ -29,11 +29,11 @@ public class GameHandler {
 		};
 		screen.setResetOffset(false);
 		screen.ps = Pokemon.out;
-		
+
 		window = new Window("Pokemon", screen);
 		start();
 	}
-	
+
 	public void init(Level level, Player p) {
 		this.level = level;
 		this.p = p;
@@ -45,7 +45,7 @@ public class GameHandler {
 		if (Pokemon.ONLINE) {
 			saveData();
 			Pokemon.client.sendText("/q/");
-		}
+		} else p.save();
 	}
 
 	public void saveData() {

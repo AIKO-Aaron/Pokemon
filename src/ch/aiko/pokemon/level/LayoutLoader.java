@@ -13,6 +13,7 @@ import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.Teleporter;
+import ch.aiko.pokemon.entity.trainer.TrainerLoader;
 import ch.aiko.util.FileUtil;
 
 public class LayoutLoader {
@@ -159,8 +160,6 @@ public class LayoutLoader {
 						variables.put("TILESIZE", "" + tileSize);
 					}
 				} else {
-
-					// TODO NEW COMMAND --> ENTITY (TELEPORTER)
 					if (c.equalsIgnoreCase("ADD")) {
 						String toAdd = args[0];
 						if (toAdd.equalsIgnoreCase("ENTITY")) {
@@ -185,6 +184,14 @@ public class LayoutLoader {
 									if (args[i].equalsIgnoreCase("PATH")) levelpath = args[++i];
 								}
 								entities.add(new Teleporter(x, y, new Level(levelpath), dx, dy, w, h));
+							} else if (type.equalsIgnoreCase("TRAINER")) {
+								String tpath = "";
+								for (int i = 2; i < args.length; i++) {
+									if (args[i].equalsIgnoreCase("REL")) tpath = (path.contains("/") ? path.substring(0, path.length() - path.split("/")[path.split("/").length - 1].length()) : "/") + args[++i];
+									if (args[i].equalsIgnoreCase("ABS")) tpath = args[++i];
+								}
+								if (!tpath.endsWith(".trainer")) tpath += ".trainer";
+								entities.add(new TrainerLoader(tpath, x, y).getTrainer());
 							}
 						}
 					} else if (c.equalsIgnoreCase("PRINT")) {
@@ -345,13 +352,7 @@ public class LayoutLoader {
 	}
 
 	private boolean isKeyWord(String frT) {
-		boolean b;
-		try {
-			resolve(frT);
-			b = true;
-		} catch (Throwable t) {
-			b = false;
-		}
+		boolean b = false;
 
 		if (!b) b |= frT.equalsIgnoreCase("LOAD");
 		if (!b) b |= frT.equalsIgnoreCase("SPRITE");

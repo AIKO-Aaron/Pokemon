@@ -60,9 +60,13 @@ public class Entity extends Layer {
 		yPos += yamount;
 	}
 
+	@Override
 	public void render(Renderer renderer) {
 		renderer.drawSprite(sprite, xPos, yPos);
 	}
+
+	@Override
+	public void update(Screen s, Layer l) {}
 
 	public Renderable getRenderable() {
 		return (Renderer r) -> render(r);

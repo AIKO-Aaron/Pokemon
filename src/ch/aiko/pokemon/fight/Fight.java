@@ -12,6 +12,8 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.entity.player.Player;
+import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.graphics.menu.Animation;
 import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.pokemons.PokemonType;
@@ -20,7 +22,7 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 
 public class Fight extends LayerContainer {
 
-	public TeamPokemon pok1 = new TeamPokemon(Pokemons.get(1), PokemonType.OWNED, "EnemyPokemonNickName1", 1, 2, 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok1;
 	public TeamPokemon pok2 = new TeamPokemon(Pokemons.get(1), PokemonType.ENEMY, "MyPokemonNickName2", 2, 2, 0, 0, 0, 0, 0, 1);
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
@@ -30,25 +32,19 @@ public class Fight extends LayerContainer {
 	public Font f = new Font("Arial", 0, 25);
 	public int color, color2;
 	public PixelRenderer renderer;
-
-	public Fight(Screen s) {
-		super();
+	
+	public Fight(Screen s, Player p, Trainer t) {
 		this.s = s;
 		background = new Sprite("/ch/aiko/pokemon/textures/fight_background/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
 		Sprite ground = new Sprite("/ch/aiko/pokemon/textures/fight_ground/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
-
 		background.getImage().getGraphics().drawImage(ground.getImage(), 0, 0, null);
-		int[] pixels = background.getPixels();
-
 		renderer = new PixelRenderer(background, background.getWidth(), background.getHeight());
 
+		pok1 = p.team[0];
+		pok2 = t.team[0];
+		
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok1).setUpdatable(pok1).toLayer());
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok2).setUpdatable(pok2).toLayer());
-
-		for (int i = 0; i < 50 * 50; i++) {
-			pixels[i % 50 + (i / 50) * background.getWidth()] = 0xFFFF00FF;
-		}
-		background.getImage().getGraphics().drawString(pok1.getNickName(), 0, 50);
 	}
 
 	public int getStringWidth(String s) {
@@ -92,7 +88,7 @@ public class Fight extends LayerContainer {
 	public void layerRender(Renderer r) {
 		renderer.fillRect(0, 0, 50, 50, color);
 		renderer.fillRect(50, 0, 50, 50, color2);
-		renderer.drawString("Test", 50, 50, 50, 0xFF000000);
+		renderer.drawString(pok2.getNickName(), 50, 50, 50, 0xFF000000);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 
 import ch.aiko.engine.graphics.Layer;
+import ch.aiko.engine.graphics.LayerContainer;
 import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
@@ -55,7 +56,21 @@ public abstract class MenuObject extends Layer {
 
 	@Override
 	public String getName() {
-		return null;
+		return "MenuObject";
+	}
+
+	public void closeMe() {
+		if (parent != null) {
+			try {
+				((LayerContainer) parent).removeLayer(this);
+			} catch (Throwable t) {
+				System.err.println("Cannot convert " + parent + " to a layercontainer. Cannot close " + this);
+			}
+		} else if (needsInput) {
+			input.screen.removeLayer(this);
+		} else {
+			System.err.println("Couldn't close " + this + " no parent found");
+		}
 	}
 
 }

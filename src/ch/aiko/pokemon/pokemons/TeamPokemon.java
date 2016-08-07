@@ -68,7 +68,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		nickname = c.getString("NCN").toString();
 
 		level = (int) Math.pow(xp, 1F / 3F);
-		//animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
+		// animation = new GIFAnimation(type.getPathToAnimation(holder), 0, 0, holder == PokemonType.OWNED ? OWN_MOD * SCALE : SCALE).replaceColor(0xFFFFFFFF, 0);
 		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
 
@@ -87,12 +87,12 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	}
 
 	public void gainXP(int amount) {
-		if(xp >= 1000000) return;
+		if (xp >= 1000000) return;
 		xp += amount;
-		if(xp >= 1000000) xp = 1000000;
+		if (xp >= 1000000) xp = 1000000;
 		int ol = level;
 		level = (int) Math.pow(xp, 1F / 3F);
-		if(level > ol) System.out.println("Level up to: " + level);
+		if (level > ol) System.out.println("Level up to: " + level);
 		if (type.canEvolve(level)) evolve();
 	}
 
@@ -153,7 +153,12 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		return maxHP;
 	}
 
-	public void setHP(int i) {healthPoints = i;}
-	public void addHP(int i) {healthPoints += i;}
+	public void setHP(int i) {
+		healthPoints = i;
+	}
+
+	public void addHP(int i) {
+		healthPoints += i;
+	}
 
 }

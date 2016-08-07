@@ -1,5 +1,6 @@
 package ch.aiko.pokemon;
 
+import ch.aiko.as.ASDataBase;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.client.PokemonClient;
@@ -7,7 +8,9 @@ import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
+import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
+import ch.aiko.pokemon.pokemons.TeamPokemon;
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.util.FileUtil;
 import ch.aiko.util.Log;
@@ -57,12 +60,17 @@ public class Pokemon {
 
 	public void load(String ip) {
 		out.println("Core engine started loading");
+		Pokemons.init();
 		if (ip == null) {
 			ONLINE = false;
 
-			Pokemons.init();
-
 			player = new Player(32 * 3, 32 * 2);
+			ASDataBase base = ASDataBase.createFromFile(FileUtil.getRunningJar().getParent() + "/player.bin");
+			if (base != null) {
+				
+			} else {
+				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Pokemon", 5, 10, 10, 10, 10, 10, 10, 10);
+			}
 
 			Level level = new Level("/ch/aiko/pokemon/level/test.layout");
 

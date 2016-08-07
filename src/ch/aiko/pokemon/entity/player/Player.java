@@ -2,6 +2,7 @@ package ch.aiko.pokemon.entity.player;
 
 import java.awt.event.KeyEvent;
 
+import ch.aiko.as.ASDataBase;
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
@@ -9,8 +10,11 @@ import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Entity;
+import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
+import ch.aiko.pokemon.pokemons.TeamPokemon;
+import ch.aiko.util.FileUtil;
 
 public class Player extends Entity {
 
@@ -24,6 +28,7 @@ public class Player extends Entity {
 	protected int anim = 0, curAnim = 0, send = 0;
 	protected boolean walking = false;
 	public boolean isPaused = false;
+	public TeamPokemon[] team = new TeamPokemon[6];
 
 	public static final boolean CAN_WALK_SIDEWAYS = true;
 
@@ -66,7 +71,7 @@ public class Player extends Entity {
 		yPos = y - yoff;
 	}
 
-	public Player() {}
+	protected Player() {}
 
 	public Player(int x, int y) {
 		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
@@ -75,6 +80,17 @@ public class Player extends Entity {
 		}
 		xPos = x;
 		yPos = y;
+	}
+	
+	public void save() {
+		ASDataBase base = new ASDataBase("Team");
+		for(TeamPokemon pok : team) {
+			if(pok != null) {
+				pok.reload();
+				base.addObject(pok);
+			}
+		}
+		base.saveToFile(FileUtil.getRunningJar() + "/player.bin");
 	}
 
 	@Override
@@ -109,7 +125,6 @@ public class Player extends Entity {
 		Level level = (Level) getParent();
 
 		if (input.popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
-		if (input.popKeyPressed(KeyEvent.VK_F)) startBattle(screen);
 
 		if (input.isKeyPressed(KeyEvent.VK_LEFT)) xx--;
 		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
@@ -166,8 +181,8 @@ public class Player extends Entity {
 		}
 	}
 
-	private void startBattle(Screen screen) {
-		screen.addLayer(new Fight(screen));
+	public void startBattle(Screen screen, Trainer t) {
+		screen.addLayer(new Fight(screen, this, t));
 	}
 
 	public boolean isMoving() {

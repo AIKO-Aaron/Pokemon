@@ -75,6 +75,16 @@ public class PokemonClient {
 		}
 	}
 
+	public void sendBytes(byte[] bytes) {
+		if (socket == null) return;
+		try {
+			socket.getOutputStream().write(bytes, 0, bytes.length);
+			socket.getOutputStream().write(0xA);
+		} catch (Throwable e) {
+			if (!(e instanceof SocketException)) e.printStackTrace(Pokemon.out);
+		}
+	}
+
 	private void receive() {
 		running = true;
 		try {

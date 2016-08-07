@@ -1,0 +1,15 @@
+//Future idea: load trainer from such a .trainer file (called from level.layout)
+
+NAME "Oscar"
+BATTLETEXT "Hey there! I want to battle! But because the text was too short, I needed to say more, to test line wrapping... I'm nothing but a debugging tool. What am I? Where am I? Is this reality?"
+// does he appear in battle after his last pokemon got into red hp
+INBATTLE false
+//INBATTLETEXT "notused"
+ONLOST "Aw snap! I lost. AGAIN!!!!"
+ONWIN "Yes my first victory! Now I'm going for champ"
+DIR 1
+SIGHT 4
+SPIN 1
+SPINTIME 2
+
+TEAMSET INDEX 0 NUMBER 4 NICKNAME "Gargoile" HP 5 MAXHP 10 ATK 10 SPECATK 10 DEF 10 SPECDEF 10 SPEED 10 XP 26
