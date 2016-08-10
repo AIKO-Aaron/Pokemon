@@ -7,6 +7,7 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.entity.Direction;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.level.Level;
@@ -51,9 +52,14 @@ public class Trainer extends Entity {
 		Player holder = (Player) (level).getTopLayer("Player");
 		if (holder == null) return;
 		if (walkingToPlayer) {
-			if ((xPos == holder.getX() && (dir == 2 || dir == 3)) || (yPos == holder.getY() && (dir == 0 || dir == 1))) holder.startBattle(s, this);
-			xPos += dir == 2 ? (Math.abs(holder.getX() - xPos) < speed ? holder.getX() - xPos : -speed) : dir == 3 ? (Math.abs(holder.getX() - xPos) < speed ? holder.getX() - xPos : speed) : holder.getX() - xPos;
-			yPos += dir == 0 ? (Math.abs(holder.getY() - yPos) < speed ? holder.getY() - yPos : speed) : dir == 1 ? (Math.abs(holder.getY() - yPos) < speed ? holder.getY() - yPos : -speed) : holder.getY() - yPos;
+			int x = holder.getX() - (dir == 3 ? holder.getWidth() : 0);
+			int y = holder.getY() - (dir == 0 ? holder.getHeight() : 0);
+			if ((xPos <= x && dir == 2) || (xPos >= x && dir == 3) || (yPos >= y && dir == 0) || (yPos <= y && dir == 1)) {
+				holder.setDirection(Direction.getDirection(dir).getOpposite());
+				holder.startBattle(s, this);
+			}
+			xPos += dir == 2 ? (Math.abs(x - xPos) < speed ? x - xPos : -speed) : dir == 3 ? (Math.abs(x - xPos) < speed ? x - xPos : speed) : x - xPos;
+			yPos += dir == 0 ? (Math.abs(y - yPos) < speed ? y - yPos : speed) : dir == 1 ? (Math.abs(y - yPos) < speed ? y - yPos : -speed) : y - yPos;
 			if (curAnim >= 10) {
 				anim++;
 				anim %= 4;

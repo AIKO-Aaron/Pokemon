@@ -9,6 +9,7 @@ import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.entity.Direction;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.fight.Fight;
@@ -30,7 +31,7 @@ public class Player extends Entity {
 	protected int anim = 0, curAnim = 0, send = 0;
 	protected boolean walking = false;
 	public boolean isPaused = false;
-	public TeamPokemon[] team = new TeamPokemon[6];
+	public TeamPokemon[] team = new TeamPokemon[Pokemon.TeamSize];
 
 	public static final boolean CAN_WALK_SIDEWAYS = true;
 
@@ -92,14 +93,19 @@ public class Player extends Entity {
 	}
 
 	public void save() {
-		ASDataBase base = new ASDataBase("Team");
-		for (TeamPokemon pok : team) {
-			if (pok != null) {
-				pok.reload();
-				base.addObject(pok);
+		System.out.println("Saving");
+		try {
+			ASDataBase base = new ASDataBase("Team");
+			for (TeamPokemon pok : team) {
+				if (pok != null) {
+					pok.reload();
+					base.addObject(pok);
+				}
 			}
+			base.saveToFile(FileUtil.getRunningJar().getParent() + "/player.bin");
+		} catch (Throwable t) {
+			t.printStackTrace(Pokemon.out);
 		}
-		base.saveToFile(FileUtil.getRunningJar() + "/player.bin");
 	}
 
 	@Override
@@ -204,6 +210,10 @@ public class Player extends Entity {
 
 	public void setDirection(int dir2) {
 		dir = dir2;
+	}
+
+	public void setDirection(Direction dir2) {
+		dir = dir2.getDir();
 	}
 
 	public int getDirection() {

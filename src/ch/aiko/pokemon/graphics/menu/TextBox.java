@@ -70,7 +70,7 @@ public class TextBox extends MenuObject {
 	@Override
 	public void update(Screen s, Layer l) {
 		if (popKeyPressed(KeyEvent.VK_SPACE)) {
-			if (index + 1 >= lines.size()) {
+			if (index + 2 >= lines.size()) {
 				closeMe();
 				if(action != null) action.actionPerformed(this);
 			}

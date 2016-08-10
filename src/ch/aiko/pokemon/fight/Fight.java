@@ -12,6 +12,7 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.graphics.menu.Animation;
@@ -32,7 +33,7 @@ public class Fight extends LayerContainer {
 	public Font f = new Font("Arial", 0, 25);
 	public int color, color2;
 	public PixelRenderer renderer;
-	
+
 	public Fight(Screen s, Player p, Trainer t) {
 		this.s = s;
 		background = new Sprite("/ch/aiko/pokemon/textures/fight_background/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
@@ -42,7 +43,7 @@ public class Fight extends LayerContainer {
 
 		pok1 = p.team[0];
 		pok2 = t.team[0];
-		
+
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok1).setUpdatable(pok1).toLayer());
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok2).setUpdatable(pok2).toLayer());
 	}
@@ -93,24 +94,26 @@ public class Fight extends LayerContainer {
 
 	@Override
 	public void layerUpdate(Screen s, Layer l) {
-		if (popKeyPressed(KeyEvent.VK_N)) {
-			pok1.advance();
-		} else if (popKeyPressed(KeyEvent.VK_M)) {
-			pok1.mega();
-		} else if (popKeyPressed(KeyEvent.VK_B)) {
-			pok1.gainXP(pok1.getXPToLevel());
-		} else if (popKeyPressed(KeyEvent.VK_V)) {
-			pok1.addHP(+1);
-		} else if (popKeyPressed(KeyEvent.VK_C)) {
-			pok1.addHP(-1);
-		}
+		if (Pokemon.DEBUG) {
+			if (popKeyPressed(KeyEvent.VK_N)) {
+				pok1.advance();
+			} else if (popKeyPressed(KeyEvent.VK_M)) {
+				pok1.mega();
+			} else if (popKeyPressed(KeyEvent.VK_B)) {
+				pok1.gainXP(pok1.getXPToLevel());
+			} else if (popKeyPressed(KeyEvent.VK_V)) {
+				pok1.addHP(+1);
+			} else if (popKeyPressed(KeyEvent.VK_C)) {
+				pok1.addHP(-1);
+			}
 
-		if (popKeyPressed(KeyEvent.VK_U)) {
-			pok2.advance();
-		} else if (popKeyPressed(KeyEvent.VK_I)) {
-			pok2.mega();
-		} else if (popKeyPressed(KeyEvent.VK_Z)) {
-			pok2.gainXP(pok2.getXPToLevel());
+			if (popKeyPressed(KeyEvent.VK_U)) {
+				pok2.advance();
+			} else if (popKeyPressed(KeyEvent.VK_I)) {
+				pok2.mega();
+			} else if (popKeyPressed(KeyEvent.VK_Z)) {
+				pok2.gainXP(pok2.getXPToLevel());
+			}
 		}
 
 		/**

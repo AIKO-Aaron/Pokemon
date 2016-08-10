@@ -87,9 +87,10 @@ public class PokeUtil {
 	}
 
 	public static PokemonType getType(int readInt) {
-		if (types.size() > readInt && types.get(readInt).in == readInt) return types.get(readInt);
-		for (PokemonType p : types) {
-			if (p.in == readInt) return p;
+		switch(readInt) {
+			case 0: return PokemonType.ENEMY;
+			case 1: return PokemonType.WILD;
+			case 2: return PokemonType.OWNED;
 		}
 		return PokemonType.ENEMY;
 	}

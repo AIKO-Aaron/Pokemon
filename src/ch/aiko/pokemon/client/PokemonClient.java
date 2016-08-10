@@ -2,6 +2,7 @@ package ch.aiko.pokemon.client;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -10,10 +11,12 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import ch.aiko.as.ASDataBase;
 import ch.aiko.modloader.LoadedMod;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
+import ch.aiko.pokemon.pokemons.TeamPokemon;
 
 public class PokemonClient {
 
@@ -26,12 +29,14 @@ public class PokemonClient {
 	public String uuid;
 	public String pathToLevel;
 	public int x, y, dir;
+	public TeamPokemon[] team = new TeamPokemon[Pokemon.TeamSize];
 	public Socket socket;
 	public boolean synchrone = false, lvl = false, pos = false;
 	private int waitingForMods = 0;
 	private ArrayList<String> modNames = new ArrayList<String>();
 
 	private ArrayList<String> texts = new ArrayList<String>();
+	private int dataLength = 0;
 
 	private boolean receivingPlayers = false;
 
@@ -44,8 +49,8 @@ public class PokemonClient {
 		} catch (Throwable e) {
 			e.printStackTrace(Pokemon.out);
 		}
-		receiver.start();
 		sender.start();
+		receiver.start();
 		if (uuid != null && !uuid.equalsIgnoreCase(connectTo) && uuid.contains("-")) sendText("/c/" + uuid);
 		else sendText("/ruuid/");
 	}
@@ -61,12 +66,12 @@ public class PokemonClient {
 				if (socket == null) continue;
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 				while (!socket.isConnected()) {
-					Thread.sleep(10);
+					Thread.sleep(100);
 					System.out.println("Waiting for socket...");
 				}
 				if (texts.size() > 0) {
-					writer.write(texts.get(texts.size() - 1) + "\n");
-					texts.remove(texts.size() - 1);
+					writer.write(texts.get(0) + "\n");
+					texts.remove(0);
 				} else writer.write("\n");
 				writer.flush();
 			} catch (Throwable e) {
@@ -90,6 +95,22 @@ public class PokemonClient {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (running) {
+				if (dataLength > 0) {
+					sendText("/rec/");
+					byte[] buffer = new byte[dataLength];
+					new DataInputStream(socket.getInputStream()).readFully(buffer, 0, buffer.length);
+					ASDataBase pb = ASDataBase.createFromBytes(buffer);
+					if (pb != null) {
+						ServerPlayer p = new ServerPlayer(pb.getObject("Player"));
+						team = p.team;
+						x = p.x;
+						y = p.y;
+						dir = p.dir;
+						pathToLevel = p.currentLevel;
+						dataLength = 0;
+						lvl = pos = true;
+					}
+				}
 				String received = reader.readLine();
 				if (received == null) continue;
 				perform(received.trim(), socket);
@@ -100,6 +121,9 @@ public class PokemonClient {
 	}
 
 	private void perform(String received, Socket s) {
+		/**
+		 * if (dataLength > 0) { dataLength -= received.getBytes().length; System.out.println(received + " received, " + dataLength + " bytes left"); data += received; if (dataLength <= 0 || received.equalsIgnoreCase("/EOPD/")) { for (byte b : received.getBytes()) System.out.print(Integer.toHexString(b & 0xFF) + ", "); System.out.println(); System.out.println(dataLength); ASDataBase pb = ASDataBase.createFromBytes(data.getBytes()); if (pb != null) { ServerPlayer p = new ServerPlayer(pb.getObject("Player")); System.out.println(p.currentLevel); lvl = pos = true; } } return; }
+		 */
 		if (waitingForMods > 0) {
 			modNames.add(received);
 			waitingForMods--;
@@ -121,22 +145,18 @@ public class PokemonClient {
 			}
 			return; // If mod name is /padd/X/Y/0/0000-0000-0000-0000-0000, we would add a player. Not what we want really
 		}
+
 		if (received.equals("/pend/")) receivingPlayers = false;
 		else if (received.startsWith("/guuid/")) {
 			uuid = received.substring(7).trim();
 			Pokemon.serverUUIDs.addValue(address, uuid);
 			Pokemon.serverUUIDs.saveFile();
-		} else if (received.startsWith("/lvl/")) {
-			pathToLevel = received.substring(5);
-			lvl = true;
-		} else if (received.startsWith("/mods/")) {
+		} /**
+			 * else if (received.startsWith("/lvl/")) { pathToLevel = received.substring(5); lvl = true; }
+			 */
+		else if (received.startsWith("/mods/")) {
 			waitingForMods = Integer.parseInt(received.substring(6));
 			if (waitingForMods == 0) synchrone = true;
-		} else if (received.startsWith("/pos/")) {
-			x = Integer.parseInt(received.substring(5).split("/")[0]);
-			y = Integer.parseInt(received.substring(5).split("/")[1]);
-			dir = Integer.parseInt(received.substring(5).split("/")[2]);
-			pos = true;
 		} else if (received.startsWith("/padd/") || receivingPlayers) {
 			OtherPlayer otpl = new OtherPlayer(received.startsWith("/padd/") ? received.substring(6) : received);
 			addPlayer(otpl);
@@ -168,6 +188,8 @@ public class PokemonClient {
 			OtherPlayer op = players.get(i);
 			op.setWalking(op.lx != otpl.getX() || op.ly != otpl.getY());
 			op.setX(otpl.getX()).setY(otpl.getY()).setUUID(otpl.uuid).setDirection(otpl.getDirection());
+		} else if (received.startsWith("/SOPD/")) {
+			dataLength = Integer.parseInt(received.substring(6));
 		}
 	}
 

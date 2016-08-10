@@ -1,6 +1,7 @@
 package ch.aiko.pokemon;
 
 import ch.aiko.as.ASDataBase;
+import ch.aiko.as.ASObject;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.client.PokemonClient;
@@ -20,13 +21,15 @@ import javax.swing.UIManager;
 
 public class Pokemon {
 
-	public static boolean PRELOAD = false;
+	public static final Log out = new Log(Pokemon.class);
 
+	public static boolean PRELOAD = false;
 	public static boolean ONLINE;
 	public static Pokemon pokemon;
 	public static boolean DEBUG = false;
 	public static PropertyUtil serverUUIDs = new PropertyUtil(FileUtil.LoadFile(FileUtil.getRunningJar().getParent() + "/uuids.properties"));
-	public static final Log out = new Log(Pokemon.class);
+	public static int TeamSize = 6;
+	public GameHandler handler;
 
 	/**
 	 * The only player you'll need
@@ -38,7 +41,6 @@ public class Pokemon {
 	 */
 	public static PokemonClient client;
 
-	public GameHandler handler;
 
 	public Pokemon() {
 		pokemon = this;
@@ -67,8 +69,13 @@ public class Pokemon {
 			player = new Player(32 * 3, 32 * 2);
 			ASDataBase base = ASDataBase.createFromFile(FileUtil.getRunningJar().getParent() + "/player.bin");
 			if (base != null) {
-				
+				int index = 0;
+				for(int i = 0; i < base.objectCount; i++) {
+					ASObject obj = base.objects.get(i);
+					if(obj != null) player.team[index++] = new TeamPokemon(obj);
+				}
 			} else {
+				//Give an Charizard if no pokemon there
 				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Pokemon", 5, 10, 10, 10, 10, 10, 10, 10);
 			}
 
@@ -88,6 +95,7 @@ public class Pokemon {
 		client.waitFor();
 
 		player = new Player(client.x, client.y);
+		player.team = client.team;
 		player.setDirection(client.dir);
 
 		Level level = new Level(client.pathToLevel);
