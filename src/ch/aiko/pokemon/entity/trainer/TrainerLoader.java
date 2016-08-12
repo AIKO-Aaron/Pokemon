@@ -1,5 +1,9 @@
 package ch.aiko.pokemon.entity.trainer;
 
+import java.util.ArrayList;
+
+import ch.aiko.pokemon.attacks.Attack;
+import ch.aiko.pokemon.attacks.AttackUtil;
 import ch.aiko.pokemon.pokemons.PokeUtil;
 import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
@@ -96,6 +100,7 @@ public class TrainerLoader extends BasicLoader {
 			int index = 0;
 			int dexNumber = 0, hp = 0, maxhp = 0, atk = 0, satk = 0, def = 0, sdef = 0, speed = 0, xp = 0;
 			String nickname = null;
+			ArrayList<Attack> atks = new ArrayList<Attack>();
 			for (int i = 0; i < args.length; i++) {
 				String arg = args[i];
 				if (arg.equalsIgnoreCase("INDEX")) index = Integer.parseInt(args[++i]);
@@ -109,10 +114,11 @@ public class TrainerLoader extends BasicLoader {
 				if (arg.equalsIgnoreCase("SPEED")) speed = Integer.parseInt(args[++i]);
 				if (arg.equalsIgnoreCase("XP")) xp = Integer.parseInt(args[++i]);
 				if (arg.equalsIgnoreCase("NICKNAME")) nickname = args[++i];
+				if (arg.equalsIgnoreCase("MOVE")) atks.add(AttackUtil.getAttack(args[++i]));
 			}
 			if (index < 0 || index >= 6) throwError(line, "Out of bounds! Index must be between 0 and 5");
 			System.out.println(PokeUtil.get(dexNumber).getName() + "::" + dexNumber);
-			loading.team[index] = new TeamPokemon(PokeUtil.get(dexNumber), PokemonType.ENEMY, nickname == null ? PokeUtil.get(dexNumber).getName() : nickname, hp, maxhp, atk, satk, def, sdef, speed, xp);
+			loading.team[index] = new TeamPokemon(PokeUtil.get(dexNumber), PokemonType.ENEMY, nickname == null ? PokeUtil.get(dexNumber).getName() : nickname, atks.toArray(new Attack[atks.size()]), hp, maxhp, atk, satk, def, sdef, speed, xp);
 		}
 
 		// TODO team-loading

@@ -3,6 +3,7 @@ package ch.aiko.pokemon.fight;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 import java.util.Stack;
 
 import ch.aiko.engine.graphics.Layer;
@@ -13,6 +14,7 @@ import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.graphics.menu.Animation;
@@ -24,7 +26,7 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 public class Fight extends LayerContainer {
 
 	public TeamPokemon pok1;
-	public TeamPokemon pok2 = new TeamPokemon(Pokemons.get(1), PokemonType.ENEMY, "MyPokemonNickName2", 2, 2, 0, 0, 0, 0, 0, 1);
+	public TeamPokemon pok2 = new TeamPokemon(Pokemons.get(1), PokemonType.ENEMY, "MyPokemonNickName2", new Attack[] {}, 2, 2, 0, 0, 0, 0, 0, 1);
 
 	public Stack<Layer> openMenus = new Stack<Layer>();
 	public Sprite background;
@@ -115,6 +117,8 @@ public class Fight extends LayerContainer {
 				pok2.gainXP(pok2.getXPToLevel());
 			}
 		}
+
+		color2 = new Random().nextInt(0xFFFFFF) | 0xFF000000;
 
 		/**
 		 * int col1 = 0x00FF00; // green int col2 = 0xFFFF00; // yellow int col3 = 0xFF0000; // red

@@ -228,4 +228,8 @@ public class PokemonClient {
 			}
 		}
 	}
+
+	public void ifNotSet(String string) {
+		if(texts.size() <= 0) texts.add(string);
+	}
 }

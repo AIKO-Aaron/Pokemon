@@ -68,4 +68,8 @@ public class OtherPlayer extends Player {
 	public void setWalking(boolean b) {
 		walking = b;
 	}
+	
+	public String getName() {
+		return "OtherPlayer";
+	}
 }

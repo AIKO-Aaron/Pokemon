@@ -4,6 +4,7 @@ import ch.aiko.as.ASDataBase;
 import ch.aiko.as.ASObject;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
+import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.language.Language;
@@ -46,6 +47,7 @@ public class Pokemon {
 		pokemon = this;
 		Settings.load();
 		Language.setup();
+		Attack.init();
 		handler = new GameHandler();
 	}
 
@@ -54,7 +56,7 @@ public class Pokemon {
 		boolean isDir = FileUtil.getRunningJar().isDirectory();
 
 		out.println("Starting Modloader...");
-		ModLoader.loadMods(out, (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getAbsolutePath()) + "/mods/", () -> load(ip));
+		ModLoader.loadMods(out, (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getParent()) + "/mods/", () -> load(ip));
 		out.println("Done loading mods. Starting threads...");
 
 		if (PRELOAD) PokeUtil.loadEmAll();
@@ -76,7 +78,7 @@ public class Pokemon {
 				}
 			} else {
 				//Give an Charizard if no pokemon there
-				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Pokemon", 5, 10, 10, 10, 10, 10, 10, 10);
+				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Pokemon", new Attack[4], 5, 10, 10, 10, 10, 10, 10, 10);
 			}
 
 			Level level = new Level("/ch/aiko/pokemon/level/test.layout");

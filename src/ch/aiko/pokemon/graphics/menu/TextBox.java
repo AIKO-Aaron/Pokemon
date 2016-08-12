@@ -52,7 +52,7 @@ public class TextBox extends MenuObject {
 		y = s.getFrameHeight() - h - s.getRenderer().getYOffset();
 		lines = new ArrayList<String>();
 		int maxWidth = s.getFrameWidth() - 20;
-		for (String __lines : __text.split("\n")) {
+		for (String __lines : __text.split("\\n")) {
 			String current = null;
 			for (String __word : __lines.split(" ")) {
 				if (getStringWidth(s, new Font(Settings.font, 0, h / 4), current == null ? __word : current + " " + __word) < maxWidth) {

@@ -87,10 +87,13 @@ public class PokeUtil {
 	}
 
 	public static PokemonType getType(int readInt) {
-		switch(readInt) {
-			case 0: return PokemonType.ENEMY;
-			case 1: return PokemonType.WILD;
-			case 2: return PokemonType.OWNED;
+		switch (readInt) {
+			case 0:
+				return PokemonType.ENEMY;
+			case 1:
+				return PokemonType.WILD;
+			case 2:
+				return PokemonType.OWNED;
 		}
 		return PokemonType.ENEMY;
 	}

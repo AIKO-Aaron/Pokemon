@@ -3,8 +3,10 @@ package ch.aiko.modloader;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
@@ -12,6 +14,8 @@ import ch.aiko.pokemon.pokemons.Pokemons;
 
 public class ModUtils {
 
+	public static final boolean isServer = false;
+	
 	public static InputStream getResourceAsStream(String path) {
 		for (LoadedMod mod : ModLoader.loadedMods) {
 			InputStream inStream = mod.loader.getResourceAsStream(path);
@@ -33,27 +37,42 @@ public class ModUtils {
 		}
 		return ret;
 	}
-	
+
 	public static void addTranslations(String lang, String pathToFile) {
 		Language.appendTranslations(lang, readFile(pathToFile));
 	}
-	
+
 	public static Level getCurrentLevel() {
 		return Pokemon.pokemon.handler.level;
 	}
-	
-	public static void createNewPokemon(String name, int num) {
-		new Pokemons(name, num);
+
+	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num) {
+		new Pokemons(name, moveSet, num);
 	}
-	
-	public static void createNewPokemon(String name, int num, int lvlForEvo, int evolvesTo) {
-		new Pokemons(name, num, lvlForEvo, evolvesTo);
+
+	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num, int lvlForEvo, int evolvesTo) {
+		new Pokemons(name, moveSet, num, lvlForEvo, evolvesTo);
 	}
-	
+
+	public static HashMap<Integer, Attack> createMoveSet(Attack... attacks) {
+		HashMap<Integer, Attack> ms = new HashMap<Integer, Attack>();
+		for (int i = 0; i < attacks.length; i++) {
+			Attack a = attacks[i];
+			if (a != null) ms.put(i, a);
+		}
+		return ms;
+	}
+
 	public static void createMegaEvolution(String name, int origPokemon) {
 		Pokemons orig = PokeUtil.get(origPokemon);
 		Pokemons mega = new Pokemons(name, orig.getMegaEvolutions().size() + 1, origPokemon);
 		orig.addMegaEvolution(mega);
+	}
+
+	public static void executeOnServerOnly(Runnable r) {}
+
+	public static void executeOnClientOnly(Runnable r) {
+		r.run();
 	}
 
 }

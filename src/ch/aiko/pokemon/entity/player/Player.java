@@ -188,11 +188,13 @@ public class Player extends Entity {
 		}
 
 		send++;
-		send %= 3;
+		send %= 30;
 
 		if (Pokemon.client != null && walking) {
 			Pokemon.client.sendText("/spos/" + xPos + "/" + yPos + "/" + dir);
 			Pokemon.client.sendText("/slvl/" + level.path);
+		} else if (Pokemon.client != null && send == 0) {
+			// Pokemon.client.ifNotSet("/spos/" + xPos + "/" + yPos + "/" + dir);
 		}
 	}
 

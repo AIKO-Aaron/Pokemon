@@ -15,7 +15,7 @@ public class Button extends MenuObject {
 	protected int layer;
 	protected int x, y, w, h;
 	protected String text;
-	protected boolean selected = false;
+	protected boolean selected = false, nu = true;
 	protected MenuObjectAction r = (MenuObject b) -> {};
 	protected int lastX, lastY;
 
@@ -110,6 +110,7 @@ public class Button extends MenuObject {
 
 	@Override
 	public void update(Screen screen, Layer l) {
+		if (!nu) return;
 		int xx = getMouseXInFrame(screen);
 		int yy = getMouseYInFrame(screen);
 		if (xx > x && xx < x + w && yy > y && yy < y + h) {
@@ -140,6 +141,10 @@ public class Button extends MenuObject {
 	public Layer setLayer(int layer) {
 		this.layer = layer;
 		return this;
+	}
+
+	public void setNeedsUpdates(boolean b) {
+		nu = b;
 	}
 
 }

@@ -65,6 +65,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 	}
 
 	public void addButton(Button b, int layer, int index) {
+		b.setNeedsUpdates(false);
 		while (buttons.size() <= index) {
 			buttons.add(null);
 		}
@@ -121,11 +122,11 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 			if (popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index)).buttonPressed();
 
-			if (popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
-			if (popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
-
 			for (int i = 0; i < buttons.size(); i++)
 				if (i != mouseSel && ((Button) buttons.get(i)).isInside(mx, my)) mouseSel = index = i;
+			
+			if (popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
+			if (popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
 
 			for (int i = 0; i < buttons.size(); i++)
 				((Button) buttons.get(i)).setSelected(i == index);
