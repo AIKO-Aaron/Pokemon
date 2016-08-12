@@ -216,9 +216,10 @@ public class Level extends LayerContainer {
 		return "Level";
 	}
 
-	public void openMenu(Menu menu) {
+	public Menu openMenu(Menu menu) {
 		menu.onOpen();
 		openMenus.add(addLayer(menu));
+		return menu;
 	}
 
 	public void closeTopMenu() {

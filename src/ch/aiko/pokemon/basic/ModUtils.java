@@ -1,10 +1,13 @@
-package ch.aiko.modloader;
+package ch.aiko.pokemon.basic;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import ch.aiko.modloader.GameEvent;
+import ch.aiko.modloader.LoadedMod;
+import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.language.Language;
@@ -73,6 +76,10 @@ public class ModUtils {
 
 	public static void executeOnClientOnly(Runnable r) {
 		r.run();
+	}
+	
+	public static void eventPerformed(GameEvent evt) {
+		ModLoader.performEvent(evt);
 	}
 
 }

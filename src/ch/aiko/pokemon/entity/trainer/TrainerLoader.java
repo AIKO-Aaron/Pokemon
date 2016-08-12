@@ -117,7 +117,6 @@ public class TrainerLoader extends BasicLoader {
 				if (arg.equalsIgnoreCase("MOVE")) atks.add(AttackUtil.getAttack(args[++i]));
 			}
 			if (index < 0 || index >= 6) throwError(line, "Out of bounds! Index must be between 0 and 5");
-			System.out.println(PokeUtil.get(dexNumber).getName() + "::" + dexNumber);
 			loading.team[index] = new TeamPokemon(PokeUtil.get(dexNumber), PokemonType.ENEMY, nickname == null ? PokeUtil.get(dexNumber).getName() : nickname, atks.toArray(new Attack[atks.size()]), hp, maxhp, atk, satk, def, sdef, speed, xp);
 		}
 

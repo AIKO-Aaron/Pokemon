@@ -1,9 +1,10 @@
-package ch.aiko.pokemon;
+package ch.aiko.pokemon.basic;
 
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.LayerContainer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.graphics.menu.Button;
 import ch.aiko.pokemon.graphics.menu.MenuObject;
@@ -39,7 +40,6 @@ public class MainMenu extends LayerContainer {
 	}
 
 	public void startMultiPlayer(TextField sender) {
-		System.out.println(sender.getText());
 		String ip = sender.getText();
 		Pokemon.getScreen().removeAllLayers();
 		Pokemon.getScreen().setClearColor(0xFF000000);
@@ -47,7 +47,6 @@ public class MainMenu extends LayerContainer {
 	}
 
 	public void startSinglePlayer() {
-		System.out.println("SinglePlayer");
 		Pokemon.getScreen().removeAllLayers();
 		Pokemon.getScreen().setClearColor(0xFF000000);
 		Pokemon.pokemon.start(null);

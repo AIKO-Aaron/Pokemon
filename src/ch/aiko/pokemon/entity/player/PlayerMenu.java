@@ -12,7 +12,7 @@ public class PlayerMenu extends ButtonGroupMenu {
 
 	// private String[] texts = new String[] { "Pokedex", "Pokemon", "Beutel", "what?", "rave!" };
 
-	private final int WIDTH = 350;
+	public final int WIDTH = 350;
 
 	public PlayerMenu(Screen parent) {
 		super(parent);
@@ -40,5 +40,9 @@ public class PlayerMenu extends ButtonGroupMenu {
 
 	@Override
 	public void onClose() {}
+
+	public Screen getScreen() {
+		return parent;
+	}
 
 }

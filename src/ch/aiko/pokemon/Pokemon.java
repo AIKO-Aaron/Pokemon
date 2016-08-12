@@ -5,6 +5,8 @@ import ch.aiko.as.ASObject;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.attacks.Attack;
+import ch.aiko.pokemon.basic.GameHandler;
+import ch.aiko.pokemon.basic.MainMenu;
 import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.language.Language;
@@ -56,7 +58,7 @@ public class Pokemon {
 		boolean isDir = FileUtil.getRunningJar().isDirectory();
 
 		out.println("Starting Modloader...");
-		ModLoader.loadMods(out, (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getParent()) + "/mods/", () -> load(ip));
+		ModLoader.loadMods((isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getParent()) + "/mods/", () -> load(ip));
 		out.println("Done loading mods. Starting threads...");
 
 		if (PRELOAD) PokeUtil.loadEmAll();
@@ -101,7 +103,7 @@ public class Pokemon {
 		player.setDirection(client.dir);
 
 		Level level = new Level(client.pathToLevel);
-
+System.out.println("");
 		handler.init(level, player);
 	}
 

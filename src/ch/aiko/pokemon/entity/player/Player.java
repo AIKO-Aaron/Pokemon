@@ -8,7 +8,9 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.entity.Direction;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.trainer.Trainer;
@@ -139,7 +141,10 @@ public class Player extends Entity {
 
 		Level level = (Level) getParent();
 
-		if (input.popKeyPressed(KeyEvent.VK_X)) level.openMenu(new PlayerMenu(screen));
+		if (input.popKeyPressed(KeyEvent.VK_X)) {
+			PlayerMenu menu = (PlayerMenu) level.openMenu(new PlayerMenu(screen));
+			ModLoader.performEvent(new PokemonEvents.PlayerOpenMenuEvent(menu));
+		}
 
 		if (input.isKeyPressed(KeyEvent.VK_LEFT)) xx--;
 		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
