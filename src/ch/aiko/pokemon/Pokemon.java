@@ -5,6 +5,7 @@ import ch.aiko.as.ASObject;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.attacks.Attack;
+import ch.aiko.pokemon.attacks.AttackUtil;
 import ch.aiko.pokemon.basic.GameHandler;
 import ch.aiko.pokemon.basic.MainMenu;
 import ch.aiko.pokemon.basic.PokemonEvents;
@@ -81,7 +82,7 @@ public class Pokemon {
 				}
 			} else {
 				//Give an Charizard if no pokemon there
-				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Pokemon", new Attack[4], 5, 10, 10, 10, 10, 10, 10, 10);
+				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Exterminator", new Attack[]{AttackUtil.getAttack("Tackle")}, 5, 10, 10, 10, 10, 10, 10, 10);
 			}
 
 			Level level = new Level("/ch/aiko/pokemon/level/test.layout");

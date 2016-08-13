@@ -14,6 +14,7 @@ public class PokeUtil {
 	public static final float OWN_MOD = 1.5F;
 
 	public static final ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>();
+	public static final ArrayList<PokemonState> states = new ArrayList<PokemonState>();
 	public static final ArrayList<PokemonType> types = new ArrayList<PokemonType>();
 	public static final ArrayList<GIF> frontAnimations = new ArrayList<GIF>();
 	public static final ArrayList<GIF> backAnimations = new ArrayList<GIF>();
@@ -98,4 +99,16 @@ public class PokeUtil {
 		return PokemonType.ENEMY;
 	}
 
+	public static void registerState(PokemonState state, int id) {
+		while(id >= states.size()) states.add(null);
+		states.set(id, state);
+	}
+	
+	public static int getIDOf(PokemonState state) {
+		return states.indexOf(state);
+	}
+	
+	public static PokemonState getState(int id) {
+		return states.get(id);
+	}
 }

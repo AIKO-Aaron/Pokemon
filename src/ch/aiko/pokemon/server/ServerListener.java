@@ -16,6 +16,7 @@ import java.util.Random;
 import ch.aiko.as.ASDataBase;
 import ch.aiko.modloader.LoadedMod;
 import ch.aiko.modloader.ModLoader;
+import ch.aiko.pokemon.Pokemon;
 
 public class ServerListener {
 
@@ -30,6 +31,7 @@ public class ServerListener {
 	protected HashMap<Socket, ArrayList<String>> texts = new HashMap<Socket, ArrayList<String>>();
 
 	public ServerListener() {
+		Pokemon.out.warn("Why are you starting the receiver of the server on the client");
 		running = true;
 		try {
 			socket = new ServerSocket(PORT);

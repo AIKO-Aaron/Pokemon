@@ -10,6 +10,7 @@ import ch.aiko.modloader.LoadedMod;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.attacks.Attack;
+import ch.aiko.pokemon.attacks.AttackUtil;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
@@ -18,7 +19,7 @@ import ch.aiko.pokemon.pokemons.Pokemons;
 public class ModUtils {
 
 	public static final boolean isServer = false;
-	
+
 	public static InputStream getResourceAsStream(String path) {
 		for (LoadedMod mod : ModLoader.loadedMods) {
 			InputStream inStream = mod.loader.getResourceAsStream(path);
@@ -66,6 +67,13 @@ public class ModUtils {
 		return ms;
 	}
 
+	public static Attack[] convertToAttacks(String... strings) {
+		Attack[] attacks = new Attack[strings.length];
+		for (int i = 0; i < attacks.length; i++)
+			attacks[i] = AttackUtil.getAttack(strings[i]);
+		return attacks;
+	}
+
 	public static void createMegaEvolution(String name, int origPokemon) {
 		Pokemons orig = PokeUtil.get(origPokemon);
 		Pokemons mega = new Pokemons(name, orig.getMegaEvolutions().size() + 1, origPokemon);
@@ -77,7 +85,7 @@ public class ModUtils {
 	public static void executeOnClientOnly(Runnable r) {
 		r.run();
 	}
-	
+
 	public static void eventPerformed(GameEvent evt) {
 		ModLoader.performEvent(evt);
 	}

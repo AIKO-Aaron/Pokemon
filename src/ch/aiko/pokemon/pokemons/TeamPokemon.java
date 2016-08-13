@@ -23,9 +23,12 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	protected Pokemons type;
 	protected String nickname;
 	private Attack[] moveSet;
+	protected PokemonState currentState;
+
+	protected float damageToDeal = 0;
 
 	// STATS
-	protected int healthPoints;
+	protected float healthPoints;
 	protected int maxHP;
 	protected int attack;
 	protected int specAttack;
@@ -54,6 +57,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		this.xp = xp;
 		level = (int) Math.pow(xp, 1F / 3F);
 		this.setMoveSet(moveSet);
+		currentState = PokemonState.NORMAL;
 
 		animation = new GIFAnimation(PokeUtil.getAnimation(type, holder), 0, 0);
 	}
@@ -69,6 +73,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		maxHP = SerializationReader.readInt(c.getField("MHP").data, 0);
 		type = PokeUtil.get(SerializationReader.readInt(c.getField("NUM").data, 0));
 		holder = PokeUtil.getType(SerializationReader.readInt(c.getField("TYP").data, 0));
+		currentState = PokeUtil.getState(SerializationReader.readInt(c.getField("STATE").data, 0));
 		nickname = c.getString("NCN").toString();
 		ASObject atks = c.getObject("ATKS");
 		if (atks != null) {
@@ -88,10 +93,11 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		thisObject.addField(ASField.Integer("SDF", specDefense));
 		thisObject.addField(ASField.Integer("SPD", speed));
 		thisObject.addField(ASField.Integer("XP", xp));
-		thisObject.addField(ASField.Integer("HP", healthPoints));
+		thisObject.addField(ASField.Integer("HP", (int) healthPoints));
 		thisObject.addField(ASField.Integer("MHP", maxHP));
 		thisObject.addField(ASField.Integer("NUM", type.getPokedexNumber()));
 		thisObject.addField(ASField.Integer("TYP", holder.in));
+		thisObject.addField(ASField.Integer("STATE", currentState.getID()));
 		thisObject.addString(ASString.Create("NCN", nickname.toCharArray()));
 		ASObject atks = new ASObject("ATKS");
 		for (Attack a : getMoveSet()) {
@@ -143,6 +149,17 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	@Override
 	public void update(Screen screen, Layer l) {
 		animation.update(screen, l);
+		if (healthPoints <= 0) ko();
+		if (healthPoints > getMaxHP()) healthPoints = getMaxHP();
+		if (damageToDeal != 0) {
+			float DAMAGE_PER_UPDATE = 0.03F * (damageToDeal + 0.5F);
+			healthPoints -= DAMAGE_PER_UPDATE;
+			damageToDeal -= DAMAGE_PER_UPDATE;
+		}
+	}
+
+	public void ko() {
+
 	}
 
 	public void mega() {
@@ -155,12 +172,16 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		} else System.err.println("This pokmon doesn't have a mega-evolution");
 	}
 
+	public void hit(int damage) {
+		damageToDeal += damage;
+	}
+
 	public String getNickName() {
 		return nickname;
 	}
 
 	public int getHP() {
-		return healthPoints;
+		return (int) healthPoints;
 	}
 
 	public int getMaxHP() {
@@ -181,6 +202,14 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 
 	public void setMoveSet(Attack[] moveSet) {
 		this.moveSet = moveSet;
+	}
+
+	public float getCurrentHealthPoints() {
+		return healthPoints;
+	}
+
+	public int getLevel() {
+		return (int) Math.pow(xp, 1F / 3F);
 	}
 
 }

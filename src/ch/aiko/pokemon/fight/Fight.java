@@ -2,8 +2,8 @@ package ch.aiko.pokemon.fight;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.Random;
 import java.util.Stack;
 
 import ch.aiko.engine.graphics.Layer;
@@ -35,12 +35,25 @@ public class Fight extends LayerContainer {
 	public Font f = new Font("Arial", 0, 25);
 	public int color, color2;
 	public PixelRenderer renderer;
+	public static final int HP_SCALE = 3;
+	public Point ep, pp;
 
 	public Fight(Screen s, Player p, Trainer t) {
 		this.s = s;
+
 		background = new Sprite("/ch/aiko/pokemon/textures/fight_background/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
 		Sprite ground = new Sprite("/ch/aiko/pokemon/textures/fight_ground/grass_day.png").getScaledInstance(s.getFrameWidth(), s.getFrameHeight());
+		Sprite playerhp = new Sprite("/ch/aiko/pokemon/textures/hp_player.png");
+		playerhp = playerhp.getScaledInstance(playerhp.getWidth() * HP_SCALE, playerhp.getHeight() * HP_SCALE);
+		Sprite enemyhp = new Sprite("/ch/aiko/pokemon/textures/hp_enemy.png");
+		enemyhp = enemyhp.getScaledInstance(enemyhp.getWidth() * HP_SCALE, enemyhp.getHeight() * HP_SCALE);
+
+		ep = new Point(0, 25);
+		pp = new Point(s.getWidth() - playerhp.getWidth(), 40);
+
 		background.getImage().getGraphics().drawImage(ground.getImage(), 0, 0, null);
+		background.getImage().getGraphics().drawImage(playerhp.getImage(), pp.x, pp.y, null);
+		background.getImage().getGraphics().drawImage(enemyhp.getImage(), ep.x, ep.y, null);
 		renderer = new PixelRenderer(background, background.getWidth(), background.getHeight());
 
 		pok1 = p.team[0];
@@ -89,9 +102,16 @@ public class Fight extends LayerContainer {
 
 	@Override
 	public void layerRender(Renderer r) {
-		renderer.fillRect(0, 0, 50, 50, color);
-		renderer.fillRect(50, 0, 50, 50, color2);
-		renderer.drawString(pok2.getNickName(), 50, 50, 50, 0xFF000000);
+		renderer.fillRect(pp.x + 56 * HP_SCALE, pp.y + 9 * HP_SCALE, (48 * HP_SCALE), 2 * HP_SCALE, 0xFFFFFFFF);
+		renderer.fillRect(ep.x + 44 * HP_SCALE, ep.y + 9 * HP_SCALE, (48 * HP_SCALE), 2 * HP_SCALE, 0xFFFFFFFF);
+		renderer.fillRect(pp.x + 56 * HP_SCALE, pp.y + 9 * HP_SCALE, (int) ((48 * HP_SCALE) * pok1.getCurrentHealthPoints() / pok1.getMaxHP()), 2 * HP_SCALE, color);
+		renderer.fillRect(ep.x + 44 * HP_SCALE, ep.y + 9 * HP_SCALE, (int) ((48 * HP_SCALE) * pok2.getCurrentHealthPoints() / pok2.getMaxHP()), 2 * HP_SCALE, color2);
+
+		renderer.drawString(pok2.getNickName(), 18, ep.x + 15, ep.y - 4, 0xFF000000);
+		renderer.drawString(pok1.getNickName(), 18, pp.x + 15, pp.y - 4, 0xFF000000);
+
+		renderer.drawString(pok1.getLevel() + "", 18, pp.x + 90 * HP_SCALE, pp.y - 4, 0xFF000000);
+		renderer.drawString(pok2.getLevel() + "", 18, ep.x + 94 * HP_SCALE, ep.y - 4, 0xFF000000);
 	}
 
 	@Override
@@ -104,9 +124,9 @@ public class Fight extends LayerContainer {
 			} else if (popKeyPressed(KeyEvent.VK_B)) {
 				pok1.gainXP(pok1.getXPToLevel());
 			} else if (popKeyPressed(KeyEvent.VK_V)) {
-				pok1.addHP(+1);
+				pok1.hit(-1);
 			} else if (popKeyPressed(KeyEvent.VK_C)) {
-				pok1.addHP(-1);
+				pok1.hit(+1);
 			}
 
 			if (popKeyPressed(KeyEvent.VK_U)) {
@@ -118,19 +138,8 @@ public class Fight extends LayerContainer {
 			}
 		}
 
-		color2 = new Random().nextInt(0xFFFFFF) | 0xFF000000;
-
-		/**
-		 * int col1 = 0x00FF00; // green int col2 = 0xFFFF00; // yellow int col3 = 0xFF0000; // red
-		 * 
-		 * int mod = 100 * pok1.getHP() / pok1.getMaxHP(); int mod2 = 100 * pok2.getHP() / pok2.getMaxHP();
-		 * 
-		 * int col1amount = mod; int col2amount = 100 - Math.abs(50 - mod); int col3amount = Math.abs(100 - mod);
-		 * 
-		 * Vector3f vec = new Vector3f(col1amount, col2amount, col3amount); vec.normalize();
-		 * 
-		 * int col = 0xFF << 24 | (int) (col1 * vec.x) + (int) (col2 * vec.y) + (int) (col3 * vec.z); color = col; // color = 0xFF << 24 | (int) (0xFF - mod) << 16 | ((int) (mod) & 0xFF) << 8 | (Math.abs(0x7F - mod)) << 16 | (Math.abs(0x7F - mod)) << 8; color2 = 0xFF << 24 | (int) (0xFF - mod2) << 16 | ((int) (mod2) & 0xFF) << 8 | (Math.abs(0x7F - mod2)) << 16 | (Math.abs(0x7F - mod2)) << 8;
-		 */
+		color = pok1.getHP() > pok1.getMaxHP() / 2 ? 0xFF00FF00 : pok1.getHP() > pok1.getMaxHP() / 8 ? 0xFFFFFF00 : 0xFFFF0000;
+		color2 = pok2.getHP() > pok2.getMaxHP() / 2 ? 0xFF00FF00 : pok2.getHP() > pok2.getMaxHP() / 8 ? 0xFFFFFF00 : 0xFFFF0000;
 	}
 
 	@Override

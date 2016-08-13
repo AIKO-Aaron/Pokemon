@@ -78,6 +78,7 @@ public class GIFAnimation implements Renderable, Updatable {
 	}
 
 	public void render(Renderer renderer, int x, int y) {
+		curIndex %= animation.length;
 		renderer.drawImage(animation[curIndex].getImage(), (int) (x - animation[curIndex].getWidth() / 2 * scale), y + (maxHeight - animation[curIndex].getHeight()) / 2);
 	}
 

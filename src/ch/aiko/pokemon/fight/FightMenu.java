@@ -18,7 +18,7 @@ public class FightMenu extends Menu {
 		x_for_close = false;
 		reopen();
 	}
-	
+
 	public void reopen() {
 		int xc = parent.getFrameWidth() - width;
 		int yc = parent.getFrameHeight() - 100;
@@ -35,19 +35,19 @@ public class FightMenu extends Menu {
 		int yc = parent.getFrameHeight() - 100;
 		TeamPokemon owned = ((Fight) (parent.getTopLayer("Fight"))).pok1;
 		for (int i = 0; i < owned.getMoveSet().length; i++) {
-			addButton(new Button(xc - (i % 2) * width, yc - (i / 2) * 100, width, 100, owned.getMoveSet()[i].attackName, (b) -> attack((Button) b)), 1, i);
+			if (owned.getMoveSet()[i] != null) addButton(new Button(xc - (i % 2) * width, yc - (i / 2) * 100, width, 100, owned.getMoveSet()[i].attackName, (b) -> attack((Button) b)), 1, i);
 		}
 	}
-	
+
 	public void attack(Button b) {
 		removeAllButtons();
-		
+
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		reopen();
 	}
 

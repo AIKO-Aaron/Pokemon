@@ -12,6 +12,8 @@ public class Pokemons {
 	
 	public static void init() {
 		// MEGA EVOLUTIONS
+		
+		PokemonState.init();
 
 		Pokemons MEGA_VENUSAUR = new Pokemons("Mega Venusaur", 1, 3);
 		Pokemons MEGA_CHARIZARD_X = new Pokemons("Mega Charizard X", 1, 6);
