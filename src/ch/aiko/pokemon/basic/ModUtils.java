@@ -82,4 +82,7 @@ public class ModUtils {
 		ModLoader.performEvent(evt);
 	}
 
+	public static void setInitValue(int value) {
+		ModLoader.bar3.setValue(value > 100 ? 100 : value < 0 ? 0 : value);
+	}
 }

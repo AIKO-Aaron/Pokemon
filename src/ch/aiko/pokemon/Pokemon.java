@@ -7,6 +7,7 @@ import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.basic.GameHandler;
 import ch.aiko.pokemon.basic.MainMenu;
+import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.language.Language;
@@ -91,6 +92,7 @@ public class Pokemon {
 			connect(ip);
 		}
 		out.println("Core engine done loading");
+		ModLoader.performEvent(new PokemonEvents.ClientStartEvent());
 	}
 
 	public void connect(String ip) {

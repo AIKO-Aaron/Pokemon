@@ -374,9 +374,9 @@ public class ModLoader {
 						Object instance = getInstanceOf(lm, m);
 						try {
 							++InitIndex;
-							bar3.setValue(0);
+							if(bar3 != null) bar3.setValue(0);
 							m.invoke(instance, new Object[] {});
-							bar3.setValue(100);
+							if(bar3 != null) bar3.setValue(100);
 						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
 					} catch (Throwable t) {
 						log.err("Error loading mod: " + lm.name + ". Error whilst pre-initialization");
@@ -398,9 +398,9 @@ public class ModLoader {
 						Object instance = getInstanceOf(lm, m);
 						try {
 							++InitIndex;
-							bar3.setValue(0);
+							if(bar3 != null) bar3.setValue(0);
 							m.invoke(instance, new Object[] {});
-							bar3.setValue(100);
+							if(bar3 != null) bar3.setValue(100);
 						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
 					} catch (Throwable t) {
 						log.err("Error loading mod: " + lm.name + ". Error whilst initialization");
@@ -419,9 +419,9 @@ public class ModLoader {
 						Object instance = getInstanceOf(lm, m);
 						try {
 							++InitIndex;
-							bar3.setValue(0);
+							if(bar3 != null) bar3.setValue(0);
 							m.invoke(instance, new Object[] {});
-							bar3.setValue(100);
+							if(bar3 != null) bar3.setValue(100);
 						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
 					} catch (Throwable t) {
 						log.err("Error loading mod: " + lm.name + ". Error whilst post-initialization");

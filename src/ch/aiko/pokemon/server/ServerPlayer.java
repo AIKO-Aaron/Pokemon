@@ -1,4 +1,4 @@
-package ch.aiko.pokemon.client;
+package ch.aiko.pokemon.server;
 
 import ch.aiko.as.ASDataBase;
 import ch.aiko.as.ASDataType;
@@ -6,7 +6,6 @@ import ch.aiko.as.ASField;
 import ch.aiko.as.ASObject;
 import ch.aiko.as.ASString;
 import ch.aiko.as.SerializationReader;
-import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
@@ -18,7 +17,8 @@ public class ServerPlayer extends ASDataType {
 	public String currentLevel; // Path to level
 	public int x = 128, y = 128, dir;
 	public boolean online;
-	public TeamPokemon[] team = new TeamPokemon[Pokemon.TeamSize];
+	// TODO team-pokemon storing...
+	public TeamPokemon[] team = new TeamPokemon[PokemonServer.TeamSize];
 
 	public ServerPlayer(String uuid) {
 		this.uuid = uuid;
@@ -51,8 +51,8 @@ public class ServerPlayer extends ASDataType {
 				ASObject obj = teamP.objects.get(i);
 				if (obj != null) team[index++] = new TeamPokemon(obj);
 			}
-			if (index == 0) {
-				team = new TeamPokemon[Pokemon.TeamSize];
+			if(index == 0) {
+				team = new TeamPokemon[PokemonServer.TeamSize];
 				team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Pokemon", new Attack[4], 5, 10, 10, 10, 10, 10, 10, 10);
 			}
 		}
@@ -64,7 +64,7 @@ public class ServerPlayer extends ASDataType {
 		thisObject.addField(ASField.Integer("X", x));
 		thisObject.addField(ASField.Integer("Y", y));
 		thisObject.addField(ASField.Integer("DIR", dir));
-		thisObject.addField(ASField.Integer("TEAMSIZE", Pokemon.TeamSize));
+		thisObject.addField(ASField.Integer("TEAMSIZE", PokemonServer.TeamSize));
 		ASObject teamP = new ASObject("TEAM");
 		for (TeamPokemon pok : team) {
 			if (pok != null) teamP.addObject(pok.toObject());

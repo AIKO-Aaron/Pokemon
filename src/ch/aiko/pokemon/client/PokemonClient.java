@@ -15,8 +15,10 @@ import ch.aiko.as.ASDataBase;
 import ch.aiko.modloader.LoadedMod;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
+import ch.aiko.pokemon.server.ServerPlayer;
 
 public class PokemonClient {
 
@@ -124,6 +126,7 @@ public class PokemonClient {
 		/**
 		 * if (dataLength > 0) { dataLength -= received.getBytes().length; System.out.println(received + " received, " + dataLength + " bytes left"); data += received; if (dataLength <= 0 || received.equalsIgnoreCase("/EOPD/")) { for (byte b : received.getBytes()) System.out.print(Integer.toHexString(b & 0xFF) + ", "); System.out.println(); System.out.println(dataLength); ASDataBase pb = ASDataBase.createFromBytes(data.getBytes()); if (pb != null) { ServerPlayer p = new ServerPlayer(pb.getObject("Player")); System.out.println(p.currentLevel); lvl = pos = true; } } return; }
 		 */
+		ModLoader.performEvent(new PokemonEvents.StringReceivedEvent(received, s));
 		if (waitingForMods > 0) {
 			modNames.add(received);
 			waitingForMods--;

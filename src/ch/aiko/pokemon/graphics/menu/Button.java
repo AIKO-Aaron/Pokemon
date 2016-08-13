@@ -10,7 +10,7 @@ import ch.aiko.pokemon.settings.Settings;
 
 public class Button extends MenuObject {
 
-	private static final int THICKNESS = 3;
+	public static final int THICKNESS = 3;
 
 	protected int layer;
 	protected int x, y, w, h;
