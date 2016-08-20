@@ -1,5 +1,6 @@
 //Future idea: load trainer from such a .trainer file (called from level.layout)
 
+ID 0
 NAME "Pikachu"
 BATTLETEXT "Heya its'a me ...\n\n\n\n Pikachuu.."
 // does he appear in battle after his last pokemon got into red hp

@@ -151,15 +151,19 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		animation.update(screen, l);
 		if (healthPoints <= 0) ko();
 		if (healthPoints > getMaxHP()) healthPoints = getMaxHP();
-		if (damageToDeal != 0) {
+		if (damageToDeal != 0 && healthPoints > 0) {
 			float DAMAGE_PER_UPDATE = 0.03F * (damageToDeal + 0.5F);
 			healthPoints -= DAMAGE_PER_UPDATE;
 			damageToDeal -= DAMAGE_PER_UPDATE;
+		} else if (healthPoints < 0) {
+			damageToDeal = 0;
+			healthPoints = 0;
+			ko();
 		}
 	}
 
 	public void ko() {
-
+		currentState = PokemonState.DEFEATED;
 	}
 
 	public void mega() {
@@ -210,6 +214,10 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 
 	public int getLevel() {
 		return (int) Math.pow(xp, 1F / 3F);
+	}
+
+	public boolean isKO() {
+		return currentState == PokemonState.DEFEATED;
 	}
 
 }

@@ -191,7 +191,7 @@ public class LayoutLoader {
 									if (args[i].equalsIgnoreCase("ABS")) tpath = args[++i];
 								}
 								if (!tpath.endsWith(".trainer")) tpath += ".trainer";
-								entities.add(new TrainerLoader(tpath, x, y).getTrainer());
+								entities.add(new TrainerLoader(tpath, x, y).finishTrainer());
 							}
 						}
 					} else if (c.equalsIgnoreCase("PRINT")) {

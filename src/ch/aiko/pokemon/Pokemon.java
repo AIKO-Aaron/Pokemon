@@ -1,11 +1,8 @@
 package ch.aiko.pokemon;
 
-import ch.aiko.as.ASDataBase;
-import ch.aiko.as.ASObject;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.attacks.Attack;
-import ch.aiko.pokemon.attacks.AttackUtil;
 import ch.aiko.pokemon.basic.GameHandler;
 import ch.aiko.pokemon.basic.MainMenu;
 import ch.aiko.pokemon.basic.PokemonEvents;
@@ -14,9 +11,7 @@ import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
-import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
-import ch.aiko.pokemon.pokemons.TeamPokemon;
 import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.util.FileUtil;
 import ch.aiko.util.Log;
@@ -46,7 +41,6 @@ public class Pokemon {
 	 */
 	public static PokemonClient client;
 
-
 	public Pokemon() {
 		pokemon = this;
 		Settings.load();
@@ -73,18 +67,9 @@ public class Pokemon {
 			ONLINE = false;
 
 			player = new Player(32 * 3, 32 * 2);
-			ASDataBase base = ASDataBase.createFromFile(FileUtil.getRunningJar().getParent() + "/player.bin");
-			if (base != null) {
-				int index = 0;
-				for(int i = 0; i < base.objectCount; i++) {
-					ASObject obj = base.objects.get(i);
-					if(obj != null) player.team[index++] = new TeamPokemon(obj);
-				}
-			} else {
-				//Give an Charizard if no pokemon there
-				player.team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Exterminator", new Attack[]{AttackUtil.getAttack("Tackle")}, 5, 10, 10, 10, 10, 10, 10, 10);
-			}
-
+			// Load Player
+			player.load();
+			
 			Level level = new Level("/ch/aiko/pokemon/level/test.layout");
 
 			handler.init(level, player);
@@ -106,7 +91,6 @@ public class Pokemon {
 		player.setDirection(client.dir);
 
 		Level level = new Level(client.pathToLevel);
-System.out.println("");
 		handler.init(level, player);
 	}
 

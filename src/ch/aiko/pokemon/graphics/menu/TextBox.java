@@ -24,20 +24,20 @@ public class TextBox extends MenuObject {
 		x = 0;
 		this.__text = text;
 	}
-	
+
 	public TextBox(String text, MenuObjectAction ac) {
 		x = 0;
 		this.__text = text;
 		this.action = ac;
 	}
-	
+
 	public TextBox(String text, MenuObjectAction ac, boolean su) {
 		x = 0;
 		this.__text = text;
 		this.action = ac;
 		this.stopsUpdates = su;
 	}
-	
+
 	public TextBox setOnCloseAction(MenuObjectAction ac) {
 		action = ac;
 		return this;
@@ -52,6 +52,8 @@ public class TextBox extends MenuObject {
 		y = s.getFrameHeight() - h - s.getRenderer().getYOffset();
 		lines = new ArrayList<String>();
 		int maxWidth = s.getFrameWidth() - 20;
+		if (__text == null) return;
+		__text = __text.replace("\\n", "\n");
 		for (String __lines : __text.split("\\n")) {
 			String current = null;
 			for (String __word : __lines.split(" ")) {
@@ -72,7 +74,7 @@ public class TextBox extends MenuObject {
 		if (popKeyPressed(KeyEvent.VK_SPACE)) {
 			if (index + 2 >= lines.size()) {
 				closeMe();
-				if(action != null) action.actionPerformed(this);
+				if (action != null) action.actionPerformed(this);
 			}
 			index++;
 		}
@@ -89,12 +91,12 @@ public class TextBox extends MenuObject {
 		renderer.drawText(text1, Settings.font, h / 4, 0, x + 10, y + 10, 0xFF000000);
 		renderer.drawText(text2, Settings.font, h / 4, 0, x + 10, y + 50, 0xFF000000);
 	}
-	
+
 	@Override
 	public String getName() {
 		return "TextBox";
 	}
-	
+
 	public boolean stopsUpdating() {
 		return stopsUpdates;
 	}

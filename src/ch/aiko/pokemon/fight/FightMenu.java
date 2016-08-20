@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
+import ch.aiko.pokemon.attacks.AttackUtil;
 import ch.aiko.pokemon.graphics.menu.Button;
 import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
@@ -12,10 +13,12 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 public class FightMenu extends Menu {
 
 	final int width = 250;
+	private Fight fight;
 
-	public FightMenu(Screen parent) {
+	public FightMenu(Screen parent, Fight fight) {
 		super(parent);
 		x_for_close = false;
+		this.fight = fight;
 		reopen();
 	}
 
@@ -41,12 +44,8 @@ public class FightMenu extends Menu {
 
 	public void attack(Button b) {
 		removeAllButtons();
-
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
+		fight.attack(AttackUtil.getAttack(b.getText()));
 
 		reopen();
 	}

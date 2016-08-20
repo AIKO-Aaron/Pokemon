@@ -13,9 +13,9 @@ public class TrainerLoader extends BasicLoader {
 
 	protected Trainer loading;
 
-	public TrainerLoader(String path) {
-		super(path);
-	}
+	/**
+	 * public TrainerLoader(String path) { super(path); }
+	 */
 
 	public TrainerLoader(String path, int x, int y) {
 		super(path);
@@ -76,6 +76,8 @@ public class TrainerLoader extends BasicLoader {
 			loading.spinFunc = Integer.parseInt(args[0]);
 		} else if (command.equalsIgnoreCase("SPINTIME")) {
 			loading.spinTime = Integer.parseInt(args[0]);
+		} else if (command.equalsIgnoreCase("ID")) {
+			loading.id = Integer.parseInt(args[0]);
 		} else if (command.equalsIgnoreCase("BATTLETEXT")) {
 			loading.battletext = args[0];
 		} else if (command.equalsIgnoreCase("DIR")) {
@@ -120,12 +122,11 @@ public class TrainerLoader extends BasicLoader {
 			loading.team[index] = new TeamPokemon(PokeUtil.get(dexNumber), PokemonType.ENEMY, nickname == null ? PokeUtil.get(dexNumber).getName() : nickname, atks.toArray(new Attack[atks.size()]), hp, maxhp, atk, satk, def, sdef, speed, xp);
 		}
 
-		// TODO team-loading
-
 		return true;
 	}
 
-	public Trainer getTrainer() {
+	public Trainer finishTrainer() {
+		loading.register();
 		return loading;
 	}
 }

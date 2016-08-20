@@ -22,6 +22,7 @@ import ch.aiko.pokemon.graphics.menu.Menu;
 import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
+import ch.aiko.pokemon.settings.Settings;
 
 public class Fight extends LayerContainer {
 
@@ -34,9 +35,13 @@ public class Fight extends LayerContainer {
 
 	public Font f = new Font("Arial", 0, 25);
 	public int color, color2;
-	public PixelRenderer renderer;
 	public static final int HP_SCALE = 3;
 	public Point ep, pp;
+
+	public int pi, ti;
+
+	public Player cp;
+	public Trainer ct;
 
 	public Fight(Screen s, Player p, Trainer t) {
 		this.s = s;
@@ -54,11 +59,13 @@ public class Fight extends LayerContainer {
 		background.getImage().getGraphics().drawImage(ground.getImage(), 0, 0, null);
 		background.getImage().getGraphics().drawImage(playerhp.getImage(), pp.x, pp.y, null);
 		background.getImage().getGraphics().drawImage(enemyhp.getImage(), ep.x, ep.y, null);
-		renderer = new PixelRenderer(background, background.getWidth(), background.getHeight());
+
+		cp = p;
+		ct = t;
 
 		pok1 = p.team[0];
 		pok2 = t.team[0];
-
+		
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok1).setUpdatable(pok1).toLayer());
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok2).setUpdatable(pok2).toLayer());
 	}
@@ -75,12 +82,12 @@ public class Fight extends LayerContainer {
 
 	@Override
 	public void onOpen() {
-		openMenu(new FightMenu(s));
+		openMenu(new FightMenu(s, this));
 		openMenu(new Animation(s, new SpriteSheet("/ch/aiko/pokemon/textures/player/player_fight_boy.png", 80, 80, 300, 300).removeColor(0xFF88B8B0), false, 7).setPosition(150, s.getFrameHeight() - 300));
 		// SoundPlayer.playSound("/ch/aiko/pokemon/sounds/TrainerFight.mp3"); // why is music disabled? Because I'm testing and it's annoying...
 
 		// Set background of the renderer to the background image. It can be modified afterwards
-		s.getRenderer().setClearPixels(renderer.pixels);
+		s.getRenderer().setClearPixels(background.getPixels());
 	}
 
 	@Override
@@ -102,16 +109,16 @@ public class Fight extends LayerContainer {
 
 	@Override
 	public void layerRender(Renderer r) {
-		renderer.fillRect(pp.x + 56 * HP_SCALE, pp.y + 9 * HP_SCALE, (48 * HP_SCALE), 2 * HP_SCALE, 0xFFFFFFFF);
-		renderer.fillRect(ep.x + 44 * HP_SCALE, ep.y + 9 * HP_SCALE, (48 * HP_SCALE), 2 * HP_SCALE, 0xFFFFFFFF);
-		renderer.fillRect(pp.x + 56 * HP_SCALE, pp.y + 9 * HP_SCALE, (int) ((48 * HP_SCALE) * pok1.getCurrentHealthPoints() / pok1.getMaxHP()), 2 * HP_SCALE, color);
-		renderer.fillRect(ep.x + 44 * HP_SCALE, ep.y + 9 * HP_SCALE, (int) ((48 * HP_SCALE) * pok2.getCurrentHealthPoints() / pok2.getMaxHP()), 2 * HP_SCALE, color2);
+		r.fillRect(pp.x + 56 * HP_SCALE, pp.y + 9 * HP_SCALE, (48 * HP_SCALE), 2 * HP_SCALE, 0xFFFFFFFF);
+		r.fillRect(ep.x + 44 * HP_SCALE, ep.y + 9 * HP_SCALE, (48 * HP_SCALE), 2 * HP_SCALE, 0xFFFFFFFF);
+		r.fillRect(pp.x + 56 * HP_SCALE, pp.y + 9 * HP_SCALE, (int) ((48 * HP_SCALE) * pok1.getCurrentHealthPoints() / pok1.getMaxHP()), 2 * HP_SCALE, color);
+		r.fillRect(ep.x + 44 * HP_SCALE, ep.y + 9 * HP_SCALE, (int) ((48 * HP_SCALE) * pok2.getCurrentHealthPoints() / pok2.getMaxHP()), 2 * HP_SCALE, color2);
 
-		renderer.drawString(pok2.getNickName(), 18, ep.x + 15, ep.y - 4, 0xFF000000);
-		renderer.drawString(pok1.getNickName(), 18, pp.x + 15, pp.y - 4, 0xFF000000);
+		r.drawText(pok2.getNickName(), Settings.font, 18, 0, ep.x + 15, ep.y - 4, 0xFF000000);
+		r.drawText(pok1.getNickName(), Settings.font, 18, 0, pp.x + 15, pp.y - 4, 0xFF000000);
 
-		renderer.drawString(pok1.getLevel() + "", 18, pp.x + 90 * HP_SCALE, pp.y - 4, 0xFF000000);
-		renderer.drawString(pok2.getLevel() + "", 18, ep.x + 94 * HP_SCALE, ep.y - 4, 0xFF000000);
+		r.drawText(pok1.getLevel() + "", Settings.font, 18, 0, pp.x + 90 * HP_SCALE, pp.y - 4, 0xFF000000);
+		r.drawText(pok2.getLevel() + "", Settings.font, 18, 0, ep.x + 94 * HP_SCALE, ep.y - 4, 0xFF000000);
 	}
 
 	@Override
@@ -167,6 +174,30 @@ public class Fight extends LayerContainer {
 		openMenus.remove(m);
 		m.onClose();
 		removeLayer(m);
+	}
+
+	public void attack(Attack attack) {
+		pok2.hit(attack.attackDamage);
+		pok1.hit(attack.backFire);
+		
+		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
+			cp.winBattle(ct);
+			ct.defeated = true;
+		} else if(pok1.isKO() && cp.getTeamLength() <= ++pi) {
+			cp.lostBattle(ct);
+		}
+	}
+	
+	public void t_attack(Attack attack) {
+		pok1.hit(attack.attackDamage);
+		pok2.hit(attack.backFire);
+		
+		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
+			cp.winBattle(ct);
+			ct.defeated = true;
+		} else if(pok1.isKO() && cp.getTeamLength() <= ++pi) {
+			cp.lostBattle(ct);
+		}
 	}
 
 }

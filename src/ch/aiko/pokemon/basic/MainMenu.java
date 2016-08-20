@@ -43,12 +43,14 @@ public class MainMenu extends LayerContainer {
 		String ip = sender.getText();
 		Pokemon.getScreen().removeAllLayers();
 		Pokemon.getScreen().setClearColor(0xFF000000);
+		GameHandler.gameStarted = true;
 		Pokemon.pokemon.start(ip);
 	}
 
 	public void startSinglePlayer() {
 		Pokemon.getScreen().removeAllLayers();
 		Pokemon.getScreen().setClearColor(0xFF000000);
+		GameHandler.gameStarted = true;
 		Pokemon.pokemon.start(null);
 	}
 

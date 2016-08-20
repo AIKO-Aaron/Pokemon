@@ -2,6 +2,7 @@ package ch.aiko.pokemon.basic;
 
 import java.net.Socket;
 
+import ch.aiko.engine.graphics.Window;
 import ch.aiko.modloader.GameEvent;
 import ch.aiko.pokemon.entity.player.PlayerMenu;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
@@ -15,6 +16,7 @@ public class PokemonEvents {
 	public static final String PLAYER_CONNECTED = "playerconnect";
 	public static final String STRING_RECEIVED = "receiveddata";
 	public static final String POKEMON_DEFEATED = "pokemondefeat";
+	public static final String WINDOW_CLOSING = "windowclosing";
 	// TODO more events (for mods)
 
 	public static class PlayerOpenMenuEvent extends GameEvent {
@@ -75,6 +77,18 @@ public class PokemonEvents {
 		public PokemonDefeatEvent(TeamPokemon pok1, TeamPokemon pok2) {
 			defeated = pok1;
 			other = pok2;
+		}
+	}
+	
+	public static class WindowClosingEvent extends GameEvent {
+		public String eventName() {
+			return WINDOW_CLOSING;
+		}
+
+		public Window window;
+		
+		public WindowClosingEvent(Window window) {
+			this.window = window;
 		}
 	}
 }

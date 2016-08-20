@@ -7,6 +7,7 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
+import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.Direction;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.player.Player;
@@ -25,6 +26,8 @@ public class Trainer extends Entity {
 	private int xdistance;
 	private int ydistance;
 	private boolean walkingToPlayer;
+	public boolean defeated = false;
+	protected int id = -1;
 
 	protected SpriteSheet sprites;
 	protected Sprite[] walkingAnims = new Sprite[4 * 4];
@@ -69,7 +72,7 @@ public class Trainer extends Entity {
 			return;
 		}
 
-		if (holder != null) {
+		if (holder != null && !defeated) {
 			int x = holder.getX();
 			int y = holder.getY();
 			int w = holder.getWidth();
@@ -120,6 +123,29 @@ public class Trainer extends Entity {
 			int yv = yPos - holder.getY();
 			dir = (Math.abs(xv) > Math.abs(yv)) ? (xv > 0 ? 2 : 3) : (yv > 0 ? 1 : 0);
 		}
+	}
+
+	public int getTeamLength() {
+		int length = 0;
+		for (TeamPokemon pok : team)
+			if (pok != null) ++length;
+		return length;
+	}
+
+	public int getID() {
+		return id;
+	}
+
+	public Trainer setID(int id) {
+		this.id = id;
+		return this;
+	}
+
+	public void register() {
+		if (id == -1) id = TrainerUtil.registerTrainer(this);
+		else TrainerUtil.registerTrainer(this, id);
+
+		if (Pokemon.player.trainersDefeated.contains((Object) id)) defeated = true;
 	}
 
 }

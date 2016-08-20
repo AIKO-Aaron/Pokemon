@@ -1,8 +1,11 @@
 package ch.aiko.pokemon.entity.player;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
+import ch.aiko.as.ASArray;
 import ch.aiko.as.ASDataBase;
+import ch.aiko.as.ASObject;
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
@@ -10,6 +13,7 @@ import ch.aiko.engine.sprite.Sprite;
 import ch.aiko.engine.sprite.SpriteSheet;
 import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.basic.ModUtils;
 import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.entity.Direction;
 import ch.aiko.pokemon.entity.Entity;
@@ -18,6 +22,8 @@ import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.graphics.menu.MenuObject;
 import ch.aiko.pokemon.graphics.menu.TextBox;
 import ch.aiko.pokemon.level.Level;
+import ch.aiko.pokemon.pokemons.PokemonType;
+import ch.aiko.pokemon.pokemons.Pokemons;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
 import ch.aiko.util.FileUtil;
 
@@ -34,6 +40,8 @@ public class Player extends Entity {
 	protected boolean walking = false;
 	public boolean isPaused = false;
 	public TeamPokemon[] team = new TeamPokemon[Pokemon.TeamSize];
+	public Fight currentFight;
+	public ArrayList<Integer> trainersDefeated = new ArrayList<Integer>();
 
 	public static final boolean CAN_WALK_SIDEWAYS = true;
 
@@ -95,15 +103,24 @@ public class Player extends Entity {
 	}
 
 	public void save() {
-		System.out.println("Saving");
+		Pokemon.out.println("Saving");
 		try {
-			ASDataBase base = new ASDataBase("Team");
+			ASDataBase base = new ASDataBase("Player");
+			ASObject teamObj = new ASObject("Team");
 			for (TeamPokemon pok : team) {
 				if (pok != null) {
 					pok.reload();
-					base.addObject(pok);
+					teamObj.addObject(pok.toObject());
 				}
 			}
+			
+			ASObject tdo = new ASObject("TDO");
+			int[] td = new int[trainersDefeated.size()];
+			for(int i = 0; i< td.length; i++) td[i] = trainersDefeated.size();
+			tdo.addArray(ASArray.Integer("TD", td));
+			
+			base.addObject(teamObj);
+			base.addObject(tdo);
 			base.saveToFile(FileUtil.getRunningJar().getParent() + "/player.bin");
 		} catch (Throwable t) {
 			t.printStackTrace(Pokemon.out);
@@ -204,7 +221,7 @@ public class Player extends Entity {
 	}
 
 	public void startBattle(Screen screen, Trainer t) {
-		screen.addLayer(new TextBox(t.name + ": " + t.battletext, (MenuObject sender) -> screen.addLayer(new Fight(screen, this, t)), true));
+		screen.addLayer(new TextBox(t.name + ": " + t.battletext, (MenuObject sender) -> currentFight = (Fight) screen.addLayer(new Fight(screen, this, t)), true));
 	}
 
 	public boolean isMoving() {
@@ -235,6 +252,55 @@ public class Player extends Entity {
 	@Override
 	public int getLevel() {
 		return PLAYER_RENDERED_LAYER;
+	}
+
+	public void winBattle(Trainer ct) {
+		Screen screen = Pokemon.getScreen();
+		trainersDefeated.add(ct.getID());
+		screen.removeLayer(currentFight);
+		screen.addLayer(new TextBox(ct.losttext, (b)->{}, true));
+	}
+	
+	public void lostBattle(Trainer ct) {
+		getScreen().removeLayer(currentFight);
+		getScreen().addLayer(new TextBox(ct.wintext, (b)->{}, true));
+	}
+
+	public void load() {
+		ASDataBase base = ASDataBase.createFromFile(FileUtil.getRunningJar().getParent() + "/player.bin");
+		if (base != null) {
+			ASObject teamObj = base.getObject("Team");
+			int index = 0;
+			if (team != null) {
+				for (int i = 0; i < teamObj.objectCount; i++) {
+					ASObject obj = teamObj.objects.get(i);
+					if (obj != null) team[index++] = new TeamPokemon(obj);
+					System.out.println("Added: " + team[index - 1].getNickName());
+				}
+			}
+			if (teamObj == null || index == 0) {
+				team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Exterminator", ModUtils.convertToAttacks("Tackle", "Verzweifler"), 5, 10, 10, 10, 10, 10, 10, 10);
+				System.out.println("Team empty...");
+			}
+
+			ASObject tdo = base.getObject("TDO");
+			if (tdo != null) {
+				int[] td = tdo.getArray("TD").getIntData();
+				trainersDefeated = new ArrayList<Integer>();
+				for (int i : td)
+					trainersDefeated.add(i);
+			}
+		} else {
+			System.err.println("No player save found...");
+			team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Exterminator", ModUtils.convertToAttacks("Tackle", "Verzweifler"), 5, 10, 10, 10, 10, 10, 10, 10);
+		}
+	}
+
+	public int getTeamLength() {
+		int length = 0;
+		for (TeamPokemon pok : team)
+			if (pok != null) ++length;
+		return length;
 	}
 
 }
