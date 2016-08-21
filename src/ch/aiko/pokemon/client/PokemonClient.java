@@ -36,7 +36,7 @@ public class PokemonClient {
 	public boolean synchrone = false, lvl = false, pos = false;
 	private int waitingForMods = 0;
 	private ArrayList<String> modNames = new ArrayList<String>();
-
+	public ArrayList<Integer> trainersDefeated = new ArrayList<Integer>();
 	private ArrayList<String> texts = new ArrayList<String>();
 	private int dataLength = 0;
 
@@ -109,6 +109,7 @@ public class PokemonClient {
 						y = p.y;
 						dir = p.dir;
 						pathToLevel = p.currentLevel;
+						trainersDefeated = p.trainersDefeated;
 						dataLength = 0;
 						lvl = pos = true;
 					}
@@ -118,7 +119,7 @@ public class PokemonClient {
 				perform(received.trim(), socket);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			if (!(e instanceof SocketException)) e.printStackTrace();
 		}
 	}
 
@@ -233,6 +234,6 @@ public class PokemonClient {
 	}
 
 	public void ifNotSet(String string) {
-		if(texts.size() <= 0) texts.add(string);
+		if (texts.size() <= 0) texts.add(string);
 	}
 }

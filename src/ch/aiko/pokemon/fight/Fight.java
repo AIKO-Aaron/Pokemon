@@ -144,6 +144,13 @@ public class Fight extends LayerContainer {
 				pok2.gainXP(pok2.getXPToLevel());
 			}
 		}
+		
+		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
+			cp.winBattle(ct);
+			ct.defeated = true;
+		} else if(pok1.isKO() && cp.getTeamLength() <= ++pi) {
+			cp.lostBattle(ct);
+		}
 
 		color = pok1.getHP() > pok1.getMaxHP() / 2 ? 0xFF00FF00 : pok1.getHP() > pok1.getMaxHP() / 8 ? 0xFFFFFF00 : 0xFFFF0000;
 		color2 = pok2.getHP() > pok2.getMaxHP() / 2 ? 0xFF00FF00 : pok2.getHP() > pok2.getMaxHP() / 8 ? 0xFFFFFF00 : 0xFFFF0000;
@@ -179,25 +186,11 @@ public class Fight extends LayerContainer {
 	public void attack(Attack attack) {
 		pok2.hit(attack.attackDamage);
 		pok1.hit(attack.backFire);
-		
-		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
-			cp.winBattle(ct);
-			ct.defeated = true;
-		} else if(pok1.isKO() && cp.getTeamLength() <= ++pi) {
-			cp.lostBattle(ct);
-		}
 	}
 	
-	public void t_attack(Attack attack) {
+	public void trainer_attack(Attack attack) {
 		pok1.hit(attack.attackDamage);
 		pok2.hit(attack.backFire);
-		
-		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
-			cp.winBattle(ct);
-			ct.defeated = true;
-		} else if(pok1.isKO() && cp.getTeamLength() <= ++pi) {
-			cp.lostBattle(ct);
-		}
 	}
 
 }

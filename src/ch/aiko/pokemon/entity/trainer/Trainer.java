@@ -54,7 +54,7 @@ public class Trainer extends Entity {
 		Level level = (Level) s.getTopLayer("Level");
 		Player holder = (Player) (level).getTopLayer("Player");
 		if (holder == null) return;
-		if (walkingToPlayer) {
+		if (walkingToPlayer && !defeated) {
 			int x = holder.getX() - (dir == 3 ? holder.getWidth() : 0);
 			int y = holder.getY() - (dir == 0 ? holder.getHeight() : 0);
 			if ((xPos <= x && dir == 2) || (xPos >= x && dir == 3) || (yPos >= y && dir == 0) || (yPos <= y && dir == 1)) {
@@ -145,7 +145,7 @@ public class Trainer extends Entity {
 		if (id == -1) id = TrainerUtil.registerTrainer(this);
 		else TrainerUtil.registerTrainer(this, id);
 
-		if (Pokemon.player.trainersDefeated.contains((Object) id)) defeated = true;
+		if (Pokemon.player.trainersDefeated.contains(id)) defeated = true;
 	}
 
 }

@@ -88,6 +88,7 @@ public class Pokemon {
 
 		player = new Player(client.x, client.y);
 		player.team = client.team;
+		player.trainersDefeated = client.trainersDefeated;
 		player.setDirection(client.dir);
 
 		Level level = new Level(client.pathToLevel);

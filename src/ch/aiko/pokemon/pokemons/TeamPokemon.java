@@ -97,7 +97,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		thisObject.addField(ASField.Integer("MHP", maxHP));
 		thisObject.addField(ASField.Integer("NUM", type.getPokedexNumber()));
 		thisObject.addField(ASField.Integer("TYP", holder.in));
-		thisObject.addField(ASField.Integer("STATE", currentState.getID()));
+		thisObject.addField(ASField.Integer("STATE", currentState == null ? PokemonState.NORMAL.getID() : currentState.getID()));
 		thisObject.addString(ASString.Create("NCN", nickname.toCharArray()));
 		ASObject atks = new ASObject("ATKS");
 		for (Attack a : getMoveSet()) {
@@ -155,7 +155,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 			float DAMAGE_PER_UPDATE = 0.03F * (damageToDeal + 0.5F);
 			healthPoints -= DAMAGE_PER_UPDATE;
 			damageToDeal -= DAMAGE_PER_UPDATE;
-		} else if (healthPoints < 0) {
+		} else if (healthPoints <= 0) {
 			damageToDeal = 0;
 			healthPoints = 0;
 			ko();
