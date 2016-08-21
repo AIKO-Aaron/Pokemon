@@ -65,7 +65,7 @@ public class Fight extends LayerContainer {
 
 		pok1 = p.team[0];
 		pok2 = t.team[0];
-		
+
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok1).setUpdatable(pok1).toLayer());
 		addLayer(new LayerBuilder().setLayer(5).setRenderable(pok2).setUpdatable(pok2).toLayer());
 	}
@@ -144,11 +144,11 @@ public class Fight extends LayerContainer {
 				pok2.gainXP(pok2.getXPToLevel());
 			}
 		}
-		
+
 		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
 			cp.winBattle(ct);
 			ct.defeated = true;
-		} else if(pok1.isKO() && cp.getTeamLength() <= ++pi) {
+		} else if (pok1.isKO() && cp.getTeamLength() <= ++pi) {
 			cp.lostBattle(ct);
 		}
 
@@ -187,7 +187,7 @@ public class Fight extends LayerContainer {
 		pok2.hit(attack.attackDamage);
 		pok1.hit(attack.backFire);
 	}
-	
+
 	public void trainer_attack(Attack attack) {
 		pok1.hit(attack.attackDamage);
 		pok2.hit(attack.backFire);

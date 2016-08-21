@@ -6,7 +6,7 @@ BATTLETEXT "Heya its'a me ...\n\n\n\n Pikachuu.."
 // does he appear in battle after his last pokemon got into red hp
 INBATTLE false
 //INBATTLETEXT "notused"
-ONLOST "Aw snap! I lost. AGAIN!!!!"
+ONLOSE "Aw snap! I lost. AGAIN!!!!"
 ONWIN "Yes my first victory! Now I'm going for champ"
 DIR 1
 SIGHT 4

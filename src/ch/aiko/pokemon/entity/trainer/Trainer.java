@@ -71,7 +71,7 @@ public class Trainer extends Entity {
 			curAnim++;
 			return;
 		}
-
+		
 		if (holder != null && !defeated) {
 			int x = holder.getX();
 			int y = holder.getY();
