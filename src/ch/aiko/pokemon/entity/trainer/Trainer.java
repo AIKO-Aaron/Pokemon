@@ -16,6 +16,8 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 
 public class Trainer extends Entity {
 
+	public static final int OFFSET = 10;
+	
 	public TeamPokemon[] team = new TeamPokemon[6];
 	public String name, battletext, inbattletext, wintext, losttext;
 	public boolean inbattle;
@@ -46,7 +48,7 @@ public class Trainer extends Entity {
 	public void render(Renderer renderer) {
 		sprite = walkingAnims[dir * 4 + anim];
 		renderer.drawSprite(sprite, xPos, yPos);
-		renderer.drawRect(xPos + (dir == 2 ? -xdistance : dir == 3 ? sprite.getWidth() : 0), yPos + (dir == 1 ? -ydistance : dir == 0 ? sprite.getHeight() : 0), dir == 2 || dir == 3 ? xdistance : sprite.getWidth(), dir == 0 || dir == 1 ? ydistance : sprite.getHeight(), 0xFFFF00FF);
+		renderer.drawRect(xPos + (dir == 2 ? -xdistance : dir == 3 ? sprite.getWidth() : 0) + OFFSET, yPos + (dir == 1 ? -ydistance : dir == 0 ? sprite.getHeight() : 0) + OFFSET, (dir == 2 || dir == 3 ? xdistance : sprite.getWidth()) - 2 * OFFSET, (dir == 0 || dir == 1 ? ydistance : sprite.getHeight()) - 2 * OFFSET, 0xFFFF00FF);
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class Trainer extends Entity {
 			return;
 		}
 		
-		if (holder != null && !defeated) {
+		if (holder != null/** && !defeated*/) {
 			int x = holder.getX();
 			int y = holder.getY();
 			int w = holder.getWidth();
@@ -100,7 +102,7 @@ public class Trainer extends Entity {
 					xOff++;
 				xdistance = xOff;
 			}
-			if (x + w + (dir == 2 ? xdistance : 0) > xPos && x < xPos + sprite.getWidth() + (dir == 3 ? xdistance : 0) && y + h + (dir == 1 ? ydistance : 0) > yPos && y < yPos + sprite.getHeight() + (dir == 0 ? ydistance : 0)) {
+			if (!defeated && x + w + (dir == 2 ? xdistance : 0) - OFFSET > xPos && x + OFFSET < xPos + sprite.getWidth() + (dir == 3 ? xdistance : 0) && y + h + (dir == 1 ? ydistance : 0) - OFFSET > yPos && y + OFFSET < yPos + sprite.getHeight() + (dir == 0 ? ydistance : 0)) {
 				holder.isPaused = true;
 				walkingToPlayer = true;
 			}

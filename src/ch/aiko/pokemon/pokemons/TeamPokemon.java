@@ -219,5 +219,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	public boolean isKO() {
 		return currentState == PokemonState.DEFEATED;
 	}
+	
+	public float getDamageToDeal() {return damageToDeal;}
 
 }

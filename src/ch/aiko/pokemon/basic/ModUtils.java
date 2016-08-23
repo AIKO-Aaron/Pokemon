@@ -11,6 +11,7 @@ import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.attacks.AttackUtil;
+import ch.aiko.pokemon.attacks.Type;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
@@ -50,12 +51,20 @@ public class ModUtils {
 		return Pokemon.pokemon.handler.level;
 	}
 
-	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num) {
-		new Pokemons(name, moveSet, num);
+	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num, Type t1) {
+		new Pokemons(name, moveSet, num).setType(t1, null);
 	}
 
-	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num, int lvlForEvo, int evolvesTo) {
-		new Pokemons(name, moveSet, num, lvlForEvo, evolvesTo);
+	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num, int lvlForEvo, int evolvesTo, Type t1) {
+		new Pokemons(name, moveSet, num, lvlForEvo, evolvesTo).setType(t1, null);
+	}
+	
+	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num, Type t1, Type t2) {
+		new Pokemons(name, moveSet, num).setType(t1, t2);
+	}
+
+	public static void createNewPokemon(String name, HashMap<Integer, Attack> moveSet, int num, int lvlForEvo, int evolvesTo, Type t1, Type t2) {
+		new Pokemons(name, moveSet, num, lvlForEvo, evolvesTo).setType(t1, t2);
 	}
 
 	public static HashMap<Integer, Attack> createMoveSet(Attack... attacks) {

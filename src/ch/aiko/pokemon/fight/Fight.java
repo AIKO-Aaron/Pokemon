@@ -19,6 +19,7 @@ import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.entity.trainer.Trainer;
 import ch.aiko.pokemon.graphics.menu.Animation;
 import ch.aiko.pokemon.graphics.menu.Menu;
+import ch.aiko.pokemon.graphics.menu.TextBox;
 import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
@@ -185,12 +186,16 @@ public class Fight extends LayerContainer {
 
 	public void attack(Attack attack) {
 		pok2.hit(attack.attackDamage);
-		pok1.hit(attack.backFire);
+		pok1.hit(pok1.getMaxHP() * attack.backFire / 100);
+
+		if (ct.inbattle && ct.getTeamLength() == ti && (pok2.getHP() - pok2.getDamageToDeal() < pok2.getMaxHP() / 2)) addLayer(new TextBox(ct.inbattletext));
 	}
 
 	public void trainer_attack(Attack attack) {
 		pok1.hit(attack.attackDamage);
-		pok2.hit(attack.backFire);
+		pok2.hit(pok2.getMaxHP() * attack.backFire / 100);
+
+		if (ct.inbattle && ct.getTeamLength() == ti && (pok2.getHP() - pok2.getDamageToDeal() < pok2.getMaxHP() / 2)) addLayer(new TextBox(ct.inbattletext));
 	}
 
 }

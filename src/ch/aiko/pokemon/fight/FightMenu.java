@@ -13,6 +13,7 @@ import ch.aiko.pokemon.pokemons.TeamPokemon;
 public class FightMenu extends Menu {
 
 	final int width = 250;
+	private boolean open;
 	private Fight fight;
 
 	public FightMenu(Screen parent, Fight fight) {
@@ -23,8 +24,11 @@ public class FightMenu extends Menu {
 	}
 
 	public void reopen() {
+		open = true;
+		removeAllButtons();
 		int xc = parent.getFrameWidth() - width;
 		int yc = parent.getFrameHeight() - 100;
+		
 
 		addButton(new Button(xc - width, yc - 100, width, 100, "Fight", (b) -> openMoves((Button) b)), 1, 0);
 		addButton(new Button(xc, yc - 100, width, 100, "Pokemon", (b) -> buttonPressed((Button) b)), 1, 2);
@@ -44,15 +48,14 @@ public class FightMenu extends Menu {
 
 	public void attack(Button b) {
 		removeAllButtons();
-		
+		open = false;
 		fight.attack(AttackUtil.getAttack(b.getText()));
-
-		reopen();
 	}
 
 	public void buttonPressed(Button sender) {
-		removeAllButtons();
-		addButton(new Button(0, 0, 350, 100, sender.getText(), (b) -> buttonPressed((Button) b)), 1, 0);
+		open = true;
+		//removeAllButtons();
+		//addButton(new Button(0, 0, 350, 100, sender.getText(), (b) -> buttonPressed((Button) b)), 1, 0);
 	}
 
 	@Override
@@ -71,7 +74,9 @@ public class FightMenu extends Menu {
 	@Override
 	public void updateMenu(Screen s, Layer l) {
 		if (popKeyPressed(KeyEvent.VK_RIGHT) || popKeyPressed(KeyEvent.VK_LEFT)) index = (index + 2) % buttons.size();
-
+		if(popKeyPressed(KeyEvent.VK_ESCAPE)) reopen();
+		if(!open && fight.pok1.getDamageToDeal() <= 0 && fight.pok2.getDamageToDeal() <= 0 && !fight.pok1.isKO() && !fight.pok2.isKO()) reopen();
+		
 		if (xOffset > 0) xOffset -= 10;
 	}
 

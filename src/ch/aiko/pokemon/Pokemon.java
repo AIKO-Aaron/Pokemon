@@ -68,9 +68,9 @@ public class Pokemon {
 
 			player = new Player(32 * 3, 32 * 2);
 			// Load Player
-			player.load();
+			Level level = player.load();
 			
-			Level level = new Level("/ch/aiko/pokemon/level/test.layout");
+			//Level level = new Level("/ch/aiko/pokemon/level/test.layout");
 
 			handler.init(level, player);
 		} else {

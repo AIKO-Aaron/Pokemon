@@ -5,7 +5,10 @@ import java.util.ArrayList;
 
 import ch.aiko.as.ASArray;
 import ch.aiko.as.ASDataBase;
+import ch.aiko.as.ASField;
 import ch.aiko.as.ASObject;
+import ch.aiko.as.ASString;
+import ch.aiko.as.SerializationReader;
 import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
@@ -124,8 +127,14 @@ public class Player extends Entity {
 				td[i] = trainersDefeated.get(i);
 			tdo.addArray(ASArray.Integer("TD", td));
 
+			ASObject poso = new ASObject("POS");
+			poso.addField(ASField.Integer("X", xPos));
+			poso.addField(ASField.Integer("Y", yPos));
+			poso.addString(ASString.Create("Level", Pokemon.pokemon.handler.level.path));
+
 			base.addObject(teamObj);
 			base.addObject(tdo);
+			base.addObject(poso);
 			base.saveToFile(FileUtil.getRunningJar().getParent() + "/player.bin");
 		} catch (Throwable t) {
 			t.printStackTrace(Pokemon.out);
@@ -276,7 +285,7 @@ public class Player extends Entity {
 		}, true));
 	}
 
-	public void load() {
+	public Level load() {
 		ASDataBase base = ASDataBase.createFromFile(FileUtil.getRunningJar().getParent() + "/player.bin");
 		if (base != null) {
 			ASObject teamObj = base.getObject("Team");
@@ -299,9 +308,16 @@ public class Player extends Entity {
 					if (!trainersDefeated.contains(i)) trainersDefeated.add(i);
 				}
 			}
+
+			ASObject poso = base.getObject("POS");
+			xPos = SerializationReader.readInt(poso.getField("X").data, 0);
+			yPos = SerializationReader.readInt(poso.getField("Y").data, 0);
+			return new Level(poso.getString("Level").toString());
 		} else {
 			team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Exterminator", ModUtils.convertToAttacks("Tackle", "Verzweifler"), 5, 10, 10, 10, 10, 10, 10, 10);
 		}
+
+		return new Level("/ch/aiko/pokemon/level/test.layout");
 	}
 
 	public int getTeamLength() {

@@ -18,9 +18,11 @@ public class Button extends MenuObject {
 	protected boolean selected = false, nu = true;
 	protected MenuObjectAction r = (MenuObject b) -> {};
 	protected int lastX, lastY;
+	protected int textsize = 0;
 
 	public Button() {
 		x = y = w = h = 0;
+		textsize = 0;
 		text = "";
 	}
 
@@ -29,6 +31,7 @@ public class Button extends MenuObject {
 		this.y = y;
 		this.w = w;
 		this.h = h;
+		textsize = h / 2;
 		this.text = text;
 	}
 
@@ -37,6 +40,7 @@ public class Button extends MenuObject {
 		this.y = y;
 		this.w = w;
 		this.h = h;
+		textsize = h / 2;
 		this.text = text;
 		this.r = r;
 	}
@@ -58,6 +62,7 @@ public class Button extends MenuObject {
 
 	public Button setHeight(int h) {
 		this.h = h;
+		textsize = h / 2;
 		return this;
 	}
 
@@ -125,13 +130,19 @@ public class Button extends MenuObject {
 
 	@Override
 	public void render(Renderer renderer) {
-		renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
-		renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);
+		// renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
+		// renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);
 
-		int xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), text)) / 2;
-		int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, h / 2))) / 2;
+		renderer.fillOval(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000);
+		renderer.drawOval(x, y, w, h, selected ? 0xFFFF00FF : 0xFFFFFFFF, 5);
 
-		renderer.drawText(text, Settings.font, h / 2, 0, xstart, ystart, 0xFF000000);
+		int xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textsize), text)) / 2;
+		while (xstart < x + 20) {
+			textsize--;
+			xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textsize), text)) / 2;
+		}
+		int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, textsize))) / 3;
+		renderer.drawText(text, Settings.font, textsize, 0, xstart, ystart, selected ? 0xFFFF00FF : 0xFFFFFFFF);
 	}
 
 	public void buttonPressed() {
