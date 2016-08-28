@@ -146,11 +146,21 @@ public class Fight extends LayerContainer {
 			}
 		}
 
-		if (pok2.isKO() && ct.getTeamLength() <= ++ti) {
+		if (pok1.isKO()) pok1.goDown();
+		if (pok2.isKO()) pok2.goDown();
+
+		if (pok1.isDown() && cp.getTeamLength() <= pi) {
+			cp.lostBattle(ct);
+			++pi;
+		} else if (pok1.isDown()) {
+
+		}
+		if (pok2.isDown() && ct.getTeamLength() <= ++ti) {
 			cp.winBattle(ct);
 			ct.defeated = true;
-		} else if (pok1.isKO() && cp.getTeamLength() <= ++pi) {
-			cp.lostBattle(ct);
+			++ti;
+		} else if (pok2.isDown()) {
+
 		}
 
 		color = pok1.getHP() > pok1.getMaxHP() / 2 ? 0xFF00FF00 : pok1.getHP() > pok1.getMaxHP() / 8 ? 0xFFFFFF00 : 0xFFFF0000;

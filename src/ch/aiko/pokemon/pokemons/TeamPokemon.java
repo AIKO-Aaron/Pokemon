@@ -38,6 +38,9 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	protected int level;
 	protected int xp;
 
+	public int yOff;
+	public boolean down, isDown;
+
 	public TeamPokemon(ASObject obj1) {
 		init(obj1);
 	}
@@ -132,7 +135,7 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	public void render(Renderer renderer) {
 		int x = holder == PokemonType.OWNED ? 200 : (int) (renderer.getWidth() - 250 - animation.getMaxWidth() / 2);
 		int y = holder == PokemonType.OWNED ? renderer.getHeight() - (int) (animation.getMaxHeight() * animation.getScale()) : (int) (310 - animation.getMaxHeight() * animation.getScale());
-		animation.render(renderer, x, y);
+		animation.render(renderer, x, y + yOff);
 	}
 
 	public void setType(Pokemons t) {
@@ -152,13 +155,23 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 		if (healthPoints <= 0) ko();
 		if (healthPoints > getMaxHP()) healthPoints = getMaxHP();
 		if (damageToDeal != 0 && healthPoints > 0) {
-			float DAMAGE_PER_UPDATE = 0.03F * (damageToDeal + 0.5F);
+			float DAMAGE_PER_UPDATE = 0.01F * (damageToDeal + 0.5F);
+			DAMAGE_PER_UPDATE = DAMAGE_PER_UPDATE < 0.2F ? 0.2F : DAMAGE_PER_UPDATE;
 			healthPoints -= DAMAGE_PER_UPDATE;
 			damageToDeal -= DAMAGE_PER_UPDATE;
 		} else if (healthPoints <= 0) {
 			damageToDeal = 0;
 			healthPoints = 0;
 			ko();
+		}
+
+		if (down) {
+			yOff += 6;
+			// int y = holder == PokemonType.OWNED ? screen.getRenderer().getHeight() - (int) (animation.getMaxHeight() * animation.getScale()) : (int) (310 - animation.getMaxHeight() * animation.getScale());
+			// y += yOff;
+			if (yOff > animation.getMaxHeight() + 100) {
+				isDown = true;
+			}
 		}
 	}
 
@@ -219,7 +232,16 @@ public class TeamPokemon extends ASDataType implements Renderable, Updatable {
 	public boolean isKO() {
 		return currentState == PokemonState.DEFEATED;
 	}
-	
-	public float getDamageToDeal() {return damageToDeal;}
 
+	public float getDamageToDeal() {
+		return damageToDeal;
+	}
+
+	public void goDown() {
+		down = true;
+	}
+
+	public boolean isDown() {
+		return isDown;
+	}
 }

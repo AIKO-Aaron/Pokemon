@@ -1,7 +1,6 @@
 package ch.aiko.pokemon.graphics.menu;
 
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -14,6 +13,7 @@ import ch.aiko.engine.graphics.Updatable;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
+import ch.aiko.pokemon.settings.Settings;
 
 public abstract class Menu extends LayerContainer implements Renderable, Updatable {
 
@@ -111,7 +111,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 	@Override
 	public final void layerUpdate(Screen s, Layer l) {
-		if (x_for_close && popKeyPressed(KeyEvent.VK_X)) closeMe();
+		if (x_for_close && popKeyPressed(Settings.getInteger("keyMenu"))) closeMe();
 
 		if (manage_buttons && buttons.size() > 0) {
 			Point pos = s.getMousePosition();
@@ -120,13 +120,13 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 			if (popMouseKey(MouseEvent.BUTTON1)) if (((Button) buttons.get(index)).isInside(mx, my)) ((Button) buttons.get(index)).buttonPressed();
 
-			if (popKeyPressed(KeyEvent.VK_SPACE)) ((Button) buttons.get(index)).buttonPressed();
+			if (popKeyPressed(Settings.getInteger("keyA"))) ((Button) buttons.get(index)).buttonPressed();
 
 			for (int i = 0; i < buttons.size(); i++)
 				if (i != mouseSel && ((Button) buttons.get(i)).isInside(mx, my)) mouseSel = index = i;
 			
-			if (popKeyPressed(KeyEvent.VK_DOWN)) index = (index + 1) % buttons.size();
-			if (popKeyPressed(KeyEvent.VK_UP)) index = index > 0 ? (index - 1) : buttons.size() - 1;
+			if (popKeyPressed(Settings.getInteger("keyDown"))) index = (index + 1) % buttons.size();
+			if (popKeyPressed(Settings.getInteger("keyUp"))) index = index > 0 ? (index - 1) : buttons.size() - 1;
 
 			for (int i = 0; i < buttons.size(); i++)
 				((Button) buttons.get(i)).setSelected(i == index);

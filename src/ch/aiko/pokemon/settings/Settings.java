@@ -71,13 +71,13 @@ public class Settings extends PropertyUtil {
 	}
 	
 	public static String getPath() {
-		String s = System.getProperty("user.home") + "/";
+		/**String s = System.getProperty("user.home") + "/";
 		
 		if(System.getProperty("os.name").contains("Mac")) s += "/Library/Application Support/Pokemon/";
 		else if(System.getProperty("os.name").contains("Windows")) s += "/AppData/Roaming/Pokemon/";
-		else s += "Pokemon/";
+		else s += "Pokemon/";*/
 		
-		return s;
+		return FileUtil.getRunningJar().getParent();
 	}
 	
 	public static String get(String key) {

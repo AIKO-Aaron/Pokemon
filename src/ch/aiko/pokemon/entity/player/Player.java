@@ -1,6 +1,5 @@
 package ch.aiko.pokemon.entity.player;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import ch.aiko.as.ASArray;
@@ -28,6 +27,7 @@ import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.Pokemons;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
+import ch.aiko.pokemon.settings.Settings;
 import ch.aiko.util.FileUtil;
 
 public class Player extends Entity {
@@ -172,15 +172,15 @@ public class Player extends Entity {
 
 		Level level = (Level) getParent();
 
-		if (input.popKeyPressed(KeyEvent.VK_X)) {
+		if (input.popKeyPressed(Settings.getInteger("keyMenu"))) {
 			PlayerMenu menu = (PlayerMenu) level.openMenu(new PlayerMenu(screen));
 			ModLoader.performEvent(new PokemonEvents.PlayerOpenMenuEvent(menu));
 		}
 
-		if (input.isKeyPressed(KeyEvent.VK_LEFT)) xx--;
-		if (input.isKeyPressed(KeyEvent.VK_RIGHT)) xx++;
-		if (input.isKeyPressed(KeyEvent.VK_UP)) yy--;
-		if (input.isKeyPressed(KeyEvent.VK_DOWN)) yy++;
+		if (input.isKeyPressed(Settings.getInteger("keyLeft"))) xx--;
+		if (input.isKeyPressed(Settings.getInteger("keyRight"))) xx++;
+		if (input.isKeyPressed(Settings.getInteger("keyUp"))) yy--;
+		if (input.isKeyPressed(Settings.getInteger("keyDown"))) yy++;
 
 		if (!CAN_WALK_SIDEWAYS) {
 			if (xx != 0) yy = 0;

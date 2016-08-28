@@ -13,7 +13,9 @@ import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.sprite.SpriteSerialization;
 import ch.aiko.engine.sprite.Tile;
+import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.graphics.menu.Menu;
@@ -218,23 +220,28 @@ public class Level extends LayerContainer {
 
 	public Menu openMenu(Menu menu) {
 		menu.onOpen();
+		ModLoader.performEvent(new PokemonEvents.MenuOpeningEvent(menu));
 		openMenus.add(addLayer(menu));
 		return menu;
 	}
 
 	public void closeTopMenu() {
 		Layer topLayer = openMenus.pop();
+		while (!(topLayer instanceof Menu))
+			topLayer = openMenus.pop();
+		ModLoader.performEvent(new PokemonEvents.MenuClosingEvent((Menu) topLayer));
 		((Menu) topLayer).onClose();
 		removeLayer(topLayer);
 	}
 
 	public void closeAllMenus() {
-		while (openMenus.isEmpty())
+		while (!openMenus.isEmpty())
 			closeTopMenu();
 	}
 
 	public void closeMenu(Menu m) {
 		openMenus.remove(m);
+		ModLoader.performEvent(new PokemonEvents.MenuClosingEvent(m));
 		m.onClose();
 		removeLayer(m);
 	}
