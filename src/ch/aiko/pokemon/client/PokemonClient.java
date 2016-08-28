@@ -51,8 +51,8 @@ public class PokemonClient {
 		} catch (Throwable e) {
 			e.printStackTrace(Pokemon.out);
 		}
-		sender.start();
 		receiver.start();
+		sender.start();
 		if (uuid != null && !uuid.equalsIgnoreCase(connectTo) && uuid.contains("-")) sendText("/c/" + uuid);
 		else sendText("/ruuid/");
 	}
