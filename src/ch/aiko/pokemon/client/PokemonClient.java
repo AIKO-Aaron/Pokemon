@@ -22,7 +22,7 @@ import ch.aiko.pokemon.server.ServerPlayer;
 
 public class PokemonClient {
 
-	public static final int PORT = 4732;
+	public static int PORT = 4732;
 
 	public ArrayList<OtherPlayer> players = new ArrayList<OtherPlayer>();
 	public Thread receiver, sender;
@@ -43,7 +43,8 @@ public class PokemonClient {
 	private boolean receivingPlayers = false;
 
 	public PokemonClient(String connectTo, String uuid) {
-		address = connectTo;
+		address = connectTo.split(":")[0];
+		if (connectTo.contains(":")) PORT = Integer.parseInt(connectTo.split(":")[1]);
 		receiver = new Thread(() -> receive());
 		sender = new Thread(() -> send());
 		try {

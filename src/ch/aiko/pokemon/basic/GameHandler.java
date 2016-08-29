@@ -9,15 +9,11 @@ import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Window;
 import ch.aiko.modloader.ModLoader;
+import ch.aiko.pokemon.MacAdapter;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.level.Level;
-
-import com.apple.eawt.AppEvent.QuitEvent;
-import com.apple.eawt.Application;
-import com.apple.eawt.QuitHandler;
-import com.apple.eawt.QuitResponse;
 
 public class GameHandler {
 
@@ -28,12 +24,9 @@ public class GameHandler {
 	public static boolean gameStarted = false;
 
 	public GameHandler() {
-		Application.getApplication().setQuitHandler(new QuitHandler() {
-			public void handleQuitRequestWith(QuitEvent arg0, QuitResponse qr) {
-				quit();
-				qr.performQuit();
-			}
-		});
+		if (System.getProperty("os.name").contains("Mac")) {
+			MacAdapter.addCloseFunction(()->quit());
+		}
 
 		screen = new Screen(960, 540) {
 			private static final long serialVersionUID = 9052690094292517622L;

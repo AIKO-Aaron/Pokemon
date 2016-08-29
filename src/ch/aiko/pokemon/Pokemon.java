@@ -23,6 +23,7 @@ public class Pokemon {
 
 	public static final Log out = new Log(Pokemon.class);
 
+	private static String moddir;
 	public static boolean PRELOAD = false;
 	public static boolean ONLINE;
 	public static Pokemon pokemon;
@@ -41,6 +42,7 @@ public class Pokemon {
 	 */
 	public static PokemonClient client;
 
+
 	public Pokemon() {
 		pokemon = this;
 		Settings.load();
@@ -51,10 +53,8 @@ public class Pokemon {
 
 	public void start(String ip) {
 		// If we are in eclipse
-		boolean isDir = FileUtil.getRunningJar().isDirectory();
-
 		out.println("Starting Modloader...");
-		ModLoader.loadMods((isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getParent()) + "/mods/", () -> load(ip));
+		ModLoader.loadMods(moddir, () -> load(ip));
 		out.println("Done loading mods. Starting threads...");
 
 		if (PRELOAD) PokeUtil.loadEmAll();
@@ -67,10 +67,8 @@ public class Pokemon {
 			ONLINE = false;
 
 			player = new Player(32 * 3, 32 * 2);
-			// Load Player
+			// Load Player & Level
 			Level level = player.load();
-			
-			//Level level = new Level("/ch/aiko/pokemon/level/test.layout");
 
 			handler.init(level, player);
 		} else {
@@ -101,9 +99,12 @@ public class Pokemon {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		boolean isDir = FileUtil.getRunningJar().isDirectory();
+		moddir = (isDir ? FileUtil.getRunningJar().getParent() : FileUtil.getRunningJar().getParent()) + "/mods/";
 		for (String arg : args) {
 			if (arg.equalsIgnoreCase("--debug-mode=true")) DEBUG = true;
 			if (arg.equalsIgnoreCase("-preload")) PRELOAD = true;
+			if (arg.startsWith("-m=") || arg.startsWith("--mods=")) moddir = arg.substring(arg.split("=")[0].length() + 1);
 		}
 		pokemon = new Pokemon();
 		new MainMenu();
