@@ -33,6 +33,11 @@ public class TextureLoader {
 				}
 			}
 		}
+		try {
+			return new GIF(ImageUtil.readGif(TextureLoader.class.getResourceAsStream((path.startsWith("/") ? "" : "/") + path), scale), scale);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		Pokemon.out.err("Error loading " + path + ". It cannot be found. EVERYBODY PANIC!!!");
 		return null;
 	}
