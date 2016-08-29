@@ -194,6 +194,7 @@ public class PokemonClient {
 			op.setWalking(op.lx != otpl.getX() || op.ly != otpl.getY());
 			op.setX(otpl.getX()).setY(otpl.getY()).setUUID(otpl.uuid).setDirection(otpl.getDirection());
 		} else if (received.startsWith("/SOPD/")) {
+			Pokemon.out.println("Estabalishing connection to server: " + address);
 			dataLength = Integer.parseInt(received.substring(6));
 		}
 	}
