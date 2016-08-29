@@ -12,6 +12,8 @@ public class Button extends MenuObject {
 
 	public static final int THICKNESS = 3;
 
+	public static final int SHRINKING = 2;
+
 	protected int layer;
 	protected int x, y, w, h;
 	protected String text;
@@ -19,10 +21,14 @@ public class Button extends MenuObject {
 	protected MenuObjectAction r = (MenuObject b) -> {};
 	protected int lastX, lastY;
 	protected int textsize = 0;
+	protected int button_type = 0;
+	protected boolean pressed = false;
+
+	public static final int ROUND_BUTTON = 0;
+	public static final int RECT_BUTTON = 1;
 
 	public Button() {
 		x = y = w = h = 0;
-		textsize = 0;
 		text = "";
 	}
 
@@ -31,7 +37,6 @@ public class Button extends MenuObject {
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		textsize = h / 2;
 		this.text = text;
 	}
 
@@ -40,7 +45,6 @@ public class Button extends MenuObject {
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		textsize = h / 2;
 		this.text = text;
 		this.r = r;
 	}
@@ -62,7 +66,6 @@ public class Button extends MenuObject {
 
 	public Button setHeight(int h) {
 		this.h = h;
-		textsize = h / 2;
 		return this;
 	}
 
@@ -120,9 +123,14 @@ public class Button extends MenuObject {
 		int yy = getMouseYInFrame(screen);
 		if (xx > x && xx < x + w && yy > y && yy < y + h) {
 			if (xx != lastX || yy != lastY) selected = true;
-			if (input.popMouseKey(MouseEvent.BUTTON1)) {
+			if (input.isMouseKeyPressed(MouseEvent.BUTTON1)) {
+				setPressed();
+			} else if (pressed) {
 				buttonPressed();
 			}
+		} else if (input.isMouseKeyPressed(MouseEvent.BUTTON1)) {
+			pressed = false;
+			selected = false;
 		} else selected = false;
 		lastX = xx;
 		lastY = yy;
@@ -130,14 +138,15 @@ public class Button extends MenuObject {
 
 	@Override
 	public void render(Renderer renderer) {
-		// renderer.drawRect(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
-		// renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);
-
-		renderer.fillOval(x, y, w, h, selected ? 0xFFFF00FF : 0xFF000000);
-		renderer.drawOval(x, y, w, h, selected ? 0xFFFF00FF : 0xFFFFFFFF, 5);
-
+		if (button_type == RECT_BUTTON) {
+			renderer.drawRect(x + (pressed ? SHRINKING : 0), y + (pressed ? SHRINKING : 0), w - (pressed ? 2 * SHRINKING : 0), h - (pressed ? 2 * SHRINKING : 0), selected ? 0xFFFF00FF : 0xFF000000, THICKNESS);
+			renderer.fillRect(x + (pressed ? SHRINKING : 0) + THICKNESS, y + (pressed ? SHRINKING : 0) + THICKNESS, w - 2 * THICKNESS - 1 - (pressed ? 2 * SHRINKING : 0), h - 2 * THICKNESS - 1 - (pressed ? 2 * SHRINKING : 0), 0xFFFFFFFF);
+		} else if (button_type == ROUND_BUTTON) {
+			renderer.fillOval(x + (pressed ? SHRINKING : 0), y + (pressed ? SHRINKING : 0), w - (pressed ? 2 * SHRINKING : 0), h - (pressed ? 2 * SHRINKING : 0), selected ? 0xFFFF00FF : 0xFF000000);
+			renderer.drawOval(x + (pressed ? SHRINKING : 0), y + (pressed ? SHRINKING : 0), w - (pressed ? 2 * SHRINKING : 0), h - (pressed ? 2 * SHRINKING : 0), selected ? 0xFFFF00FF : 0xFFFFFFFF, 5);
+		}
 		int xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textsize), text)) / 2;
-		while (xstart < x + 20) {
+		while (xstart < x + 20 + (pressed ? 2 * SHRINKING : 0)) {
 			textsize--;
 			xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textsize), text)) / 2;
 		}
@@ -146,6 +155,7 @@ public class Button extends MenuObject {
 	}
 
 	public void buttonPressed() {
+		pressed = false;
 		r.actionPerformed(this);
 	}
 
@@ -154,8 +164,18 @@ public class Button extends MenuObject {
 		return this;
 	}
 
-	public void setNeedsUpdates(boolean b) {
+	public Button setNeedsUpdates(boolean b) {
 		nu = b;
+		return this;
+	}
+
+	public Button setType(int typ) {
+		button_type = typ;
+		return this;
+	}
+
+	public void setPressed() {
+		pressed = true;
 	}
 
 }

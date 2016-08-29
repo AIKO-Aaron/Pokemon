@@ -9,7 +9,6 @@ import ch.aiko.engine.graphics.Layer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Window;
 import ch.aiko.modloader.ModLoader;
-import ch.aiko.pokemon.MacAdapter;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
 import ch.aiko.pokemon.entity.player.Player;
@@ -55,7 +54,9 @@ public class GameHandler {
 				quit();
 			}
 
-			public void windowClosed(WindowEvent e) {}
+			public void windowClosed(WindowEvent e) {
+				quit();
+			}
 
 			public void windowActivated(WindowEvent e) {}
 		});

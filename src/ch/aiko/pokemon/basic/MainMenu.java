@@ -34,7 +34,7 @@ public class MainMenu extends LayerContainer {
 	
 	public void openMultiPlayerMenu() {
 		if (mpopen) return;
-		Layer tf = addLayer(new TextField(WIDTH, HEIGHT, WIDTH, HEIGHT, 25, "IP", (MenuObject sender) -> startMultiPlayer((TextField) sender)));
+		Layer tf = addLayer(new TextField(WIDTH, HEIGHT, WIDTH, HEIGHT, "IP", (MenuObject sender) -> startMultiPlayer((TextField) sender)));
 		addLayer(new Button(WIDTH, HEIGHT * 2, WIDTH, HEIGHT, "Connect", (MenuObject sender) -> startMultiPlayer((TextField) tf)));
 		mpopen = true;
 	}

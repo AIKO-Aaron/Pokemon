@@ -1,4 +1,4 @@
-package ch.aiko.pokemon;
+package ch.aiko.pokemon.basic;
 
 import com.apple.eawt.Application;
 import com.apple.eawt.QuitHandler;
