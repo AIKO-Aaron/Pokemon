@@ -10,6 +10,7 @@ import ch.aiko.engine.graphics.Renderable;
 import ch.aiko.engine.graphics.Renderer;
 import ch.aiko.engine.graphics.Screen;
 import ch.aiko.engine.graphics.Updatable;
+import ch.aiko.engine.input.Input;
 import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.pokemon.fight.Fight;
 import ch.aiko.pokemon.level.Level;
@@ -28,12 +29,42 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 	protected ArrayList<Layer> buttons = new ArrayList<Layer>();
 
+	/**
+	 * Limited functionality Use at own risk
+	 */
+	public Menu(boolean doNotInvoke) {
+
+	}
+
 	public Menu(Screen parent) {
 		resetOffset = false;
 		this.parent = parent;
 		this.level = (Level) parent.getTopLayer("Level");
 		this.fight = (Fight) parent.getTopLayer("Fight");
-		this.holder = (Player) (level).getTopLayer("Player");
+		if (holder != null) this.holder = (Player) (level).getTopLayer("Player");
+	}
+
+	public Layer addLayer(Layer l) {
+		if (l == null) return l;
+		l.onOpen(parent);
+		l.setParent(this);
+		if (layers.size() <= 0) {
+			layers.add(l);
+		} else {
+			for (int i = 0; i < layers.size(); i++) {
+				if (layers.get(i).getLevel() <= l.getLevel()) {
+					layers.add(i, l);
+					break;
+				}
+			}
+		}
+
+		if (input != null && input.screen != null) l.setInput(new Input(input.screen));
+
+		lastRendered = getLowestRendered();
+		lastUpdated = getLowestUpdated();
+
+		return l;
 	}
 
 	/**
@@ -122,7 +153,7 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 				if (((Button) buttons.get(index)).isInside(mx, my)) ((Button) buttons.get(index)).setPressed();
 			} else if (((Button) buttons.get(index)).pressed) {
 				if (((Button) buttons.get(index)).isInside(mx, my)) ((Button) buttons.get(index)).buttonPressed();
-				else ((Button) buttons.get(index)).pressed = false;
+				else((Button) buttons.get(index)).pressed = false;
 			}
 
 			if (popKeyPressed(Settings.getInteger("keyA"))) ((Button) buttons.get(index)).buttonPressed();

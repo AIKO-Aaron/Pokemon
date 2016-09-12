@@ -12,6 +12,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.entity.player.Player;
 import ch.aiko.util.FileUtil;
 import ch.aiko.util.PropertyUtil;
 
@@ -116,6 +117,7 @@ public class Language extends PropertyUtil {
 	}
 
 	public static String translate(String s) {
+		s = replaceKeys(s);
 		s = s.replace("/", " / ");
 		String ret = "";
 		for (String part : s.split(" ")) {
@@ -124,6 +126,7 @@ public class Language extends PropertyUtil {
 		ret = ret.substring(0, ret.length() - 1);
 		ret = ret.replace(" / ", "/");
 		ret = ret.substring(0, 1).toUpperCase() + ret.substring(1);
+		ret = replaceKeys(ret);
 		return ret;
 	}
 
@@ -133,5 +136,17 @@ public class Language extends PropertyUtil {
 
 	public String getLanguageName() {
 		return getValue(__lang);
+	}
+
+	public static String replaceKeys(String s) {
+		if(Pokemon.player != null) s = replace(s, ("$(PLAYER_NAME)"), Pokemon.player.name, false);
+		if(Pokemon.player != null) s = replace(s, ("$(PLAYER_GENDER)"), Pokemon.player.gender == Player.BOY ? "BOY" : "GIRL", true);
+
+		return s;
+	}
+	
+	public static String replace(String s, String key, String value, boolean translation) {
+		if(s.contains(key)) return s.replace(key, translation ? translate(value) : value);
+		return s;
 	}
 }

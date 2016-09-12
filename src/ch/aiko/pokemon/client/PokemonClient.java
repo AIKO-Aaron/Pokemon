@@ -17,6 +17,7 @@ import ch.aiko.modloader.ModLoader;
 import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.entity.player.OtherPlayer;
+import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
 import ch.aiko.pokemon.server.ServerPlayer;
 
@@ -39,8 +40,11 @@ public class PokemonClient {
 	public ArrayList<Integer> trainersDefeated = new ArrayList<Integer>();
 	private ArrayList<String> texts = new ArrayList<String>();
 	private int dataLength = 0;
-
+	public int gender;
+	public String name;
+	
 	private boolean receivingPlayers = false;
+
 
 	public PokemonClient(String connectTo, String uuid) {
 		address = connectTo.split(":")[0];
@@ -108,6 +112,8 @@ public class PokemonClient {
 						team = p.team;
 						x = p.x;
 						y = p.y;
+						gender = p.gender;
+						name = p.name;
 						dir = p.dir;
 						pathToLevel = p.currentLevel;
 						trainersDefeated = p.trainersDefeated;
@@ -151,6 +157,8 @@ public class PokemonClient {
 			return; // If mod name is /padd/X/Y/0/0000-0000-0000-0000-0000, we would add a player. Not what we want really
 		}
 
+		if(received.startsWith("/chat/")) Level.addChatMessage(received.substring(6));
+		
 		if (received.equals("/pend/")) receivingPlayers = false;
 		else if (received.startsWith("/guuid/")) {
 			uuid = received.substring(7).trim();

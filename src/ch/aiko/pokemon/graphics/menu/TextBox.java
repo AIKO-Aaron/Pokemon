@@ -85,6 +85,8 @@ public class TextBox extends MenuObject {
 		renderer.drawRect(x, y, w, h, 0xFF000000, THICKNESS);
 		renderer.fillRect(x + THICKNESS, y + THICKNESS, w - 2 * THICKNESS - 1, h - 2 * THICKNESS - 1, 0xFFFFFFFF);
 
+		if(lines == null) return;
+		
 		String text1 = lines.size() > index ? lines.get(index) : "";
 		String text2 = lines.size() > index + 1 ? lines.get(index + 1) : "";
 

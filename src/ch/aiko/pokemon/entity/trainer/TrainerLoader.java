@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.aiko.pokemon.attacks.Attack;
 import ch.aiko.pokemon.attacks.AttackUtil;
+import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.pokemons.PokeUtil;
 import ch.aiko.pokemon.pokemons.PokemonType;
 import ch.aiko.pokemon.pokemons.TeamPokemon;
@@ -71,7 +72,8 @@ public class TrainerLoader extends BasicLoader {
 	public boolean executeCommand(String command, String[] args) {
 
 		if (command.equalsIgnoreCase("NAME")) {
-			loading.name = args[0];
+			if (args[0].equalsIgnoreCase("TRANS")) loading.name = Language.translate(args[0]);
+			else loading.name = args[0];
 		} else if (command.equalsIgnoreCase("SPIN") || command.equalsIgnoreCase("SPINFUNC")) {
 			loading.spinFunc = Integer.parseInt(args[0]);
 		} else if (command.equalsIgnoreCase("SPINTIME")) {
@@ -79,17 +81,21 @@ public class TrainerLoader extends BasicLoader {
 		} else if (command.equalsIgnoreCase("ID")) {
 			loading.id = Integer.parseInt(args[0]);
 		} else if (command.equalsIgnoreCase("BATTLETEXT")) {
-			loading.battletext = args[0];
+			if (args[0].equalsIgnoreCase("TRANS")) loading.battletext = Language.translate(args[1]);
+			else loading.battletext = args[0];
 		} else if (command.equalsIgnoreCase("DIR")) {
 			loading.dir = Integer.parseInt(args[0]);
 		} else if (command.equalsIgnoreCase("SIGHT")) {
 			loading.sight = Integer.parseInt(args[0]);
 		} else if (command.equalsIgnoreCase("ONWIN")) {
-			loading.wintext = args[0];
+			if (args[0].equalsIgnoreCase("TRANS")) loading.wintext = Language.translate(args[1]);
+			else loading.wintext = args[0];
 		} else if (command.equalsIgnoreCase("ONLOSE")) {
-			loading.losttext = args[0];
+			if (args[0].equalsIgnoreCase("TRANS")) loading.losttext = Language.translate(args[1]);
+			else loading.losttext = args[0];
 		} else if (command.equalsIgnoreCase("INBATTLETEXT")) {
-			loading.inbattletext = args[0];
+			if (args[0].equalsIgnoreCase("TRANS")) loading.inbattletext = Language.translate(args[1]);
+			else loading.inbattletext = args[0];
 		} else if (command.equalsIgnoreCase("INBATTLE")) {
 			boolean b;
 			try {
@@ -104,19 +110,23 @@ public class TrainerLoader extends BasicLoader {
 			String nickname = null;
 			ArrayList<Attack> atks = new ArrayList<Attack>();
 			for (int i = 0; i < args.length; i++) {
-				String arg = args[i];
-				if (arg.equalsIgnoreCase("INDEX")) index = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("NUMBER")) dexNumber = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("HP")) hp = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("MAXHP")) maxhp = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("ATK")) atk = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("SPECATK")) satk = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("DEF")) def = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("SPECDEF")) sdef = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("SPEED")) speed = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("XP")) xp = Integer.parseInt(args[++i]);
-				if (arg.equalsIgnoreCase("NICKNAME")) nickname = args[++i];
-				if (arg.equalsIgnoreCase("MOVE")) atks.add(AttackUtil.getAttack(args[++i]));
+				if (args[i].equalsIgnoreCase("INDEX")) index = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("NUMBER")) dexNumber = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("HP")) hp = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("MAXHP")) maxhp = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("ATK")) atk = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("SPECATK")) satk = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("DEF")) def = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("SPECDEF")) sdef = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("SPEED")) speed = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("XP")) xp = Integer.parseInt(args[++i]);
+				if (args[i].equalsIgnoreCase("MOVE")) atks.add(AttackUtil.getAttack(args[++i]));
+				if (args[i].equalsIgnoreCase("NICKNAME")) {
+					if (args[i + 1].equals("TRANS")) {
+						nickname = args[i + 2];
+						i += 2;
+					} else nickname = args[++i];
+				}
 			}
 			if (index < 0 || index >= 6) throwError(line, "Out of bounds! Index must be between 0 and 5");
 			loading.team[index] = new TeamPokemon(PokeUtil.get(dexNumber), PokemonType.ENEMY, nickname == null ? PokeUtil.get(dexNumber).getName() : nickname, atks.toArray(new Attack[atks.size()]), hp, maxhp, atk, satk, def, sdef, speed, xp);
@@ -129,4 +139,7 @@ public class TrainerLoader extends BasicLoader {
 		loading.register();
 		return loading;
 	}
+
+	@Override
+	public void finish() {}
 }

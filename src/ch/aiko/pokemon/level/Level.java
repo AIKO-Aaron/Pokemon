@@ -1,5 +1,7 @@
 package ch.aiko.pokemon.level;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -18,7 +20,9 @@ import ch.aiko.pokemon.Pokemon;
 import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.entity.Entity;
 import ch.aiko.pokemon.entity.player.Player;
+import ch.aiko.pokemon.graphics.menu.Chat;
 import ch.aiko.pokemon.graphics.menu.Menu;
+import ch.aiko.pokemon.settings.Settings;
 
 public class Level extends LayerContainer {
 
@@ -33,8 +37,14 @@ public class Level extends LayerContainer {
 	public LevelPalette lp;
 	public String path;
 
+	public static boolean rendering = false;
+	public static ArrayList<String> texts = new ArrayList<String>();
+	public static ArrayList<Integer> time = new ArrayList<Integer>();
+	public static Font font = new Font(Settings.font, 0, Chat.stringSize);
+
 	private int tileSize = 32;
 	public Stack<Layer> openMenus = new Stack<Layer>();
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
 
 	public Level() {
 		SpriteSerialization.TILE_SIZE = tileSize;
@@ -117,6 +127,7 @@ public class Level extends LayerContainer {
 			tiles.add(current);
 		}
 		Pokemon.out.println("Loaded " + layerCount + " layers for the level, with a total of " + (fieldWidth * fieldHeight * layerCount) + " tiles, but only " + addedTiles + " tiles were added");
+		rendering = true;
 	}
 
 	public Level setPath(String path) {
@@ -126,6 +137,8 @@ public class Level extends LayerContainer {
 
 	public Level loadLevel(String pathToLevel) {
 		path = pathToLevel;
+
+		addClientLog("Loaded Level");
 
 		removeAllLayers();
 		tiles.clear();
@@ -150,6 +163,24 @@ public class Level extends LayerContainer {
 		return this;
 	}
 
+	public static void addChatMessage(String string, int duration) {
+		texts.add(string);
+		time.add(duration);
+	}
+
+	public static void addChatMessage(String string) {
+		texts.add(string);
+		time.add(5 * 60);
+	}
+
+	public static void addClientLog(String log, int duration) {
+		addChatMessage("[Client] " + log, duration);
+	}
+
+	public static void addClientLog(String log) {
+		addChatMessage("[Client] " + log, 5 * 60);
+	}
+
 	public int getLevel() {
 		return -1;
 	}
@@ -160,6 +191,16 @@ public class Level extends LayerContainer {
 
 	public boolean stopsUpdating() {
 		return true;
+	}
+
+	public final int getStringWidth(Screen s, Font f, String text) {
+		FontMetrics metrics = s.getGraphics().getFontMetrics(f);
+		return metrics.stringWidth(text);
+	}
+
+	public final int getStringHeight(Screen s, Font f) {
+		FontMetrics metrics = s.getGraphics().getFontMetrics(f);
+		return metrics.getHeight();
 	}
 
 	@Override
@@ -178,14 +219,80 @@ public class Level extends LayerContainer {
 				}
 			}
 		}
+
+		int xof = r.getXOffset();
+		int yof = r.getYOffset();
+		r.setOffset(0, 0);
+
+		for (int i = 0; i < texts.size() && i < time.size();) {
+			int value = time.get(i);
+			String key = texts.get(i);
+			int x = r.getWidth() - 400;
+			r.fillRect(x, 55 + Chat.stringSize * (i + 1), 400, Chat.stringSize * key.split("\n").length, 0xFFFFFFFF);
+			int val = 0xFF - (value * 0xFF / 60) & 0xFF;
+			if (value > 60) val = 0;
+			for (String s : key.split("\n")) {
+				r.drawText(s, font, x, 50 + Chat.stringSize * ++i, 0xFF << 24 | val << 16 | val << 8 | val);
+			}
+		}
+
+		r.setOffset(xof, yof);
 	}
 
 	@Override
-	public void layerUpdate(Screen s, Layer l) {
-		if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
-			if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
-			else closeTopMenu();
-		} else if (popKeyPressed(KeyEvent.VK_R)) Pokemon.pokemon.handler.setLevel(this);
+	public void layerUpdate(Screen sc, Layer layer) {
+		if (!Chat.OPEN) {
+			if (getInput().popKeyPressed(KeyEvent.VK_ESCAPE)) {
+				if (openMenus.isEmpty()) Pokemon.pokemon.handler.window.quit();
+				else closeTopMenu();
+			} else if (popKeyPressed(KeyEvent.VK_R)) Pokemon.pokemon.handler.setLevel(this);
+			if (popKeyPressed(KeyEvent.VK_T)) openMenu(new Chat(sc));
+			if (popKeyPressed(KeyEvent.VK_N)) addChatMessage("Test");
+		}
+
+		if (!rendering) return;
+		for (int i = 0; i < texts.size() && i < time.size(); i++) {
+			if (time.get(i) <= 0) {
+				texts.remove(i);
+				time.remove(i);
+			} else time.set(i, time.get(i) - 1);
+		}
+
+		int i = 0;
+		for (String key : texts) {
+			for (String s : key.split("\n")) {
+				if (getStringWidth(sc, font, s) > 400) {
+					if (s.contains(" ")) {
+						String write = "", t = s.split(" ")[0];
+						int l = 0;
+						while (getStringWidth(sc, font, write + t) < 400) {
+							write += t;
+							t = s.split(" ")[++l];
+						}
+						if (i < 0 || i >= texts.size()) continue;
+						texts.set(i, key = key.replace(write + s.substring(write.length()), write + "\n" + s.substring(write.length())));
+						++i;
+					} else {
+						String write = "";
+						char t = s.charAt(0);
+						int l = 0;
+						while (getStringWidth(sc, font, write + t) < 400) {
+							write += t;
+							t = s.charAt(++l);
+						}
+						if (i < 0 || i >= texts.size()) continue;
+						texts.set(i, key = key.replace(write + s.substring(write.length()), write + "\n" + s.substring(write.length())));
+						++i;
+					}
+				}
+			}
+		}
+
+		int min = Math.min(texts.size(), time.size());
+		for (int j = min; j < time.size(); j++)
+			time.remove(j);
+		for (int j = min; j < texts.size(); j++)
+			texts.remove(j);
 	}
 
 	public ArrayList<Tile> getTile(int x, int y) {
@@ -210,6 +317,13 @@ public class Level extends LayerContainer {
 		for (Tile t : getTile(xcol, ycol)) {
 			if (t != null && t.isSolid(xof, yof, layer)) return true;
 		}
+
+		for (Entity e : entities) {
+			if (e.getX() < x && e.getX() + e.getSprite().getWidth() > x) {
+				if (e.getY() < y && e.getY() + e.getSprite().getHeight() > y) { return true; }
+			}
+		}
+
 		return false;
 	}
 
@@ -248,6 +362,7 @@ public class Level extends LayerContainer {
 
 	public void addEntity(Entity p) {
 		addLayer(p);
+		entities.add(p);
 	}
 
 	public void addPlayer(Player p) {
@@ -266,6 +381,7 @@ public class Level extends LayerContainer {
 
 	public void removeEntity(Entity p) {
 		removeLayer(p);
+		entities.remove(p);
 	}
 
 }

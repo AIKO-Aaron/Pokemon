@@ -32,6 +32,9 @@ import ch.aiko.util.FileUtil;
 
 public class Player extends Entity {
 
+	public static final int BOY = 1;
+	public static final int GIRL = 2;
+	
 	protected int xoff, yoff;
 	protected int speed = 6;
 	protected SpriteSheet sprites;
@@ -46,6 +49,7 @@ public class Player extends Entity {
 	public Fight currentFight;
 	public ArrayList<Integer> trainersDefeated = new ArrayList<Integer>();
 	public String name;
+	public int gender;
 
 	public static final boolean CAN_WALK_SIDEWAYS = true;
 
@@ -90,14 +94,12 @@ public class Player extends Entity {
 
 	protected Player() {}
 
-	public Player(int x, int y) {
-		name = System.getProperty("user.home");
-		name = name.substring(name.lastIndexOf(name.lastIndexOf("/") == -1 ? "\\" : "/") + 1);
+	public Player(int x, int y, int gender, String name) {
+		// name = System.getProperty("user.home");
+		// name = name.substring(name.lastIndexOf(name.lastIndexOf("/") == -1 ? "\\" : "/") + 1);
 		Pokemon.out.println(name);
-		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_boy.png", 32, 32).removeColor(0xFF88B8B0);
-		for (int i = 0; i < 4 * 4; i++) {
-			walkingAnims[i] = sprites.getSprite(i, false);
-		}
+		setGender(gender);
+		this.name = name;
 		xPos = x;
 		yPos = y;
 	}
@@ -132,9 +134,14 @@ public class Player extends Entity {
 			poso.addField(ASField.Integer("Y", yPos));
 			poso.addString(ASString.Create("Level", Pokemon.pokemon.handler.level.path));
 
+			ASObject gend = new ASObject("PlayerData");
+			gend.addField(ASField.Integer("Gender", gender));
+			gend.addString(ASString.Create("Name", name));
+			
 			base.addObject(teamObj);
 			base.addObject(tdo);
 			base.addObject(poso);
+			base.addObject(gend);
 			base.saveToFile(FileUtil.getRunningJar().getParent() + "/player.bin");
 		} catch (Throwable t) {
 			t.printStackTrace(Pokemon.out);
@@ -258,6 +265,10 @@ public class Player extends Entity {
 		return dir;
 	}
 
+	public String getPlayerName() {
+		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+	}
+
 	@Override
 	public String getName() {
 		return "Player";
@@ -288,6 +299,12 @@ public class Player extends Entity {
 	public Level load() {
 		ASDataBase base = ASDataBase.createFromFile(FileUtil.getRunningJar().getParent() + "/player.bin");
 		if (base != null) {
+			ASObject gen = base.getObject("PlayerData");
+			if(gen != null) {
+				setGender(SerializationReader.readInt(gen.getField("Gender").data, 0));
+				name = gen.getString("Name").toString();
+			}
+			
 			ASObject teamObj = base.getObject("Team");
 			int index = 0;
 			if (team != null) {
@@ -308,16 +325,16 @@ public class Player extends Entity {
 					if (!trainersDefeated.contains(i)) trainersDefeated.add(i);
 				}
 			}
-
 			ASObject poso = base.getObject("POS");
 			xPos = SerializationReader.readInt(poso.getField("X").data, 0);
 			yPos = SerializationReader.readInt(poso.getField("Y").data, 0);
+			if(!poso.getString("Level").toString().endsWith(".layout")) return new PlayerSetter(this);
 			return new Level(poso.getString("Level").toString());
 		} else {
 			team[0] = new TeamPokemon(Pokemons.get(6), PokemonType.OWNED, "Exterminator", ModUtils.convertToAttacks("Tackle", "Verzweifler"), 5, 10, 10, 10, 10, 10, 10, 10);
 		}
-
-		return new Level("/ch/aiko/pokemon/level/test.layout");
+		
+		return new PlayerSetter(this);
 	}
 
 	public int getTeamLength() {
@@ -325,6 +342,14 @@ public class Player extends Entity {
 		for (TeamPokemon pok : team)
 			if (pok != null) ++length;
 		return length;
+	}
+
+	public void setGender(int p) {
+		gender = p;
+		sprites = new SpriteSheet("/ch/aiko/pokemon/textures/player/player_" + (gender == BOY ? "boy" : "girl") + ".png", 32, 32).removeColor(0xFF88B8B0);
+		for (int i = 0; i < 4 * 4; i++) {
+			walkingAnims[i] = sprites.getSprite(i, false);
+		}
 	}
 
 }

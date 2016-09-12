@@ -1,6 +1,7 @@
 ID 0
 NAME "Pikachu"
-BATTLETEXT "Heya its'a me ...\n\n\n Pikachuu.."
+BATTLETEXT TRANS Trainer000
+//"Heya its'a me ...\n\n\n Pikachuu.."
 INBATTLE true
 INBATTLETEXT "notused"
 ONLOSE "Aw snap! I lost. AGAIN!!!!"

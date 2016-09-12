@@ -25,6 +25,7 @@ public class TextField extends MenuObject implements KeyListener {
 	protected MenuObjectAction onEnter;
 	protected boolean defaultText = true;
 	protected int orientation = 0;
+	protected int index;
 
 	public static final int CENTERED = 0;
 	public static final int LEFT = 1;
@@ -61,7 +62,10 @@ public class TextField extends MenuObject implements KeyListener {
 			int yy = getMouseYInFrame(screen);
 			if (xx > x && xx < x + w && yy > y && yy < y + h) {
 				selected = true;
-				if (defaultText) text = "";
+				if (defaultText) {
+					index = 0;
+					text = "";
+				}
 			} else {
 				selected = false;
 			}
@@ -69,7 +73,11 @@ public class TextField extends MenuObject implements KeyListener {
 
 		if (selected) {
 			if (input.popKeyPressed(KeyEvent.VK_ENTER)) entered();
-			else if (input.popKeyPressed(KeyEvent.VK_BACK_SPACE)) text = text.substring(0, text.length() - 1);
+			else if (input.popKeyPressed(KeyEvent.VK_BACK_SPACE) && text.length() > 0) {
+				index--;
+				text = text.substring(0, index) + text.substring(index + 1, text.length());
+			} else if (input.popKeyPressed(KeyEvent.VK_LEFT)) index = index > 0 ? index - 0 : 0;
+			else if (input.popKeyPressed(KeyEvent.VK_RIGHT)) index = index < text.length() - 1 ? index + 1 : text.length() - 1;
 		}
 	}
 
@@ -100,27 +108,27 @@ public class TextField extends MenuObject implements KeyListener {
 		if (text == null || text.replace(" ", "").equalsIgnoreCase("")) return;
 
 		if (orientation == CENTERED) {
-			int textSize = h / 2;
-			int xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textSize), text)) / 2;
+			String renderedtext = text.substring(0, index);
+			int xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), renderedtext)) / 2;
 			while (xstart < 10) {
-				textSize--;
-				xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textSize), text)) / 2;
+				renderedtext = renderedtext.substring(1);
+				xstart = x + (w - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), renderedtext)) / 2;
 			}
-			int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, textSize))) / 2;
-			renderer.drawText(text, Settings.font, textSize, 0, xstart, ystart, 0xFF000000);
+			int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, h / 2))) / 2;
+			renderer.drawText(renderedtext, Settings.font, h / 2, 0, xstart, ystart, 0xFF000000);
 		} else if (orientation == LEFT) {
-			int textSize = h / 2;
-			while (getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textSize), text) > w - 20)
-				textSize--;
-			int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, textSize))) / 2;
-			renderer.drawText(text, Settings.font, textSize, 0, 10 + x, ystart, 0xFF000000);
+			String renderedtext = text.substring(0, index);
+			while (getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), renderedtext) > w - 20)
+				renderedtext = renderedtext.substring(1);
+			int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, h / 2))) / 2;
+			renderer.drawText(renderedtext, Settings.font, h / 2, 0, 10 + x, ystart, 0xFF000000);
 		} else if (orientation == RIGHT) {
-			int textSize = h / 2;
-			while (getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textSize), text) > w - 20)
-				textSize--;
-			int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, textSize))) / 2;
-			int xstart = x + w - 10 - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, textSize), text);
-			renderer.drawText(text, Settings.font, textSize, 0, xstart, ystart, 0xFF000000);
+			String renderedtext = text.substring(0, index);
+			while (getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), renderedtext) > w - 20)
+				renderedtext = renderedtext.substring(1);
+			int ystart = y + (h - getStringHeight(renderer.getScreen(), new Font(Settings.font, 0, h / 2))) / 2;
+			int xstart = x + w - 10 - getStringWidth(renderer.getScreen(), new Font(Settings.font, 0, h / 2), renderedtext);
+			renderer.drawText(renderedtext, Settings.font, h / 2, 0, xstart, ystart, 0xFF000000);
 		}
 	}
 
@@ -130,7 +138,10 @@ public class TextField extends MenuObject implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-		if (!blackList.contains(keyCode)) text += e.getKeyChar();
+		if (!blackList.contains(keyCode)) {
+			index++;
+			text += e.getKeyChar();
+		}
 	}
 
 	@Override
@@ -146,6 +157,10 @@ public class TextField extends MenuObject implements KeyListener {
 
 	public void setOrientation(int or) {
 		orientation = or;
+	}
+
+	public void setClearOnClick(boolean dt) {
+		defaultText = dt;
 	}
 
 }

@@ -16,15 +16,18 @@ public abstract class BasicLoader {
 		variables = new HashMap<String, String>();
 		text = FileUtil.ReadFileInClassPath(path);
 		currentText = text;
-		
+
 		init();
-		
+
 		decode(true);
 		currentText = text;
 		decode(false);
+		finish();
 	}
-	
+
 	public abstract void init();
+
+	public abstract void finish();
 
 	public boolean decode(boolean prp) {
 		boolean prepro = false;
@@ -33,7 +36,11 @@ public abstract class BasicLoader {
 		try {
 			while (!currentText.replace(" ", "").replace("\n", "").equalsIgnoreCase("")) {
 				++line;
-				String code = currentText.split("\n")[0];
+				String code = currentText.split("\n")[0];// .toLowerCase();
+				while (code.startsWith(" ")) {
+					code = code.substring(1);
+					currentText = currentText.substring(1);
+				}
 
 				if (!code.startsWith("#")) {
 					prepro = false;
@@ -45,7 +52,7 @@ public abstract class BasicLoader {
 					code = code.substring(1);
 				}
 				currentText = currentText.substring(code.length() + 1 + (prepro ? 1 : 0));
-
+				if (currentText.startsWith(" ") || currentText.startsWith("\n") || currentText.startsWith(";")) currentText = currentText.substring(1);
 				if (code.replace(" ", "").equalsIgnoreCase("") || code.startsWith("//")) continue;
 
 				String c = code.split(" ")[0];
@@ -57,25 +64,27 @@ public abstract class BasicLoader {
 						int sp = code.indexOf(" ");
 						int fi = code.indexOf("\"");
 
-						if (sp < fi && sp != -1) {
-							arguments.add(code.split(" ")[0]);
+						if (sp < fi && sp != -1 && !code.split(" ")[0].replace(" ", "").equalsIgnoreCase("")) {
+							arguments.add(code.split(" ")[0].toLowerCase());
 							code = code.substring(arguments.get(arguments.size() - 1).length() + 1);
 							continue;
 						}
 
 						int si = code.substring(fi + 1).indexOf("\"") + fi + 1;
-						arguments.add(code.substring(fi + 1, si));
+						if (code.substring(fi + 1, si).replace(" ", "").equalsIgnoreCase("")) continue;
+						arguments.add(code.substring(fi + 1, si).toLowerCase());
 						code = code.substring(0, fi) + code.substring(si + 1);
+						while(code.startsWith(" ")) code = code.substring(1);
 					}
 					String[] rest = code.split(" ");
 					for (int i = 0; i < rest.length; i++)
-						arguments.add(rest[i]);
+						if (!rest[i].replace(" ", "").equals("")) arguments.add(rest[i].toLowerCase());
 					args = arguments.toArray(new String[arguments.size()]);
 				} else args = code.contains(" ") ? code.substring(c.length() + 1).split(" ") : new String[0];
 				if (prepro && prp) {
-					if (!executePreprocessor(c, args)) return false;
+					if (!executePreprocessor(c.toLowerCase(), args)) return false;
 				} else if (!prp) {
-					if (!executeCommand(c, args)) return false;
+					if (!executeCommand(c.toLowerCase(), args)) return false;
 					if (semi) line--;
 				}
 			}

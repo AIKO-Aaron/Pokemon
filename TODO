@@ -1,0 +1,3 @@
+    a = fight
+    b = intro
+--> c = scripts in files to load from level / player / trainer (see test.aipt)

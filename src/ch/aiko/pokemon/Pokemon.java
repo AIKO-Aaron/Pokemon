@@ -8,6 +8,7 @@ import ch.aiko.pokemon.basic.MainMenu;
 import ch.aiko.pokemon.basic.PokemonEvents;
 import ch.aiko.pokemon.client.PokemonClient;
 import ch.aiko.pokemon.entity.player.Player;
+import ch.aiko.pokemon.entity.player.PlayerSetter;
 import ch.aiko.pokemon.language.Language;
 import ch.aiko.pokemon.level.Level;
 import ch.aiko.pokemon.pokemons.PokeUtil;
@@ -42,7 +43,6 @@ public class Pokemon {
 	 */
 	public static PokemonClient client;
 
-
 	public Pokemon() {
 		pokemon = this;
 		Settings.load();
@@ -66,7 +66,7 @@ public class Pokemon {
 		if (ip == null) {
 			ONLINE = false;
 
-			player = new Player(32 * 3, 32 * 2);
+			player = new Player(32 * 3, 32 * 2, Player.GIRL, "MissingNo");
 			// Load Player & Level
 			Level level = player.load();
 
@@ -84,13 +84,18 @@ public class Pokemon {
 		client = new PokemonClient(ip, uuid);
 		client.waitFor();
 
-		player = new Player(client.x, client.y);
+		player = new Player(client.x, client.y, client.gender, client.name);
 		player.team = client.team;
 		player.trainersDefeated = client.trainersDefeated;
 		player.setDirection(client.dir);
 
-		Level level = new Level(client.pathToLevel);
-		handler.init(level, player);
+		if (client.pathToLevel.endsWith(".layout")) {
+			Level level = new Level(client.pathToLevel);
+			handler.init(level, player);
+		} else {
+			Level level = new PlayerSetter(player);
+			handler.init(level, player);
+		}
 	}
 
 	public static void main(String[] args) {

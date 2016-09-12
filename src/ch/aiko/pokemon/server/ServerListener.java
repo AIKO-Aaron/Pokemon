@@ -16,11 +16,9 @@ import java.util.Random;
 import ch.aiko.as.ASDataBase;
 import ch.aiko.modloader.LoadedMod;
 import ch.aiko.modloader.ModLoader;
-import ch.aiko.pokemon.Pokemon;
+import ch.aiko.pokemon.basic.PokemonEvents;
 
 public class ServerListener {
-
-	public static final int PORT = 4732;
 
 	protected boolean running = false, sending;
 	protected Thread acceptor, receiver, sender;
@@ -30,8 +28,7 @@ public class ServerListener {
 	protected ArrayList<String> uuids = new ArrayList<String>();
 	protected HashMap<Socket, ArrayList<String>> texts = new HashMap<Socket, ArrayList<String>>();
 
-	public ServerListener() {
-		Pokemon.out.warn("Why are you starting the receiver of the server on the client");
+	public ServerListener(int PORT) {
 		running = true;
 		try {
 			socket = new ServerSocket(PORT);
@@ -105,32 +102,41 @@ public class ServerListener {
 	}
 
 	private void perform(String received, Socket s) {
+		ModLoader.performEvent(new PokemonEvents.StringReceivedEvent(received, s));
 		if (!clients.contains(s)) return;
 		if (received.equalsIgnoreCase("/ruuid/")) {
 			String uuid = genUUID();
 			while (existsUUID(uuid))
 				uuid = genUUID();
-			System.out.println("Generated uuid: " + uuid);
+			PokemonServer.out.println("Generated uuid: " + uuid);
 			send(s, "/guuid/" + uuid);
 			connect(s, uuid);
 		}
+		if (received.startsWith("/chat/")) {
+			for (int i = 0; i < clients.size(); i++) {
+				Socket socket = clients.get(i);
+				if (socket != null && socket != s) {
+					send(socket, received);
+				}
+			}
+		}
 		if (received.equalsIgnoreCase("/rlvl/")) {
-			send(s, "/lvl/" + PokemonServer.handler.getServerPlayer(uuids.get(clients.indexOf(s))).currentLevel);
+			send(s, "/lvl/" + PokemonServer.handler.getPlayer(uuids.get(clients.indexOf(s))).currentLevel);
 		}
 		if (received.equalsIgnoreCase("/rpos/")) {
-			ServerPlayer p = PokemonServer.handler.getServerPlayer(uuids.get(clients.indexOf(s)));
+			ServerPlayer p = PokemonServer.handler.getPlayer(uuids.get(clients.indexOf(s)));
 			send(s, "/pos/" + p.x + "/" + p.y + "/" + p.dir);
 		}
 		if (received.startsWith("/c/")) connect(s, received.substring(3));
 		if (received.startsWith("/slvl/")) {
-			PokemonServer.handler.setServerPlayerLevel(getUUID(s), received.substring(6));
+			PokemonServer.handler.setPlayerLevel(getUUID(s), received.substring(6));
 			updatePositions();
 		}
 		if (received.startsWith("/spos/")) {
 			int x = Integer.parseInt(received.substring(6).split("/")[0]);
 			int y = Integer.parseInt(received.substring(6).split("/")[1]);
 			int dir = Integer.parseInt(received.substring(6).split("/")[2]);
-			PokemonServer.handler.setServerPlayerPos(getUUID(s), x, y, dir);
+			PokemonServer.handler.setPlayerPos(getUUID(s), x, y, dir);
 			if (PokemonServer.listener != null) PokemonServer.listener.updatePositions();
 		}
 		if (received.equalsIgnoreCase("/q/")) {
@@ -139,23 +145,31 @@ public class ServerListener {
 		if (received.equalsIgnoreCase("/rec/")) {
 			finishUp(s);
 		}
+		if (received.startsWith("/LTT/")) {
+			int lostToTrainer = Integer.parseInt(received.substring(5));
+			System.out.println("Player: " + getPlayer(s).uuid + " got defeated by trainer: " + lostToTrainer);
+		}
+		if (received.startsWith("/DFT/")) {
+			int defeatedTrainer = Integer.parseInt(received.substring(5));
+			getPlayer(s).trainersDefeated.add(defeatedTrainer);
+		}
 	}
 
 	public String getUUID(Socket s) {
 		return uuids.get(clients.indexOf(s));
 	}
 
-	public ServerPlayer getServerPlayer(Socket s) {
-		return PokemonServer.handler.getServerPlayer(uuids.get(clients.indexOf(s)));
+	public ServerPlayer getPlayer(Socket s) {
+		return PokemonServer.handler.getPlayer(uuids.get(clients.indexOf(s)));
 	}
 
 	private void connect(Socket s, String uuid) {
 		if (uuids.contains(uuid)) kickUUID(uuid);
-		PokemonServer.out.println("ServerPlayer connected with uuid: " + uuid);
+		PokemonServer.out.println("Player connected with uuid: " + uuid);
 		uuids.set(clients.indexOf(s), uuid);
-		ServerPlayer p = PokemonServer.handler.getServerPlayer(uuid);
-		if (p == null) PokemonServer.handler.addServerPlayer(new ServerPlayer(uuid));
-		p = PokemonServer.handler.getServerPlayer(uuid);
+		ServerPlayer p = PokemonServer.handler.getPlayer(uuid);
+		if (p == null) PokemonServer.handler.addPlayer(new ServerPlayer(uuid));
+		p = PokemonServer.handler.getPlayer(uuid);
 		p.online = true;
 
 		ASDataBase base = p.toBase();
@@ -166,8 +180,8 @@ public class ServerListener {
 	}
 
 	private void finishUp(Socket s) {
-		ServerPlayer p = getServerPlayer(s);
-
+		ServerPlayer p = getPlayer(s);
+		ModLoader.performEvent(new PokemonEvents.PlayerConnectedEvent(p));
 		ASDataBase base = p.toBase();
 		byte[] bytes = new byte[base.getSize()];
 		base.getBytes(bytes, 0);
@@ -184,7 +198,7 @@ public class ServerListener {
 	}
 
 	public void setPositions(Socket s) {
-		ServerPlayer p = getServerPlayer(s);
+		ServerPlayer p = getPlayer(s);
 		String setter = "/pset/\n";
 
 		for (int i = 0; i < PokemonServer.handler.p.size(); i++) {
@@ -202,7 +216,7 @@ public class ServerListener {
 		send(s, setter);
 	}
 
-	public void removeServerPlayer(Socket s) {
+	public void removePlayer(Socket s) {
 		for (int i = 0; i < clients.size(); i++) {
 			Socket s1 = clients.get(i);
 			if (s1 == s) continue;
@@ -230,8 +244,8 @@ public class ServerListener {
 	}
 
 	public void disconnect(Socket s) {
-		ServerPlayer p = getServerPlayer(s);
-		System.out.println("ServerPlayer disconnected: " + p.uuid);
+		ServerPlayer p = getPlayer(s);
+		PokemonServer.out.println("Player disconnected: " + p.uuid);
 		int index = clients.indexOf(s);
 		p.online = false;
 		try {
@@ -251,22 +265,31 @@ public class ServerListener {
 
 	private void sendText() {
 		sending = true;
+		PokemonServer.out.println("Started sending");
 		while (sending) {
-			for (int i = 0; i < clients.size(); i++) {
-				Socket s = clients.get(i);
-				if (s == null) continue;
-				ArrayList<String> textsToSend = texts.get(s);
-				if (textsToSend == null || textsToSend.size() <= 0) continue;
+			if (clients.size() == 0) {
 				try {
-					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-					String text = textsToSend.get(0);
-					if (text != null) for (String t : text.split("\n")) {
-						writer.write(t + "\n");
-						writer.flush();
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				for (int i = 0; i < clients.size(); i++) {
+					Socket s = clients.get(i);
+					if (s == null) continue;
+					ArrayList<String> textsToSend = texts.get(s);
+					if (textsToSend == null || textsToSend.size() <= 0) continue;
+					try {
+						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+						String text = textsToSend.get(0);
+						if (text != null) for (String t : text.split("\n")) {
+							writer.write(t + "\n");
+							writer.flush();
+						}
+						texts.get(s).remove(0);
+					} catch (IOException e) {
+						e.printStackTrace(PokemonServer.out);
 					}
-					texts.get(s).remove(0);
-				} catch (IOException e) {
-					e.printStackTrace(PokemonServer.out);
 				}
 			}
 		}
@@ -294,5 +317,14 @@ public class ServerListener {
 			if (i % 4 == 3 && i != 19) uuid += "-";
 		}
 		return uuid;
+	}
+
+	public void sendToAll(String message) {
+		for (int i = 0; i < clients.size(); i++) {
+			Socket s = clients.get(i);
+			if (s != null) {
+				send(s, message);
+			}
+		}
 	}
 }
