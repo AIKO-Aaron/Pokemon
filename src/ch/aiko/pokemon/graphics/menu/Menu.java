@@ -146,9 +146,9 @@ public abstract class Menu extends LayerContainer implements Renderable, Updatab
 
 		if (manage_buttons && buttons.size() > 0) {
 			Point pos = s.getMousePosition();
-			int mx = pos == null ? getMouseXInFrame(s) : pos.x;
-			int my = pos == null ? getMouseYInFrame(s) : pos.y;
-
+			int mx = pos == null ? getMouseXInFrame(s) : pos.x * s.getFrameWidth() / s.getWidth();
+			int my = pos == null ? getMouseYInFrame(s) : pos.y * s.getFrameHeight() / s.getHeight();
+			
 			if (isMouseKeyPressed(MouseEvent.BUTTON1)) {
 				if (((Button) buttons.get(index)).isInside(mx, my)) ((Button) buttons.get(index)).setPressed();
 			} else if (((Button) buttons.get(index)).pressed) {
